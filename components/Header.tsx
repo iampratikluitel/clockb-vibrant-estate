@@ -42,7 +42,7 @@ const Header = () => {
           <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
           <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
           <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
-          <NavLink href="/admin/dashboard" isActive={pathname.startsWith("/admin")}>
+          <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
             <Shield className="w-4 h-4 mr-1" /> Admin
           </NavLink>
         </div>

@@ -8,7 +8,8 @@
 // import OngoingProjects from "@/components/sections/OngoingProjects";
 // import Testimonials from "@/components/sections/Testimonials";
 // import NewsInsights from "@/components/sections/NewsInsights";
-
+"use client"
+import Footer from "./Footer";
 import Header from "./Header";
 import Hero from "./Hero";
 import InvestmentBenefits from "./InvestmentBenefits";
@@ -30,7 +31,7 @@ const Index = () => {
       <OngoingProjects />
       <Testimonials />
       <NewsInsights />
-      {/* <Footer /> */}
+      <Footer />              
     </div>
   );
 };
