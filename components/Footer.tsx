@@ -1,11 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link"; // Import Next.js Link
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
   return (
     <footer className="bg-[#1A1F2C] text-white pt-16 pb-6">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auhref px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Column 1: About */}
           <div>
@@ -46,43 +46,43 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-6">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/about" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/about" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   About
                 </Link>
               </li>
               <li>
-                <Link to="/projects" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/projects" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Project Description
                 </Link>
               </li>
               <li>
-                <Link to="/investor-relations" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/inveshrefr-relations" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
-                  Investor Relations
+                  Inveshrefr Relations
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/blog" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/faqs" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/faqs" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   FAQs
                 </Link>
               </li>
               <li>
-                <Link to="/news" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/news" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   News & Insights
                 </Link>
               </li>
               <li>
-                <Link to="/resources" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/resources" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Resources
                 </Link>
@@ -95,25 +95,25 @@ const Footer = () => {
             <h3 className="text-xl font-bold mb-6">More Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link to="/terms" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/terms" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/privacy" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/career" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/career" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Careers
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/contact" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Contact Us
                 </Link>
@@ -140,7 +140,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
-                <a href="mailto:Info@projestates.com" className="text-[#9F9EA1] hover:text-white transition-colors">
+                <a href="mailhref:Info@projestates.com" className="text-[#9F9EA1] hover:text-white transition-colors">
                   Info@projestates.com
                 </a>
               </li>

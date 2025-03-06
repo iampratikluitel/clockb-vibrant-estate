@@ -5,10 +5,16 @@ import { Building2, Download, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const router = useRouter()
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  const handleLogin = () => {
+    router.push('/login')
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,9 +48,9 @@ const Header = () => {
           <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
           <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
           <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
-          <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
+          {/* <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
             <Shield className="w-4 h-4 mr-1" /> Admin
-          </NavLink>
+          </NavLink> */}
         </div>
 
         {/* CTA Button */}
@@ -53,6 +59,14 @@ const Header = () => {
         >
           <Download className="w-4 h-4 mr-2 animate-bounce" />
           Download Brochure
+        </Button>
+
+        <Button
+          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
+          onClick={(handleLogin)}
+        >
+          {/* <Download className="w-4 h-4 mr-2 animate-bounce" /> */}
+          login
         </Button>
 
         {/* Mobile Menu Button */}

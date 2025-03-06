@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
+
 const Contact = () => {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
@@ -37,7 +38,7 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(`${API_URL}/contact`, {
+      const response = await fetch(`api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ const Contact = () => {
     setIsAppointmentSubmitting(true);
     
     try {
-      const response = await fetch(`${API_URL}/appointment`, {
+      const response = await fetch(`/api/appointment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

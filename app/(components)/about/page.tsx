@@ -1,3 +1,4 @@
+"use client"
 
 import { Building2, Download, Phone, FileText, MapPin, Users, LucideIcon, User, Briefcase, Shield, LineChart, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
