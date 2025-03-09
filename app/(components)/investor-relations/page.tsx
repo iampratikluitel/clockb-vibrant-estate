@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
-// import Footer from "@/components/layout/Footer";
+import Footer from "@/components/Footer";
 import { 
   Download, 
   MapPin, 
@@ -507,7 +507,7 @@ const InvestmentRelations = () => {
         </div>
       </section>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

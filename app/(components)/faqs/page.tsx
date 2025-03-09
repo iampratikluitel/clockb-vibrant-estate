@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import Header from "@/components/Header";
-// import Footer from "@/components/layout/Footer";
+import Footer from "@/components/Footer";
 import { 
   Accordion, 
   AccordionContent, 
@@ -277,7 +277,7 @@ const Faqs = () => {
         </div>
       </div>
       
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };

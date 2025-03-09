@@ -3,7 +3,7 @@
 import { Building2, Download, Phone, FileText, MapPin, Users, LucideIcon, User, Briefcase, Shield, LineChart, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-// import Footer from "@/components/Footer";
+import Footer from "@/components/Footer";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface TeamMemberProps {
@@ -250,7 +250,7 @@ const About = () => {
         </section>
       </main>
 
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };
