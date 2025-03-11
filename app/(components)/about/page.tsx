@@ -1,6 +1,19 @@
-"use client"
+"use client";
 
-import { Building2, Download, Phone, FileText, MapPin, Users, LucideIcon, User, Briefcase, Shield, LineChart, Building } from "lucide-react";
+import {
+  Building2,
+  Download,
+  Phone,
+  FileText,
+  MapPin,
+  Users,
+  LucideIcon,
+  User,
+  Briefcase,
+  Shield,
+  LineChart,
+  Building,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -14,7 +27,13 @@ interface TeamMemberProps {
   photoUrl?: string;
 }
 
-const TeamMember = ({ name, role, description, icon: Icon, photoUrl }: TeamMemberProps) => {
+const TeamMember = ({
+  name,
+  role,
+  description,
+  icon: Icon,
+  photoUrl,
+}: TeamMemberProps) => {
   return (
     <div className="flex flex-col bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 gap-4">
       <div className="flex flex-col items-center">
@@ -30,8 +49,12 @@ const TeamMember = ({ name, role, description, icon: Icon, photoUrl }: TeamMembe
             <Icon className="h-8 w-8 text-estates-primary" />
           </div>
         )}
-        <h3 className="text-lg font-bold text-estates-primary text-center">{name}</h3>
-        <p className="text-estates-secondary font-medium mb-2 text-center">{role}</p>
+        <h3 className="text-lg font-bold text-estates-primary text-center">
+          {name}
+        </h3>
+        <p className="text-estates-secondary font-medium mb-2 text-center">
+          {role}
+        </p>
       </div>
       <p className="text-gray-600 text-center">{description}</p>
     </div>
@@ -42,7 +65,7 @@ const About = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      
+
       <main className="flex-grow pt-24">
         {/* Hero Section */}
         <section className="bg-estates-gray-100 py-16">
@@ -52,7 +75,8 @@ const About = () => {
                 About Project Estates
               </h1>
               <p className="text-lg text-gray-700 mb-8">
-                Learn about the team and partners behind our visionary real estate development project
+                Learn about the team and partners behind our visionary real
+                estate development project
               </p>
             </div>
           </div>
@@ -63,10 +87,13 @@ const About = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-estates-primary mb-4">Meet the Team</h2>
+                <h2 className="text-3xl font-bold text-estates-primary mb-4">
+                  Meet the Team
+                </h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
-                  Our experienced leadership team brings decades of combined expertise in real estate development,
-                  finance, and project management.
+                  Our experienced leadership team brings decades of combined
+                  expertise in real estate development, finance, and project
+                  management.
                 </p>
               </div>
 
@@ -116,7 +143,9 @@ const About = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold text-estates-primary mb-4">Engineering & Planning Partner</h2>
+                <h2 className="text-3xl font-bold text-estates-primary mb-4">
+                  Engineering & Planning Partner
+                </h2>
               </div>
 
               <div className="bg-white rounded-xl shadow-md p-8 text-center">
@@ -125,11 +154,15 @@ const About = () => {
                     <Building className="h-10 w-10 text-estates-primary" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-estates-secondary mb-4">Innovate Urban Solutions</h3>
+                <h3 className="text-2xl font-bold text-estates-secondary mb-4">
+                  Innovate Urban Solutions
+                </h3>
                 <p className="text-gray-600 max-w-3xl mx-auto">
-                  Industry-leading experts in urban planning and sustainable infrastructure development. With a proven track 
-                  record of successful projects across various regions, they bring unparalleled expertise to ensure our 
-                  development meets the highest standards of quality and sustainability.
+                  Industry-leading experts in urban planning and sustainable
+                  infrastructure development. With a proven track record of
+                  successful projects across various regions, they bring
+                  unparalleled expertise to ensure our development meets the
+                  highest standards of quality and sustainability.
                 </p>
               </div>
             </div>
@@ -141,7 +174,9 @@ const About = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-10">
-                <h2 className="text-3xl font-bold text-estates-primary mb-4">Managed by Investment Circle</h2>
+                <h2 className="text-3xl font-bold text-estates-primary mb-4">
+                  Managed by Investment Circle
+                </h2>
               </div>
 
               <div className="bg-estates-primary/5 rounded-xl p-8 border border-estates-primary/20">
@@ -156,8 +191,9 @@ const About = () => {
                   </div>
                   <div className="md:w-2/3">
                     <p className="text-lg text-gray-700 mb-6">
-                      The entire project is backed and managed by a structured Investment Circle, ensuring financial 
-                      security, risk mitigation, and project success through expert governance.
+                      The entire project is backed and managed by a structured
+                      Investment Circle, ensuring financial security, risk
+                      mitigation, and project success through expert governance.
                     </p>
                     <ul className="space-y-3">
                       <li className="flex items-start">
@@ -166,7 +202,9 @@ const About = () => {
                             <span className="text-white text-xs">✓</span>
                           </div>
                         </div>
-                        <span className="text-gray-700">Professional financial management and oversight</span>
+                        <span className="text-gray-700">
+                          Professional financial management and oversight
+                        </span>
                       </li>
                       <li className="flex items-start">
                         <div className="flex-shrink-0 mr-2 mt-1">
@@ -174,7 +212,9 @@ const About = () => {
                             <span className="text-white text-xs">✓</span>
                           </div>
                         </div>
-                        <span className="text-gray-700">Transparent investor communications and reporting</span>
+                        <span className="text-gray-700">
+                          Transparent investor communications and reporting
+                        </span>
                       </li>
                       <li className="flex items-start">
                         <div className="flex-shrink-0 mr-2 mt-1">
@@ -182,7 +222,9 @@ const About = () => {
                             <span className="text-white text-xs">✓</span>
                           </div>
                         </div>
-                        <span className="text-gray-700">Strategic risk assessment and mitigation protocols</span>
+                        <span className="text-gray-700">
+                          Strategic risk assessment and mitigation protocols
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -196,48 +238,64 @@ const About = () => {
         <section className="py-16 bg-estates-primary text-white">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-6">Ready to be part of this visionary real estate opportunity?</h2>
-              <p className="text-xl mb-10 opacity-90">Join us in building the future of residential excellence</p>
-              
+              <h2 className="text-3xl font-bold mb-6">
+                Ready to be part of this visionary real estate opportunity?
+              </h2>
+              <p className="text-xl mb-10 opacity-90">
+                Join us in building the future of residential excellence
+              </p>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
                   <Phone className="h-10 w-10 mx-auto mb-4 text-white" />
-                  <h3 className="text-xl font-semibold mb-2">Book a Consultation</h3>
-                  <p className="text-white/80 mb-4">Speak with our investment advisors about opportunities.</p>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Book a Consultation
+                  </h3>
+                  <p className="text-white/80 mb-4">
+                    Speak with our investment advisors about opportunities.
+                  </p>
                 </div>
-                
+
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
                   <FileText className="h-10 w-10 mx-auto mb-4 text-white" />
-                  <h3 className="text-xl font-semibold mb-2">Download Investment Brochure</h3>
-                  <p className="text-white/80 mb-4">Get detailed information about our project and returns.</p>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Download Investment Brochure
+                  </h3>
+                  <p className="text-white/80 mb-4">
+                    Get detailed information about our project and returns.
+                  </p>
                 </div>
-                
+
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
                   <MapPin className="h-10 w-10 mx-auto mb-4 text-white" />
-                  <h3 className="text-xl font-semibold mb-2">Visit the Project Site</h3>
-                  <p className="text-white/80 mb-4">See the development location and progress in person.</p>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Visit the Project Site
+                  </h3>
+                  <p className="text-white/80 mb-4">
+                    See the development location and progress in person.
+                  </p>
                 </div>
               </div>
-              
+
               <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <Button 
-                  variant="cta" 
+                <Button
+                  variant="cta"
                   size="xl"
                   className="bg-white text-estates-primary hover:bg-white/90"
                 >
                   <Phone className="w-5 h-5" />
                   Book a Consultation
                 </Button>
-                <Button 
-                  variant="cta" 
-                  size="xl" 
+                <Button
+                  variant="cta"
+                  size="xl"
                   className="border border-white bg-transparent hover:bg-white/10"
                 >
                   <Download className="w-5 h-5" />
                   Download Brochure
                 </Button>
-                <Button 
-                  variant="cta" 
+                <Button
+                  variant="cta"
                   size="xl"
                   className="border border-white bg-transparent hover:bg-white/10"
                 >
