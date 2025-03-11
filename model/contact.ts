@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema(
+const contactSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -10,18 +10,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    password: {
+    subject: {
       type: String,
       required: true,
     },
-    role: {
+    message: {
       type: String,
-      enum: ["user", "admin"],
-      default: "user",
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+      required: false,
     },
   },
   {
@@ -29,6 +24,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("User", userSchema);
+const Contact = mongoose.model("Contact", contactSchema);
 
-export default User;
+export default Contact;
