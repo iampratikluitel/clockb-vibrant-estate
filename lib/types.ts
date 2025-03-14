@@ -1,3 +1,14 @@
+export interface Team {
+  name: string;
+  position: string;
+  description: string;
+  image: string;
+}
+
+export interface Brochure {
+  id: string;
+  description: string;
+}
 export interface FAQTYPE {
   answer: string;
   question: string;
@@ -25,4 +36,30 @@ export interface BLOGS {
   category?: string;
   postedDate: Date;
   status: boolean;
+}
+
+export interface FOOTER {
+  _id: string;
+  logo: string;
+  email: string;
+  about: string;
+  address: string;
+  phone: string;
+  socialHandles: {
+    facebook: string;
+    linkedin: string;
+    instagram: string;
+    twitter: string;
+    whatsapp: string;
+    youtube: string;
+  };
+  workingHours: string;
+}
+
+export interface Contact {
+  _id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
 }

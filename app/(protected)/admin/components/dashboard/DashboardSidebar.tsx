@@ -49,8 +49,12 @@ const DashboardSidebar = () => {
   ];
 
   const moreLinks = [
-    { name: "Terms & Conditions", path: "/admin/terms", icon: FileQuestion },
-    { name: "Privacy Policy", path: "/admin/privacy", icon: Shield },
+    {
+      name: "Terms & Conditions",
+      path: "/admin/termsAndCondition",
+      icon: FileQuestion,
+    },
+    { name: "Privacy Policy", path: "/admin/privacy-policy", icon: Shield },
     { name: "Configuration", path: "/admin/configuration", icon: Settings },
     { name: "Careers", path: "/admin/careers", icon: Briefcase },
     { name: "Contact Us", path: "/admin/contact", icon: Mail },

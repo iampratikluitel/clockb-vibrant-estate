@@ -31,8 +31,6 @@ const Contact = () => {
   const [appointmentNote, setAppointmentNote] = useState("");
   const [isAppointmentSubmitting, setIsAppointmentSubmitting] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -131,7 +129,7 @@ const Contact = () => {
               </h1>
               <p className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 Have questions about our properties or investment opportunities?
-                We're here to help you every step of the way.
+                We&apos;re here to help you every step of the way.
               </p>
             </div>
           </div>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,13 +7,15 @@ const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1773&q=80')",
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1773&q=80')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-estates-secondary/80 to-estates-primary/70" /> {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-estates-secondary/80 to-estates-primary/70" />{" "}
+        {/* Gradient overlay */}
       </div>
 
       {/* Content */}
@@ -36,7 +38,7 @@ const Hero = () => {
             </Button>
             <Button
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg
+              className="border-2 border-white text-estates-primary/90 hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg
                 transition-all duration-300"
             >
               Our Projects
@@ -50,15 +52,26 @@ const Hero = () => {
         <div className="container mx-auto">
           <div className="grid grid-cols-3 gap-6">
             {[
-              { title: "Premium Locations", desc: "Strategic properties in high-growth areas" },
-              { title: "Sustainable Design", desc: "Eco-friendly construction with modern amenities" },
-              { title: "High ROI", desc: "Consistent returns on investment portfolios" }
+              {
+                title: "Premium Locations",
+                desc: "Strategic properties in high-growth areas",
+              },
+              {
+                title: "Sustainable Design",
+                desc: "Eco-friendly construction with modern amenities",
+              },
+              {
+                title: "High ROI",
+                desc: "Consistent returns on investment portfolios",
+              },
             ].map((item, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
               >
-                <h3 className="text-estates-primary font-bold text-xl mb-2">{item.title}</h3>
+                <h3 className="text-estates-primary font-bold text-xl mb-2">
+                  {item.title}
+                </h3>
                 <p className="text-gray-600">{item.desc}</p>
               </div>
             ))}
