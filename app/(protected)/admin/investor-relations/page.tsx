@@ -1,7 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
-import Overview from "./overview/page";
-import KeyHighlight from "./key-highlight/page";
+import InvestorRelationsTabs from "../components/investment-relations/investment-relations-tab";
 
 const ProjectDescription = () => {
   return (
@@ -9,11 +7,7 @@ const ProjectDescription = () => {
       <div>
         <h1>Investor Relation</h1>
       </div>
-      <Overview />
-      <KeyHighlight />
-      <div className="flex justify-end items-end">
-        <Button variant="default">Submit</Button>
-      </div>
+      <InvestorRelationsTabs />
     </div>
   );
 };
