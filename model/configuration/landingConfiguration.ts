@@ -1,4 +1,4 @@
-import { Schema, model, models, Model } from "mongoose";
+import mongoose, { Schema, models } from  "mongoose";
 
 const contentSchema = {
   image: String,
@@ -7,22 +7,33 @@ const contentSchema = {
 
 const landingSchema = new Schema(
   {
-    title: String,
-  },
-  { strict: false }
+    name: String,
+    description: String,
+    backgroundImage: String,
+
+    card1name: String,
+    card1description: String,
+    card2name: String,
+    card2description: String,
+    card3name: String,
+    card3description: String,
+
+    card4icon: String,
+    card4name: String,
+    card4description: String,
+    card5icon: String,
+    card5name: String,
+    card5description: String,
+    card6icon: String,
+    card6name: String,
+    card6description: String,
+    card7icon: String,
+    card7name: String,
+    card7description: String,
+
+  }, { strict: false }
 );
 
-let LandingConfiguration: Model<any>;
-try {
-  LandingConfiguration =
-    models.LandingConfiguration ||
-    model("LandingConfiguration", landingSchema, "LandingConfiguration");
-} catch (error) {
-  LandingConfiguration = model(
-    "LandingConfiguration",
-    landingSchema,
-    "LandingConfiguration"
-  );
-}
+const LandingConfiguration = models.LandingConfiguration || mongoose.model("LandingConfiguration", landingSchema);
 
 export default LandingConfiguration;

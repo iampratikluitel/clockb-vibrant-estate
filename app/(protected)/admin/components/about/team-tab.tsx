@@ -7,28 +7,26 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { PlusCircle, Trash2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { useForm, Controller } from "react-hook-form"
 
 export default function TeamTab() {
   const { toast } = useToast()
+  interface TeamMemberFormData {
+    name: string;
+    role: string;
+    bio: string;
+    imageUrl: string;
+  }
+
+  const { control, handleSubmit, setValue, reset } = useForm<TeamMemberFormData>()
+
   const [teamMembers, setTeamMembers] = useState([
     { id: 1, name: "Jane Smith", role: "CEO & Founder", bio: "10+ years of industry experience", imageUrl: "/placeholder.svg?height=200&width=200" },
     { id: 2, name: "John Doe", role: "CTO", bio: "Expert in technology solutions", imageUrl: "/placeholder.svg?height=200&width=200" },
   ])
 
-  const [newMember, setNewMember] = useState({
-    name: "",
-    role: "",
-    bio: "",
-    imageUrl: "/placeholder.svg?height=200&width=200",
-  })
-
-  const handleNewMemberChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setNewMember((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const addTeamMember = () => {
-    if (!newMember.name || !newMember.role) {
+  const addTeamMember = async (data: { name: string, role: string, bio: string, imageUrl: string }) => {
+    if (!data.name || !data.role) {
       toast({
         title: "Missing information",
         description: "Please fill in at least the name and role fields.",
@@ -37,14 +35,30 @@ export default function TeamTab() {
       return
     }
 
-    setTeamMembers((prev) => [...prev, { id: Date.now(), ...newMember }])
-
-    setNewMember({ name: "", role: "", bio: "", imageUrl: "/placeholder.svg?height=200&width=200" })
-
-    toast({
-      title: "Team member added",
-      description: `${newMember.name} has been added to the team.`,
+    // Call the API to save the new team member
+    const response = await fetch("/api/admin/about/teamMember", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
+
+    if (response.ok) {
+      const newTeamMember = await response.json()
+      setTeamMembers((prev) => [...prev, newTeamMember])
+      reset()
+      toast({
+        title: "Team member added",
+        description: `${data.name} has been added to the team.`,
+      })
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to add the team member.",
+        variant: "destructive",
+      })
+    }
   }
 
   const removeTeamMember = (id: number) => {
@@ -88,27 +102,50 @@ export default function TeamTab() {
           <CardDescription>Add a new member to your team.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="memberName">Name</Label>
-              <Input id="memberName" name="name" value={newMember.name} onChange={handleNewMemberChange} />
+          <form onSubmit={handleSubmit(addTeamMember)}>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="memberName">Name</Label>
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Input id="memberName" {...field} />
+                  )}
+                />
+              </div>
+              <div>
+                <Label htmlFor="memberRole">Role</Label>
+                <Controller
+                  name="role"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Input id="memberRole" {...field} />
+                  )}
+                />
+              </div>
             </div>
-            <div>
-              <Label htmlFor="memberRole">Role</Label>
-              <Input id="memberRole" name="role" value={newMember.role} onChange={handleNewMemberChange} />
+            <div className="space-y-2 mt-4">
+              <Label htmlFor="memberBio">Bio</Label>
+              <Controller
+                name="bio"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Textarea id="memberBio" {...field} rows={4} />
+                )}
+              />
             </div>
-          </div>
-          <div className="space-y-2 mt-4">
-            <Label htmlFor="memberBio">Bio</Label>
-            <Textarea id="memberBio" name="bio" value={newMember.bio} onChange={handleNewMemberChange} rows={4} />
-          </div>
+            <CardFooter>
+              <Button type="submit">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Add Team Member
+              </Button>
+            </CardFooter>
+          </form>
         </CardContent>
-        <CardFooter>
-          <Button onClick={addTeamMember}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Team Member
-          </Button>
-        </CardFooter>
       </Card>
     </div>
   )

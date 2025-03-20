@@ -1,12 +1,32 @@
+"use client"
+
 import React from "react";
 import FooterForm from "../../components/configuration/FooterForm";
+import { useGetAdminConfigFooterQuery } from "@/store/api/Admin/adminConfiguration";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
-const Footer = () => {
+const FooterConfig = () => {
+  const { data: ConfigData, isLoading: Loading } =
+    useGetAdminConfigFooterQuery("");
+    
   return (
-    <div>
-      <FooterForm ConfigData={undefined} />
-    </div>
+    <>
+    {Loading ? (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <p className="loader"></p>
+      </div>
+    ) : (
+      <FooterForm ConfigData={ConfigData} />
+    )}
+    </>
   );
 };
 
-export default Footer;
+const FooterConfigEditor = () => (
+  <Provider store={store}>
+    <FooterConfig />
+  </Provider>
+);
+
+export default FooterConfigEditor;

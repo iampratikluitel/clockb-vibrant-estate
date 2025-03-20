@@ -25,25 +25,35 @@ export default function AdminAboutPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">About Page Management</h1>
-        <div className="flex gap-2">
-          {/* <Button variant="outline" onClick={() => setActiveTab("preview")}>
-            <Eye className="mr-2 h-4 w-4" />
-            Preview
-          </Button> */}
-          <Button onClick={saveChanges}>
-            <Save className="mr-2 h-4 w-4" />
-            Save All Changes
-          </Button>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-800">About Page Management</h1>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-4 mb-8">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="team">Team Members</TabsTrigger>
-          <TabsTrigger value="partners">Partners</TabsTrigger>
-          <TabsTrigger value="managed">Manage</TabsTrigger>
+        <TabsList className="grid grid-cols-4 mb-8 gap-4">
+          <TabsTrigger 
+            value="general" 
+            className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
+          >
+            General
+          </TabsTrigger>
+          <TabsTrigger 
+            value="team" 
+            className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
+          >
+            Team Members
+          </TabsTrigger>
+          <TabsTrigger 
+            value="partners" 
+            className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
+          >
+            Partners
+          </TabsTrigger>
+          <TabsTrigger 
+            value="managed" 
+            className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
+          >
+            Manage
+          </TabsTrigger>
         </TabsList>
 
         {/* Tab Components */}
@@ -59,7 +69,7 @@ export default function AdminAboutPage() {
           <PartnersTab />
         </TabsContent>
 
-        <TabsContent value="preview">
+        <TabsContent value="managed">
           <Manage />
         </TabsContent>
       </Tabs>

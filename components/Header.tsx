@@ -8,13 +8,13 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
   const handleLogin = () => {
-    router.push('/login')
-  }
+    router.push("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,37 +36,52 @@ const Header = () => {
           href="/"
           className="flex items-center space-x-3 text-estates-primary hover:opacity-80 transition-all duration-300 group"
         >
-          <Building2 className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" />
-          <span className="text-xl font-bold tracking-tight">Project Estates</span>
+          <img
+            className="w-8 h-8 group-hover:scale-110 transition-transform duration-30"
+            src="logo/project-estate.png"
+            alt="nss-logo-png"
+          />
+          {/* <Building2 className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" /> */}
+          <span className="text-xl font-bold tracking-tight">
+            Project Estates
+          </span>
         </Link>
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-10">
-          <NavLink href="/" isActive={pathname === "/"}>Home</NavLink>
-          <NavLink href="/about" isActive={pathname === "/about"}>About</NavLink>
-          <NavLink href="/project-description" isActive={pathname === "/project-description"}>Project Description</NavLink>
-          <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
-          <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
-          <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
+          <NavLink href="/" isActive={pathname === "/"}>
+            Home
+          </NavLink>
+          <NavLink href="/about" isActive={pathname === "/about"}>
+            About
+          </NavLink>
+          <NavLink
+            href="/project-description"
+            isActive={pathname === "/project-description"}
+          >
+            Project Description
+          </NavLink>
+          <NavLink href="/faqs" isActive={pathname === "/faqs"}>
+            FAQs
+          </NavLink>
+          <NavLink
+            href="/investor-relations"
+            isActive={pathname === "/investor-relations"}
+          >
+            Investor Relations
+          </NavLink>
+          <NavLink href="/contact" isActive={pathname === "/contact"}>
+            Contact
+          </NavLink>
           {/* <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
             <Shield className="w-4 h-4 mr-1" /> Admin
           </NavLink> */}
         </div>
 
         {/* CTA Button */}
-        <Button
-          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-        >
+        <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
           <Download className="w-4 h-4 mr-2 animate-bounce" />
           Download Brochure
-        </Button>
-
-        <Button
-          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-          onClick={(handleLogin)}
-        >
-          {/* <Download className="w-4 h-4 mr-2 animate-bounce" /> */}
-          login
         </Button>
 
         {/* Mobile Menu Button */}

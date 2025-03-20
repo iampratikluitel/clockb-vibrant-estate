@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
+import { useAdminAddUpdateFooterConfigMutation } from "@/store/api/Admin/adminConfiguration";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { paths } from "@/lib/paths";
 
 const socialLink = z.object({
   facebook: z.string().optional(),
@@ -47,6 +51,10 @@ interface props {
 
 const FooterForm = ({ ConfigData }: props) => {
   const [Loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [AddUpdateFooterConfig] = useAdminAddUpdateFooterConfigMutation();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -64,10 +72,73 @@ const FooterForm = ({ ConfigData }: props) => {
       },
     },
   });
+
+  // async function onSubmit(data: z.infer<typeof FormSchema>) {
+  //   try {
+  //     setLoading(true);
+  //     console.log("FormData:", data)
+  //     if (!data.logo) {
+  //       toast.error("Please select Logo");
+  //       return;
+  //     }
+  //     let ImageUrl = null;
+  //     if (data.logo != ConfigData?.logo) {
+  //       ImageUrl = await uploadToMinIO(data.logo, "footerconfig");
+  //       if (ImageUrl === "") {
+  //         toast.error("Image Upload Failed Please try again");
+  //         return;
+  //       }
+  //     }
+  //     const formData = {
+  //       _id: ConfigData?._id,
+  //       ...data,
+  //       logo: ImageUrl ?? ConfigData?.logo,
+  //     };
+  //     const response = await AddUpdateFooterConfig({
+  //       ...formData,
+  //     }).unwrap();
+  //     if (response) {
+  //       toast.success(`${response.message}`);
+  //       setLoading(false);
+  //       router.push(paths.admin.configuration);
+  //     } else {
+  //       toast.error(`Couldn't Update`);
+  //       setLoading(false);
+  //     }
+  //   } catch (error) {
+  //     toast.error(`Failed`);
+  //     setLoading(false);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+
+  async function handleSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`/api/admin/configuration/footer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit");
+
+      toast.success("Configuration updated successfully.");
+    } catch (error) {
+      toast.error("Failed to update configuration. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <Form {...form}>
       <form
-        // onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="w-full space-y-6 p-4 bg-gray-100"
       >
         <h1 className="font-semibold text-2xl">Footer Configuration</h1>

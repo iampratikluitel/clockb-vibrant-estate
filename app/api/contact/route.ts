@@ -5,6 +5,7 @@ import { connectDb } from "@/lib/mongodb";
 export async function POST(request: Request) {
   try {
     await connectDb();
+    console.log("Contact api mongodb connected")
     const body = await request.json();
     console.log("Request Body:", body);
 
