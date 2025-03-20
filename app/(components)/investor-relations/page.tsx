@@ -355,7 +355,7 @@ const InvestmentRelations = () => {
           </div>
 
           {/* Institutional Investors */}
-          <div className="max-w-6xl mx-auto mt-8 bg-estates-gray-100 rounded-xl p-8 shadow-md border border-estates-gray-200">
+          {/* <div className="max-w-6xl mx-auto mt-8 bg-estates-gray-100 rounded-xl p-8 shadow-md border border-estates-gray-200">
             <div className="flex items-center mb-6">
               <div className="w-12 h-12 rounded-lg bg-estates-primary/10 flex items-center justify-center mr-4">
                 <Building className="h-6 w-6 text-estates-primary" />
@@ -373,9 +373,13 @@ const InvestmentRelations = () => {
               Still Have Questions? Contact Us Today!
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
-          </div>
+          </div> */}
+
         </div>
       </section>
+
+
+      
 
       {/* Investment Team Section */}
       <section className="py-16 bg-estates-gray-100">

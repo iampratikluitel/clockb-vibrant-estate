@@ -276,32 +276,7 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4 justify-center">
-                <Button
-                  variant="cta"
-                  size="xl"
-                  className="bg-white text-estates-primary hover:bg-white/90"
-                >
-                  <Phone className="w-5 h-5" />
-                  Book a Consultation
-                </Button>
-                <Button
-                  variant="cta"
-                  size="xl"
-                  className="border border-white bg-transparent hover:bg-white/10"
-                >
-                  <Download className="w-5 h-5" />
-                  Download Brochure
-                </Button>
-                <Button
-                  variant="cta"
-                  size="xl"
-                  className="border border-white bg-transparent hover:bg-white/10"
-                >
-                  <MapPin className="w-5 h-5" />
-                  Visit Project Site
-                </Button>
-              </div>
+
             </div>
           </div>
         </section>
