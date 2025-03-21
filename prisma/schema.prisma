@@ -10,7 +10,6 @@ datasource db {
 
 enum UserType {
   admin
-  superadmin
 }
 
 model User {

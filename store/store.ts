@@ -3,18 +3,21 @@ import { adminConfigurationApi } from "./api/Admin/adminConfiguration";
 import { setupListeners } from "@reduxjs/toolkit/query"; 
 import { TypedUseSelectorHook, useSelector } from "react-redux"; 
 import { publicConfigurationApi } from "./api/Public/publicConfiguration";
+import { publicFunctionsApi } from "./api/Public/publicFunctions";
 
 export const store = configureStore({
   reducer: {
     [adminConfigurationApi.reducerPath]: adminConfigurationApi.reducer,
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
+    [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
+
   },
   devTools: true,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
     adminConfigurationApi.middleware,
     publicConfigurationApi.middleware,
-
+    publicFunctionsApi.middleware,
   ),
 });
 

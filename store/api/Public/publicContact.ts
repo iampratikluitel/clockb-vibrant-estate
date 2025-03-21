@@ -8,13 +8,13 @@ export const publicContactApi = createApi({
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
-    getAllAdminContact: builder.query<Contact[], string>({
+    getAllPublicContact: builder.query<Contact[], string>({
       query: () => `public/contact`,
       providesTags: ["Public Contact"],
     }),
   }),
 });
 
-export const {
-    useGetAllPublicContactQuery,
-} = publicContactApi;
+// export const {
+//     useGetAllPublicContactQuery,
+// } = publicContactApi;
