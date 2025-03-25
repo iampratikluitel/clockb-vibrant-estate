@@ -5,8 +5,16 @@ export interface Member {
   image: string;
 }
 
+export interface Partner {
+  name: string;
+  role: string;
+  description: string;
+  logo: string;
+}
+
 export interface Brochure {
-  id: string;
+  brochure?: string;
+  name: string;
   description: string;
 }
 export interface FAQTYPE {
@@ -62,4 +70,50 @@ export interface Contact {
   email: string;
   subject: string;
   message: string;
+}
+
+export interface LandingPage{
+  name: string,
+    description: string,
+    backgroundImage: string,
+
+    card1name: string,
+    card1description: string,
+    card2name: string,
+    card2description: string,
+    card3name: string,
+    card3description: string,
+
+    card4icon: string,
+    card4name: string,
+    card4description: string,
+    card5icon: string,
+    card5name: string,
+    card5description: string,
+    card6icon: string,
+    card6name: string,
+    card6description: string,
+
+    card7icon: string,
+    card7name: string,
+    card7description: string,
+    card8icon: string,
+    card8name: string,
+    card8description: string,
+    card9icon: string,
+    card9name: string,
+    card9description: string,
+    card10icon: string,
+    card10name: string,
+    card10description: string,
+
+    card11icon: string,
+    card11name: string,
+    card11description: string,
+    card12icon: string,
+    card12name: string,
+    card12description: string,
+    card13icon: string,
+    card13name: string,
+    card13description: string,
 }

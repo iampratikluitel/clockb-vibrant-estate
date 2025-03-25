@@ -38,7 +38,6 @@ const LoginForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof registerSchema>) {
-    console.log("values",values)
     try {
       await login(values, callbackUrl).then((response) => {
         if(!response){

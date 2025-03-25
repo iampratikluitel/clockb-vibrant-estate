@@ -1,19 +1,18 @@
-import React from 'react'
-import PartnerTable from './partner-table'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
+import TeamMemberTable from "./team-member-table";
+import Link from "next/link";
 
-export default function PartnerTab() {
+export default function TeamTab() {
   return (
     <div>
       <div className="flex justify-end">
         <Link href="/admin/faqs/add" className="self-end">
           <Button variant="default" className="m-4">
-            Add Partner
+            Add Member
           </Button>
         </Link>
       </div>
-      <PartnerTable />
+      <TeamMemberTable />
     </div>
-  )
+  );
 }

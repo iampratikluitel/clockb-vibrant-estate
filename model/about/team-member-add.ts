@@ -14,9 +14,9 @@ const teamMemberSchema = new Schema({
 
 let TeamMember: Model<any>;
 try {
-  TeamMember = models.Testimonials || model('TeamMember', teamMemberSchema, 'TeamMember');
+  TeamMember = models.TeamMember || model('TeamMember', teamMemberSchema, 'TeamMember');
 } catch (error) {
-  TeamMember = model('Testimonials', teamMemberSchema, 'Testimonials');
+  TeamMember = model('TeamMember', teamMemberSchema, 'TeamMember');
 }
 
 export default TeamMember;

@@ -1,82 +1,60 @@
-import { NextRequest, NextResponse } from "next/server";
+import { currentUser } from "@/lib/auth";
+import { BUCKET_NAME } from "@/lib/constants";
+import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
 import brochureConfiguration from "@/model/configuration/brochureConfiguration";
-import mongoose from "mongoose";
-import { GridFSBucket } from "mongodb";
+import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest) => {
+export const POST = async (request: NextRequest) => {
+  console.log("Running POST request: BROCHURE");
+
+  const user = await currentUser();
+  console.log("user", user)
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
+    const data = await request.json();
     await connectDb();
-    console.log("mongodb connected for brochure");
 
-    const data = await req.formData();
-    const file = data.get("brochure") as File;
-    const description = data.get("description") as string;
+    let responseMessage = "Added";
 
-    console.log("Received file:", file);
-    console.log("Received description:", description);
+    if (data?._id) {
+      const existingConfig = await brochureConfiguration.findById(data._id);
 
-    // Validate file type and description
-    if (!file || !description) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-    }
-
-    if (file.type !== "application/pdf") {
-      return NextResponse.json({ error: "Invalid file type. Only PDF is allowed." }, { status: 400 });
-    }
-
-    // Convert file to Buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Ensure MongoDB connection
-    const db = mongoose.connection.db;
-    if (!db) {
-      throw new Error("Database connection is not established");
-    }
-
-    // GridFS Bucket
-    const bucket = new GridFSBucket(db, { bucketName: "brochures" });
-
-    // Upload the file to GridFS and wait for completion
-    return new Promise((resolve, reject) => {
-      const uploadStream = bucket.openUploadStream(file.name, {
-        contentType: "application/pdf",
-      });
-
-      uploadStream.end(buffer);
-
-      uploadStream.on("finish", async () => {
-        try {
-          // Create the configuration entry in the database
-          await brochureConfiguration.create({
-            description,
-            fileId: uploadStream.id,
-            filename: file.name,
-          });
-          resolve(NextResponse.json({ message: "Uploaded successfully" }, { status: 201 }));
-        } catch (err) {
-          reject(NextResponse.json({ error: (err as Error).message }, { status: 500 }));
+      if (existingConfig) {
+        // ✅ Check if the brochure is changed and delete old file
+        if (existingConfig.brochure && existingConfig.brochure !== data.brochure) {
+          await minioClient.removeObject(BUCKET_NAME, existingConfig.brochure);
         }
-      });
 
-      uploadStream.on("error", (err) => {
-        reject(NextResponse.json({ error: err.message }, { status: 500 }));
-      });
-    });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+        await brochureConfiguration.findByIdAndUpdate(data._id, data, { new: true });
+        responseMessage = "Updated";
+      } else {
+        await new brochureConfiguration(data).save();
+      }
+    } else {
+      await new brochureConfiguration(data).save();
+    }
+
+    return NextResponse.json({ message: responseMessage }, { status: 200 });
+  } catch (error) {
+    console.error("Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 };
 
 export const GET = async () => {
-  console.log("Running GET request: Get Landing Configuration");
+  console.log("Running GET request: Get Brochure");
   try {
     await connectDb();
     const data = await brochureConfiguration.findOne();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+    console.error("Error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 };

@@ -20,6 +20,8 @@ import { useAdminAddUpdateFooterConfigMutation } from "@/store/api/Admin/adminCo
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { paths } from "@/lib/paths";
+import { MINIOURL } from "@/lib/constants";
+import { uploadToMinIO } from "@/lib/helper";
 
 const socialLink = z.object({
   facebook: z.string().optional(),
@@ -58,6 +60,7 @@ const FooterForm = ({ ConfigData }: props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      logo: ConfigData?.logo ? `${MINIOURL}${ConfigData?.logo}` : null,
       email: ConfigData?.email ?? "",
       about: ConfigData?.about ?? "",
       address: ConfigData?.address ?? "",
@@ -73,56 +76,35 @@ const FooterForm = ({ ConfigData }: props) => {
     },
   });
 
-  // async function onSubmit(data: z.infer<typeof FormSchema>) {
-  //   try {
-  //     setLoading(true);
-  //     console.log("FormData:", data)
-  //     if (!data.logo) {
-  //       toast.error("Please select Logo");
-  //       return;
-  //     }
-  //     let ImageUrl = null;
-  //     if (data.logo != ConfigData?.logo) {
-  //       ImageUrl = await uploadToMinIO(data.logo, "footerconfig");
-  //       if (ImageUrl === "") {
-  //         toast.error("Image Upload Failed Please try again");
-  //         return;
-  //       }
-  //     }
-  //     const formData = {
-  //       _id: ConfigData?._id,
-  //       ...data,
-  //       logo: ImageUrl ?? ConfigData?.logo,
-  //     };
-  //     const response = await AddUpdateFooterConfig({
-  //       ...formData,
-  //     }).unwrap();
-  //     if (response) {
-  //       toast.success(`${response.message}`);
-  //       setLoading(false);
-  //       router.push(paths.admin.configuration);
-  //     } else {
-  //       toast.error(`Couldn't Update`);
-  //       setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     toast.error(`Failed`);
-  //     setLoading(false);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
-
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
     setIsSubmitting(true);
 
     try {
+      setLoading(true);
+      if (!data.logo) {
+        console.log("Logo data:", data.logo); 
+        toast.error("Please select Logo");
+        return;
+      }
+      let ImageUrl = null;
+      if (data.logo != `${MINIOURL}${ConfigData?.logo}`) {
+        ImageUrl = await uploadToMinIO(data.logo, "footer");
+        if (ImageUrl === "") {
+          toast.error("Image Upload Failed Please try again");
+          return;
+        }
+      }
+      const formData = {
+        _id: ConfigData?._id,
+        ...data,
+        logo: ImageUrl ?? ConfigData?.logo,
+      };
       const response = await fetch(`/api/admin/configuration/footer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) throw new Error("Failed to submit");

@@ -1,27 +1,24 @@
 import { currentUser } from "@/lib/auth";
 import { connectDb } from "@/lib/mongodb";
-import Main from "@/model/about/main";
-import { NextResponse } from "next/server";
+import InvestorMainModel from "@/model/investor-relation/main";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export const POST = async (request: NextRequest) => {
   const user = await currentUser();
-  try {
-    await connectDb();
-    const body = await request.json();
 
+  try {
+    const data = await request.json();
+    await connectDb();
     if (user) {
-      const newMain = new Main(body);
-      await newMain.save();
-  
+      const newInvestorWork = new InvestorMainModel(data);
+      await newInvestorWork.save();
+
       return NextResponse.json(
-        { success: true, data: newMain },
+        { success: true, data: newInvestorWork },
         { status: 201 }
       );
     } else {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   } catch (error) {
     console.error("Error creating Contact", error);
@@ -30,4 +27,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+};

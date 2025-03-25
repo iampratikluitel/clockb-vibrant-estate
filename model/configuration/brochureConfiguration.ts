@@ -1,10 +1,12 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const BrochureSchema = new mongoose.Schema({
-    description: { type: String, required: true },
-    fileId: { type: mongoose.Schema.Types.ObjectId, required: true },
-    filename: { type: String, requires: true },
-    createdAt: { type: Date, default: Date.now },
+const brochureSchema = new Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  brochure: { type: String, required: true }, // URL or filename of the brochure
 });
 
-export default mongoose.models.Brochure || mongoose.model("Brochure", BrochureSchema);
+// Check if the model is already compiled and avoid recompiling
+const Brochure = mongoose.models.BrochureConfiguration || mongoose.model('BrochureConfiguration', brochureSchema);
+
+export default Brochure;

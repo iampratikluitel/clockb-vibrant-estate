@@ -17,7 +17,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import { Card, CardContent } from "@/components/ui/card";
-import { Team } from "@/lib/types";
+import { Member } from "@/lib/types";
 
 const FormSchema = z.object({
   name: z.string().min(2, {
@@ -37,12 +37,11 @@ interface TeamData {
 
 interface Props {
   type: "Add" | "Edit";
-  ExistingDetail?: Team | null;
+  ExistingDetail?: Member | null;
 }
 
 const AboutConfigForm: React.FC<Props> = ({ type, ExistingDetail }) => {
   const [heading, setHeading] = useState("About Project Etates");
-  const [backgroundImage, setBackgroundImage] = useState("");
   const [content, setContent] = useState(
     "This is the default content for the landing page."
   );

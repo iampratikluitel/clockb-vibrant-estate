@@ -1,17 +1,5 @@
 import { z } from "zod";
 
-const contentSchema = z.object({
-    id: z.string().optional(),
-    title: z.string().min(2, {
-        message: "Name must be at least 2 characters.",
-    }),
-    description: z.string().min(2, {
-        message: "description must be at least 2 characters.",
-    }),
-    link: z.string().url().min(1, "Link is required"),
-    image:z.any()
-});
-
 export const LandingPageSchema = z.object({
     name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
@@ -20,11 +8,19 @@ export const LandingPageSchema = z.object({
     description: z.string().min(2, {
         message: "Name must be at least 2 characters.",
     }),
+
+    backgrounImage:z.any(),
     
     card4icon: z.any(),
     card5icon: z.any(),
     card6icon: z.any(),
     card7icon: z.any(),
+    card8icon: z.any(),
+    card9icon: z.any(),
+    card10icon: z.any(),
+    card11icon: z.any(),
+    card12icon: z.any(),
+    card13icon: z.any(),
     
     card1name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
@@ -54,6 +50,15 @@ export const LandingPageSchema = z.object({
         message: "Name must be at least 2 characters.",
     }),
     card10name: z.string().min(2, {
+        message: "Name must be at least 2 characters.",
+    }),
+    card11name: z.string().min(2, {
+        message: "Name must be at least 2 characters.",
+    }),
+    card12name: z.string().min(2, {
+        message: "Name must be at least 2 characters.",
+    }),
+    card13name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
     }),
 
@@ -87,6 +92,13 @@ export const LandingPageSchema = z.object({
     card10description: z.string().min(2, {
         message: "description must be at least 2 characters.",
     }),
-
-    backgrounImage:z.any(),
+    card11description: z.string().min(2, {
+        message: "description must be at least 2 characters.",
+    }),
+    card12description: z.string().min(2, {
+        message: "description must be at least 2 characters.",
+    }),
+    card13description: z.string().min(2, {
+        message: "description must be at least 2 characters.",
+    }),
 })

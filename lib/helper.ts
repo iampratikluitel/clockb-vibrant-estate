@@ -13,6 +13,7 @@ export async function uploadToMinIO(image: File, folder: string) {
   let uploadedFileName = "";
   const fileData = new FormData();
   fileData.append("file", image);
+  console.log("Uploading file:", fileData); // Log the file
   fileData.append("uploadType", folder);
   try {
     const minoResponse = await axios.post("/api/uploadtominio", fileData);

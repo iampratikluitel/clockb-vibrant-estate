@@ -45,7 +45,6 @@ export async function POST(request: NextRequest) {
           "Content-Type": contentType,
         }
       );
-
       console.log(`File uploaded to MinIO: ${objectName}`);
       uploadedFileNames.push(objectName);
     }

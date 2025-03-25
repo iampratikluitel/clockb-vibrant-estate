@@ -1,13 +1,19 @@
-import mongoose from "mongoose"
+import mongoose, { Model, model, models } from "mongoose"
 
 const partnerSchema = new mongoose.Schema(
     {
       name: String,
-      image: String,
       logo: String,
       description: String,
     }, {strict: false}
 );
 
-const Partner = mongoose.model("Partner", partnerSchema)
+let Partner: Model<any>;
+try{
+  Partner = models.Partner || model("Partner", partnerSchema, "PartnerSchema");
+} catch (error){
+  Partner = model(
+    "Partner", partnerSchema,"Partner"
+  );
+}
 export default Partner;

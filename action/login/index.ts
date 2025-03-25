@@ -27,7 +27,6 @@ export const login = async (
     return { error: "You cannot login. Contact Administration!" };
   }
   const DEFAULT_REDIRECT_URL = "/admin";
-  console.log("redirect", DEFAULT_REDIRECT_URL);
 
   try {
     await signIn("credentials", {

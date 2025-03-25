@@ -2,14 +2,10 @@
 
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
-import { Eye, Save } from "lucide-react"
 import GeneralTab from "./general-tab"
-import TeamTab from "./team-tab"
+import TeamTab from "./team-member-tab"
 import PartnersTab from "./partner-tab"
-// import PreviewTab from "./PreviewTab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Manage from "./manage-investment-circle"
 
 export default function AdminAboutPage() {
   const { toast } = useToast()
@@ -29,7 +25,7 @@ export default function AdminAboutPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid grid-cols-4 mb-8 gap-4">
+        <TabsList className="grid grid-cols-3 mb-8 gap-4">
           <TabsTrigger 
             value="general" 
             className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
@@ -48,12 +44,6 @@ export default function AdminAboutPage() {
           >
             Partners
           </TabsTrigger>
-          <TabsTrigger 
-            value="managed" 
-            className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
-          >
-            Manage
-          </TabsTrigger>
         </TabsList>
 
         {/* Tab Components */}
@@ -67,10 +57,6 @@ export default function AdminAboutPage() {
 
         <TabsContent value="partners">
           <PartnersTab />
-        </TabsContent>
-
-        <TabsContent value="managed">
-          <Manage />
         </TabsContent>
       </Tabs>
     </div>

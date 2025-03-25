@@ -1,31 +1,53 @@
 "use client";
 
 import React from "react";
-import LandingForm from "../../components/configuration/landingForm";
-import { Provider } from "react-redux";
-import { store } from "@/store/store";
+import LandingPageConfigForm from "../../components/configuration/landingPageConfigForm";
 import { useGetAdminConfigLandingPageQuery } from "@/store/api/Admin/adminConfiguration";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { paths } from "@/lib/paths";
 
-const LandingPageEditorContent = () => {
+const LandingPageConfig = () => {
   const { data: ConfigData, isLoading: Loading } =
     useGetAdminConfigLandingPageQuery("");
-    console.log(ConfigData)
-    
+  console.log(ConfigData);
+
   return (
     <div>
-      <h1 className="flex text-4xl font-semibold pb-4 justify-center items-center">
-        Landing Page Configuration
-      </h1>
-      <LandingForm ConfigData={ConfigData} />
-    </div>
+      <Breadcrumb className="p-4">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={paths.admin.dashboard}>
+              Dashbord
+            </BreadcrumbLink>
+            <BreadcrumbSeparator />
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={paths.admin.configuration}>
+              Configuration
+            </BreadcrumbLink>
+            <BreadcrumbSeparator />
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <BreadcrumbPage>LandingPage</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      {Loading ? (
+        <div className="h-[100vh] w-full flex justify-center items-center">
+          <p className="loader"></p>
+        </div>
+      ) : (
+        <LandingPageConfigForm ConfigData={ConfigData} />
+      )}
+      </div>
   );
 };
 
-// Wrap the entire page with Provider
-const LandingPageEditor = () => (
-  <Provider store={store}>
-    <LandingPageEditorContent />
-  </Provider>
-);
-
-export default LandingPageEditor;
+export default LandingPageConfig;
