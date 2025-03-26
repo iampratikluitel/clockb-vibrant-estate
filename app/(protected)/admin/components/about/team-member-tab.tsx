@@ -6,7 +6,7 @@ export default function TeamTab() {
   return (
     <div>
       <div className="flex justify-end">
-        <Link href="/admin/faqs/add" className="self-end">
+        <Link href="/admin/about/addMember" className="self-end">
           <Button variant="default" className="m-4">
             Add Member
           </Button>

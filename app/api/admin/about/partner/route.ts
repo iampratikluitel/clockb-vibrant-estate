@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       if (data?._id) {
         const existingConfig = await Partner.findById(data._id);
         if (existingConfig) {
-          if (existingConfig.logo && existingConfig.logo !== data.logog) {
+          if (existingConfig.logo && existingConfig.logo !== data.logo) {
             await minioClient.removeObject(BUCKET_NAME, existingConfig.logo);
           }
           await Partner.findByIdAndUpdate(data._id, data, { new: true });

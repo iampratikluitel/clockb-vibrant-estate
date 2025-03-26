@@ -3,259 +3,271 @@
 import type React from "react";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MINIOURL } from "@/lib/constants";
+import { uploadToMinIO } from "@/lib/helper";
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
-import { BarChart3, TrendingUp, PieChart } from "lucide-react";
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
+import { Button } from "@/components/ui/button";
 
-// Available icons for selection
-const availableIcons = [
-  { name: "BarChart3", component: <BarChart3 className="h-6 w-6" /> },
-  { name: "TrendingUp", component: <TrendingUp className="h-6 w-6" /> },
-  { name: "PieChart", component: <PieChart className="h-6 w-6" /> },
-];
+const FormSchema = z.object({
+  card1icon: z.any(),
+  card2icon: z.any(),
+  card3icon: z.any(),
 
-export default function KeyHighlightsEditor() {
-  const [highlights, setHighlights] = useState([
-    {
-      id: 1,
-      title: "Strong Financial Growth",
-      icon: "BarChart3",
-      points: [
-        "20% year-over-year revenue growth",
-        "Expanding profit margins",
-        "Consistent dividend payments",
-      ],
+  card1name: z.string().min(2, {
+    message: "Name must be at least 2 character",
+  }),
+  card2name: z.string().min(2, {
+    message: "Name must be at least 2 character",
+  }),
+  card3name: z.string().min(2, {
+    message: "Name must be at least 2 character",
+  }),
+
+  card1description: z.string().min(2, {
+    message: "Description must be at least 2 character",
+  }),
+  card2description: z.string().min(2, {
+    message: "Description must be at least 2 character",
+  }),
+  card3description: z.string().min(2, {
+    message: "Description must be at least 2 character",
+  }),
+});
+
+interface props {
+  ConfigData: any | undefined;
+}
+
+export default function KeyHighlightsEditor({ ConfigData }: props) {
+  const [Loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      card1icon: ConfigData?.card1icon
+        ? `${MINIOURL}${ConfigData?.card1icon}`
+        : null,
+      card2icon: ConfigData?.card2icon
+        ? `${MINIOURL}${ConfigData?.card2icon}`
+        : null,
+      card3icon: ConfigData?.card3icon
+        ? `${MINIOURL}${ConfigData?.card3icon}`
+        : null,
+
+      card1name: ConfigData?.card1name ?? "",
+      card2name: ConfigData?.card2name ?? "",
+      card3name: ConfigData?.card3name ?? "",
+
+      card1description: ConfigData?.card1description ?? "",
+      card2description: ConfigData?.card2description ?? "",
+      card3description: ConfigData?.card3description ?? "",
     },
-    {
-      id: 2,
-      title: "Market Leadership",
-      icon: "TrendingUp",
-      points: [
-        "Top 3 market position",
-        "Growing market share",
-        "Industry recognition",
-      ],
-    },
-    {
-      id: 3,
-      title: "Strategic Investments",
-      icon: "PieChart",
-      points: [
-        "Diversified portfolio",
-        "Focus on emerging markets",
-        "Sustainable long-term growth",
-      ],
-    },
-  ]);
+  });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("1");
-  const [newPoint, setNewPoint] = useState("");
-
-  const handleTitleChange = (id: number, value: string) => {
-    setHighlights((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, title: value } : item))
-    );
-  };
-
-  const handleIconChange = (id: number, value: string) => {
-    setHighlights((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, icon: value } : item))
-    );
-  };
-
-  const handlePointChange = (id: number, index: number, value: string) => {
-    setHighlights((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const newPoints = [...item.points];
-          newPoints[index] = value;
-          return { ...item, points: newPoints };
-        }
-        return item;
-      })
-    );
-  };
-
-  const addPoint = (id: number) => {
-    if (!newPoint.trim()) return;
-
-    setHighlights((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          return { ...item, points: [...item.points, newPoint] };
-        }
-        return item;
-      })
-    );
-    setNewPoint("");
-  };
-
-  const removePoint = (id: number, index: number) => {
-    setHighlights((prev) =>
-      prev.map((item) => {
-        if (item.id === id) {
-          const newPoints = [...item.points];
-          newPoints.splice(index, 1);
-          return { ...item, points: newPoints };
-        }
-        return item;
-      })
-    );
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast({
-        title: "Changes saved",
-        description:
-          "Your changes to the key highlights have been saved successfully.",
-      });
+      setLoading(true);
+
+      let ImageUrl1 = null;
+      let ImageUrl2 = null;
+      let ImageUrl3 = null;
+
+      if (data.card1icon != `${MINIOURL}${ConfigData?.card1icon}`) {
+        ImageUrl1 = await uploadToMinIO(data.card1icon, "landingpageConfig");
+        if (ImageUrl1 === "") {
+          toast.error("Icon 4 upload failed Please try again");
+          return;
+        }
+      }
+
+      if (data.card2icon != `${MINIOURL}${ConfigData?.card2icon}`) {
+        ImageUrl2 = await uploadToMinIO(data.card2icon, "landingpageConfig");
+        if (ImageUrl2 === "") {
+          toast.error("Icon 4 upload failed Please try again");
+          return;
+        }
+      }
+
+      if (data.card3icon != `${MINIOURL}${ConfigData?.card3icon}`) {
+        ImageUrl3 = await uploadToMinIO(data.card3icon, "landingpageConfig");
+        if (ImageUrl3 === "") {
+          toast.error("Icon 1 upload failed Please try again");
+          return;
+        }
+      }
+
+      const formData = {
+        ...data,
+        card1icon: ImageUrl1 ?? ConfigData?.card1icon,
+        card2icon: ImageUrl2 ?? ConfigData?.card2icon,
+        card3icon: ImageUrl3 ?? ConfigData?.card3icon,
+      };
+
+      const response = await fetch(
+        `/api/admin/investor-relations/key-highlight`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to submit");
+
+      toast.success("Configuration updated successfully.");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save changes. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to update configuration. Please try again.");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
-  };
-
-  const renderIconPreview = (iconName: string) => {
-    const icon = availableIcons.find((i) => i.name === iconName);
-    return icon ? icon.component : null;
-  };
-
+  }
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Edit Key Highlights</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            {highlights.map((highlight) => (
-              <TabsTrigger key={highlight.id} value={highlight.id.toString()}>
-                Card {highlight.id}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-
-          {highlights.map((highlight) => (
-            <TabsContent
-              key={highlight.id}
-              value={highlight.id.toString()}
-              className="space-y-4 mt-4"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-4 border rounded-md">
-                  {renderIconPreview(highlight.icon)}
-                </div>
-
-                <div className="flex-1 space-y-2">
-                  <Label htmlFor={`title-${highlight.id}`}>Title</Label>
-                  <Input
-                    id={`title-${highlight.id}`}
-                    value={highlight.title}
-                    onChange={(e) =>
-                      handleTitleChange(highlight.id, e.target.value)
-                    }
-                    placeholder="Enter title"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor={`icon-${highlight.id}`}>Icon</Label>
-                <Select
-                  value={highlight.icon}
-                  onValueChange={(value) =>
-                    handleIconChange(highlight.id, value)
-                  }
-                >
-                  <SelectTrigger id={`icon-${highlight.id}`}>
-                    <SelectValue placeholder="Select an icon" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {availableIcons.map((icon) => (
-                      <SelectItem key={icon.name} value={icon.name}>
-                        <div className="flex items-center gap-2">
-                          {icon.component}
-                          <span>{icon.name}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Points</Label>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <Card>
+          <CardTitle className="text-2xl font-semibold m-4">
+            Key HIghlights
+          </CardTitle>
+          <CardContent>
+            <div className="flex w-full gap-4">
+              <div className="w-1/3 space-y-2">
                 <div className="space-y-2">
-                  {highlight.points.map((point, index) => (
-                    <div key={index} className="flex gap-2">
-                      <Input
-                        value={point}
-                        onChange={(e) =>
-                          handlePointChange(highlight.id, index, e.target.value)
-                        }
-                        placeholder={`Point ${index + 1}`}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="icon"
-                        onClick={() => removePoint(highlight.id, index)}
-                      >
-                        ✕
-                      </Button>
-                    </div>
-                  ))}
+                  <h1 className="font-semibold text-2xl">Card 1:</h1>
+                  <FormField
+                    control={form.control}
+                    name="card1name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="card1description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <SCNSingleImagePicker
+                    name="Icon"
+                    variant="avatar"
+                    schemaName="card1icon"
+                  ></SCNSingleImagePicker>
                 </div>
               </div>
-
-              <div className="flex gap-2">
-                <Input
-                  value={newPoint}
-                  onChange={(e) => setNewPoint(e.target.value)}
-                  placeholder="Add new point"
-                />
-                <Button type="button" onClick={() => addPoint(highlight.id)}>
-                  Add
-                </Button>
+              <div className="w-1/3 space-y-2">
+                <div className="space-y-2">
+                  <h1 className="font-semibold text-2xl">Card 2:</h1>
+                  <FormField
+                    control={form.control}
+                    name="card2name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="card2description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <SCNSingleImagePicker
+                    name="Icon"
+                    variant="avatar"
+                    schemaName="card2icon"
+                  ></SCNSingleImagePicker>
+                </div>
               </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </CardContent>
-      <CardFooter>
-        <Button onClick={handleSubmit} disabled={isLoading}>
-          {isLoading ? "Saving..." : "Save All Changes"}
-        </Button>
-      </CardFooter>
-    </Card>
+              <div className="w-1/3 space-y-2">
+                <div className="space-y-2">
+                  <h1 className="font-semibold text-2xl">Card 3:</h1>
+                  <FormField
+                    control={form.control}
+                    name="card3name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="card3description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <SCNSingleImagePicker
+                    name="Icon"
+                    variant="avatar"
+                    schemaName="card3icon"
+                  ></SCNSingleImagePicker>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <div className="flex items-end justify-end pt-4">
+          {Loading ? (
+            <div className="loader"></div>
+          ) : (
+            <Button type="submit">Submit</Button>
+          )}
+        </div>
+      </form>
+    </Form>
   );
 }

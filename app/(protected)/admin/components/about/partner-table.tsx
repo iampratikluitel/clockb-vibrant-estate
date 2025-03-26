@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -7,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Member, Partner } from "@/lib/types";
+import { Partner } from "@/lib/types";
 import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
@@ -21,8 +23,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import router from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import AlertDialogBox from "../AlertDialogBox";
 import {
@@ -37,6 +38,9 @@ import { MINIOURL } from "@/lib/constants";
 
 export default function PartnerTable() {
   const [data, setData] = React.useState<Partner[]>([]);
+  const [loading, setLoading] = React.useState(true); // To handle loading state
+  const [error, setError] = React.useState<string | null>(null); // To handle errors
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -140,6 +144,26 @@ export default function PartnerTable() {
     },
   ];
 
+  useEffect(() => {
+    const fetchPartners = async () => {
+      try {
+        const response = await fetch("/api/admin/about/partner");
+        console.log("response", response);
+        const result = await response.json();
+        console.log("result", result);
+        if (response.ok) {
+          setData(result);
+        } else {
+          console.error("Failed to fetch partners:", result);
+        }
+      } catch (error) {
+        console.error("Error fetching partners:", error);
+      }
+    };
+
+    fetchPartners();
+  }, []);
+
   const table = useReactTable({
     data,
     columns,
@@ -159,12 +183,23 @@ export default function PartnerTable() {
     },
   });
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter member..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(e) => {
+            table.getColumn("name")?.setFilterValue(e.target.value);
+          }}
           className="max-w-sm"
         />
       </div>

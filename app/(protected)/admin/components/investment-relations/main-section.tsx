@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,92 +13,115 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function MainSectionEditor() {
-  const [formData, setFormData] = useState({
-    title: "Investor Relations",
-    subtitle: "Partner with us for growth and innovation",
-    description:
-      "Our investor relations program is designed to provide transparent and timely information to our investors and stakeholders.",
-  });
+// Define a Zod schema for form validation
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  subTitle: z.string().min(1, "Subtitle is required"),
+  description: z.string().min(1, "Description is required"),
+});
 
+type FormData = z.infer<typeof formSchema>;
+
+interface Props {
+  formData: FormData | undefined;
+}
+
+export default function MainSectionEditor({ formData }: Props) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // Use React Hook Form with Zod resolver for validation
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: formData?.title ?? "",
+      subTitle: formData?.subTitle ?? "",
+      description: formData?.description ?? "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  // Handle form submission
+  async function handleSubmit(data: FormData) {
+    setIsSubmitting(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      toast({
-        title: "Changes saved",
-        description:
-          "Your changes to the main section have been saved successfully.",
-      });
+      const response = await fetch(
+        `/api/admin/investor-relations/main-section`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to submit");
+
+      toast.success("Main-section updated successfully");
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to save changes. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to update");
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
-  };
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Edit Main Section</CardTitle>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
+              {...form.register("title")}
               placeholder="Enter title"
             />
+            {form.formState.errors.title && (
+              <p className="text-red-500">
+                {form.formState.errors.title.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="subtitle">Subtitle</Label>
             <Input
               id="subtitle"
-              name="subtitle"
-              value={formData.subtitle}
-              onChange={handleChange}
+              {...form.register("subTitle")}
               placeholder="Enter subtitle"
             />
+            {form.formState.errors.subTitle && (
+              <p className="text-red-500">
+                {form.formState.errors.subTitle.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
+              {...form.register("description")}
               placeholder="Enter description"
               rows={5}
             />
+            {form.formState.errors.description && (
+              <p className="text-red-500">
+                {form.formState.errors.description.message}
+              </p>
+            )}
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "Saving..." : "Save Changes"}
+          <Button type="submit" disabled={isLoading || isSubmitting}>
+            {isLoading || isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
         </CardFooter>
       </form>

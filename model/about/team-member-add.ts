@@ -1,22 +1,25 @@
-import { Schema, model, models, Model } from 'mongoose';
+import { Schema, model, models, Model } from "mongoose";
 
-
-const teamMemberSchema = new Schema({
-    name:String,
-    image: String,
-    role: String,
+const teamMemberSchema = new Schema(
+  {
+    name: String,
+    position: String,
     description: String,
+    image: String,
     postedDate: {
       type: Date,
       default: Date.now(),
     },
-}, { strict: false });
+  },
+  { strict: false }
+);
 
 let TeamMember: Model<any>;
 try {
-  TeamMember = models.TeamMember || model('TeamMember', teamMemberSchema, 'TeamMember');
+  TeamMember =
+    models.TeamMember || model("TeamMember", teamMemberSchema, "TeamMember");
 } catch (error) {
-  TeamMember = model('TeamMember', teamMemberSchema, 'TeamMember');
+  TeamMember = model("TeamMember", teamMemberSchema, "TeamMember");
 }
 
 export default TeamMember;

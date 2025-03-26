@@ -1,3 +1,5 @@
+"use client";
+
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -22,7 +24,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import router from "next/router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import AlertDialogBox from "../AlertDialogBox";
 import {
@@ -41,9 +43,20 @@ export default function TeamMemberTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  useEffect(() => {
+    const fetchMember = async () => {
+      console.log("fetchMember", fetchMember);
+      const res = await fetch("/api/admin/about/teamMember");
+      console.log("res", res);
+      const result = await res.json();
+      setData(result);
+      console.log("result", result);
+    };
+    fetchMember();
+  }, []);
 
   const columns: ColumnDef<Member>[] = [
     {
@@ -69,29 +82,29 @@ export default function TeamMemberTable() {
       enableHiding: false,
     },
     {
-          accessorKey: "name",
-          header: ({ column }) => {
-            return (
-              <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              >
-                Partner Name
-                <CaretSortIcon className="ml-2 h-4 w-4" />
-              </Button>
-            );
-          },
-          cell: ({ row }) => (
-            <div className="flex items-center gap-4">
-              <img
-                src={`${MINIOURL}${row.original.image}`}
-                alt=""
-                className="rounded-full h-12 w-12 object-cover"
-              />
-              <div className="capitalize">{row.getValue("name")}</div>
-            </div>
-          ),
-        },
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Partner Name
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => (
+        <div className="flex items-center gap-4">
+          <img
+            src={`${MINIOURL}${row.original.image}`}
+            alt=""
+            className="rounded-full h-12 w-12 object-cover"
+          />
+          <div className="capitalize">{row.getValue("name")}</div>
+        </div>
+      ),
+    },
     {
       accessorKey: "position",
       header: "Position",

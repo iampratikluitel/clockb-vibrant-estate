@@ -40,6 +40,11 @@ const configLinks = [
     path: "/admin/configuration/footer",
     description: "Edit footer links, design, and information.",
   },
+  {
+    name: "Logo",
+    path: "/admin/configuration/logo",
+    description: "Edit Logo of the Header",
+  },
 ];
 
 export default Configuration;

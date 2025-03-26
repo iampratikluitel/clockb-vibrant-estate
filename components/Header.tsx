@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
@@ -22,6 +23,23 @@ const Header = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchBrochureUrl = async () => {
+      try {
+        const response = await fetch("/api/public/configuration/brochure");
+        console.log("response", response);
+        const data = await response.json();
+
+        if (data?.brochure) {
+          setBrochureUrl(data.brochure);
+        }
+      } catch (error) {
+        console.error("Error fetching brochure:", error);
+      }
+    };
+    fetchBrochureUrl();
   }, []);
 
   return (
@@ -79,10 +97,26 @@ const Header = () => {
         </div>
 
         {/* CTA Button */}
-        <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
+        {/* <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
           <Download className="w-4 h-4 mr-2 animate-bounce" />
           Download Brochure
-        </Button>
+        </Button> */}
+
+        {brochureUrl ? (
+          <a
+            href={brochureUrl}
+            download
+            className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
+          >
+            <Download className="w-4 h-4 mr-2 animate-bounce" />
+            Download Brochure
+          </a>
+        ) : (
+          <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
+            <Download className="w-4 h-4 mr-2 animate-bounce" />
+            Download Brochure
+          </Button>
+        )}
 
         {/* Mobile Menu Button */}
         <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">

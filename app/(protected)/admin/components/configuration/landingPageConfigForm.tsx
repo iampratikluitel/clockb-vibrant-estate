@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   Form,
@@ -17,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useAdminAddUpdateLandingPageConfigMutation } from "@/store/api/Admin/adminConfiguration";
 import { uploadToMinIO } from "@/lib/helper";
 import { useRouter } from "next/navigation";
 import { paths } from "@/lib/paths";
@@ -140,7 +140,7 @@ const LandingPageConfigForm = ({ ConfigData }: props) => {
       if (data.card6icon != `${MINIOURL}${ConfigData?.card6icon}`) {
         ImageUrl3 = await uploadToMinIO(data.card6icon, "landingpageConfig");
         if (ImageUrl3 === "") {
-          toast.error("Icon 1 upload failed Please try again");
+          toast.error("Icon 6 upload failed Please try again");
           return;
         }
       }
@@ -170,7 +170,7 @@ const LandingPageConfigForm = ({ ConfigData }: props) => {
       }
 
       if (data.card10icon != `${MINIOURL}${ConfigData?.card10icon}`) {
-        ImageUrl7 = await uploadToMinIO(data.card6icon, "landingpageConfig");
+        ImageUrl7 = await uploadToMinIO(data.card10icon, "landingpageConfig");
         if (ImageUrl7 === "") {
           toast.error("Icon 1 upload failed Please try again");
           return;
@@ -178,7 +178,7 @@ const LandingPageConfigForm = ({ ConfigData }: props) => {
       }
 
       if (data.card11icon != `${MINIOURL}${ConfigData?.card11icon}`) {
-        ImageUrl8 = await uploadToMinIO(data.card6icon, "landingpageConfig");
+        ImageUrl8 = await uploadToMinIO(data.card11icon, "landingpageConfig");
         if (ImageUrl8 === "") {
           toast.error("Icon 1 upload failed Please try again");
           return;
@@ -218,20 +218,20 @@ const LandingPageConfigForm = ({ ConfigData }: props) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        toast.success(`${responseData.message}`);
+        toast.success("updated");
         setLoading(false);
         router.push(paths.admin.configuration);
       } else {
-        toast.error(`Couldn't Update`);
+        toast.error("Error");
         setLoading(false);
       }
     } catch (error) {
-      toast.error(`Failed`);
+      toast.error("failed");
       setLoading(false);
     } finally {
       setLoading(false);

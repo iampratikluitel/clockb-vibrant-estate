@@ -9,21 +9,26 @@ export const POST = async (request: NextRequest) => {
   console.log("Running POST request: Admin Add/Update LandingPage Config");
 
   const user = await currentUser();
+  console.log("Retrieved User:", user);
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const data = await request.json();
-    console.log
+    console.log("data", data);
     await connectDb();
     console.log("Landing page api mongodb connected");
 
     if (user) {
-      const existingConfig = await LandingConfiguration.findOne({
+      const existingConfig = await LandingConfiguration.findById({
         _id: data?._id,
       });
       if (existingConfig) {
         if (
           existingConfig.backgroundImage &&
-          existingConfig.backgrounImage != data.backgroundImage
+          existingConfig.backgroundImage != data.backgroundImage
         ) {
           await minioClient.removeObject(
             BUCKET_NAME,
@@ -104,26 +109,20 @@ export const POST = async (request: NextRequest) => {
             existingConfig.card13icon
           );
         }
-        await existingConfig.updateOne(data);
-        return NextResponse.json({ message: "Update" }, { status: 200 });
+        await LandingConfiguration.findByIdAndUpdate(data._id, data, {
+          new: true,
+        });
       } else {
-        const newData = new LandingConfiguration({ ...data });
-        await newData.save();
-        return NextResponse.json({ message: "Added" }, { status: 201 });
+        await new LandingConfiguration(data).save();
       }
-    } else {
-      return NextResponse.json(JSON.stringify("Forbidden"), { status: 403 });
+      return NextResponse.json({ message: "Added" }, { status: 201 });
     }
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      { error: "Invalid request body" },
-      { status: 400 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 };
-
-
 
 export const GET = async () => {
   console.log("Running GET request: Get Landing Configuration");
