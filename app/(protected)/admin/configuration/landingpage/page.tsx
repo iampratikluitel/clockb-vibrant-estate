@@ -12,6 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { paths } from "@/lib/paths";
+import LandingConfigTab from "./components/landingConfigTab";
 
 const LandingPageConfig = () => {
   const { data: ConfigData, isLoading: Loading } =
@@ -44,7 +45,7 @@ const LandingPageConfig = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <LandingPageConfigForm ConfigData={ConfigData} />
+        <LandingConfigTab />
       )}
       </div>
   );

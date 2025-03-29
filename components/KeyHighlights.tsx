@@ -1,35 +1,66 @@
 'use client'
 
 import { MapPin, TrendingUp, ShieldCheck, Leaf } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const highlights = [
-  {
-    icon: MapPin,
-    title: "Strategic Location",
-    description: "Great strategic location near fast-track road and only 8KM from Ekantakuna Ring Road",
-    bgColor: "bg-[#D3E4FD]", // Soft blue
-  },
-  {
-    icon: TrendingUp,
-    title: "High ROI",
-    description: "Projected over 2X land value appreciation",
-    bgColor: "bg-[#F2FCE2]", // Soft green
-  },
-  {
-    icon: ShieldCheck,
-    title: "Transparency",
-    description: "Secure investment with clear ownership structures",
-    bgColor: "bg-[#FDE1D3]", // Soft peach
-  },
-  {
-    icon: Leaf,
-    title: "Sustainability",
-    description: "Eco-conscious development with infrastructure upgrades",
-    bgColor: "bg-[#E5DEFF]", // Soft purple
-  },
-];
+interface Highlight {
+  card4icon: string;
+  card4name: string;
+  card4description: string;
+  card5icon: string;
+  card5name: string;
+  card5description: string;
+  card6icon: string;
+  card6name: string;
+  card6description: string;
+  card7icon: string;
+  card7name: string;
+  card7description: string;
+}
+
 
 const KeyHighlights = () => {
+  const [keyHighlights, setKeyHighlights] = useState<Highlight | null>(null);
+  const highlights = [
+    {
+      icon: keyHighlights?.card4icon || MapPin,
+      title: keyHighlights?.card4name || "Strategic Location",
+      description: keyHighlights?.card4description || "Great strategic location near fast-track road and only 8KM from Ekantakuna Ring Road",
+      bgColor: "bg-[#D3E4FD]", // Soft blue
+    },
+    {
+      icon: keyHighlights?.card5icon || TrendingUp,
+      title: keyHighlights?.card5name || "High ROI",
+      description: keyHighlights?.card5description || "Projected over 2X land value appreciation",
+      bgColor: "bg-[#F2FCE2]", // Soft green
+    },
+    {
+      icon: keyHighlights?.card6icon || ShieldCheck,
+      title: keyHighlights?.card6name || "Transparency",
+      description: keyHighlights?.card6description || "Secure investment with clear ownership structures",
+      bgColor: "bg-[#FDE1D3]", // Soft peach
+    },
+    {
+      icon: keyHighlights?.card7icon || Leaf,
+      title: keyHighlights?.card7name || "Sustainability",
+      description: keyHighlights?.card7description || "Eco-conscious development with infrastructure upgrades",
+      bgColor: "bg-[#E5DEFF]", // Soft purple
+    },
+  ];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/public/configuration/landing/landing-second-section");
+        const data = await response.json();
+        setKeyHighlights(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4">

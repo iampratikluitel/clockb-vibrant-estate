@@ -62,7 +62,23 @@ const ContactTable = () => {
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const confirmDelete = async () => {};
 
-  // const data: Contact[] = [];
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/admin/contact");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Optionally show a user-friendly error message in the UI
+      }
+    };
+    fetchData();
+  }, []);
+  
   const columns: ColumnDef<Contact>[] = [
     {
       id: "_id",
@@ -72,7 +88,7 @@ const ContactTable = () => {
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
       ),
@@ -186,7 +202,7 @@ const ContactTable = () => {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
+        {/* <Input
           placeholder="Filter FAQ..."
           value={
             (table.getColumn("question")?.getFilterValue() as string) ?? ""
@@ -195,7 +211,7 @@ const ContactTable = () => {
             table.getColumn("question")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        />
+        /> */}
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
             onClick={() =>

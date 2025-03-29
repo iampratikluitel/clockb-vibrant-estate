@@ -29,9 +29,7 @@ const Header = () => {
     const fetchBrochureUrl = async () => {
       try {
         const response = await fetch("/api/public/configuration/brochure");
-        console.log("response", response);
         const data = await response.json();
-
         if (data?.brochure) {
           setBrochureUrl(data.brochure);
         }
@@ -41,6 +39,17 @@ const Header = () => {
     };
     fetchBrochureUrl();
   }, []);
+
+  const handleDownloadBrochure = () => {
+    if (brochureUrl) {
+      console.log("Downloading brochure:", brochureUrl);
+      const link = document.createElement("a");
+      link.href = brochureUrl;
+      link.click();
+    } else {
+      console.error("Brochure URL is not available.");
+    }
+  };
 
   return (
     <header
@@ -97,26 +106,13 @@ const Header = () => {
         </div>
 
         {/* CTA Button */}
-        {/* <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
+        <Button 
+          onClick={handleDownloadBrochure}
+          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
+        >
           <Download className="w-4 h-4 mr-2 animate-bounce" />
           Download Brochure
-        </Button> */}
-
-        {brochureUrl ? (
-          <a
-            href={brochureUrl}
-            download
-            className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-          >
-            <Download className="w-4 h-4 mr-2 animate-bounce" />
-            Download Brochure
-          </a>
-        ) : (
-          <Button className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md">
-            <Download className="w-4 h-4 mr-2 animate-bounce" />
-            Download Brochure
-          </Button>
-        )}
+        </Button>
 
         {/* Mobile Menu Button */}
         <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">

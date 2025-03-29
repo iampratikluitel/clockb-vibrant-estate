@@ -9,15 +9,12 @@ export const GET = async () => {
 
   try {
     await connectDb();
-    const data = await Brochure.findOne(); // Find the first brochure in the DB
+    const data = await Brochure.findOne(); 
 
     if (!data) {
       return NextResponse.json({ error: "Brochure not found" }, { status: 404 });
     }
-
-    // Only send the brochure URL or filename in the response
     return NextResponse.json({ brochureUrl: data.brochure }, { status: 200 });
-
   } catch (error) {
     console.error(error);
     return NextResponse.json(

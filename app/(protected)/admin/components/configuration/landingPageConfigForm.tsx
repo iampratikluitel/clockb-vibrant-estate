@@ -289,9 +289,9 @@ const LandingPageConfigForm = ({ ConfigData }: props) => {
                 {/* Right Side - Image Picker */}
                 <div className="w-1/2 flex items-center justify-center">
                   <SCNSingleImagePicker
-                    name="Image"
-                    variant="imageBox"
-                    schemaName="righBottomSection.image"
+                    name="image"
+                    variant="avatar"
+                    schemaName="backgroundImage"
                   />
                 </div>
               </div>
