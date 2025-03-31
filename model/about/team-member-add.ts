@@ -3,7 +3,7 @@ import { Schema, model, models, Model } from "mongoose";
 const teamMemberSchema = new Schema(
   {
     name: String,
-    position: String,
+    role: String,
     description: String,
     image: String,
     postedDate: {

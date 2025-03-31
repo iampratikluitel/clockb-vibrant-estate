@@ -4,6 +4,11 @@ const faqsSchema = new Schema(
   {
     question: String,
     answer: String,
+    category: {
+      type: String,
+      enum: ["General", "Investment & Returns", "Land & Location", "Exit Options & Taxation", "Project Development"],
+      required: true
+    },
     addedDate: {
       type: Date,
       default: Date.now(),

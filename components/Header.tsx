@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { MINIOURL } from "@/lib/constants";
 
 const Header = () => {
   const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
@@ -25,32 +26,49 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const fetchBrochureUrl = async () => {
-      try {
-        const response = await fetch("/api/public/configuration/brochure");
-        const data = await response.json();
-        if (data?.brochure) {
-          setBrochureUrl(data.brochure);
-        }
-      } catch (error) {
-        console.error("Error fetching brochure:", error);
+  // const handleDownloadBrochure = async () => {
+  //   try {
+  //     const fetchData = await fetch("/api/public/configuration/brochure");
+  //     const data = await fetchData.json();
+  
+  //     if (data?.brochureUrl) {
+  //       setBrochureUrl(data.brochureUrl);
+  
+  //       const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+  //       const fileName = data.brochureUrl.split('/').pop(); 
+        
+  //       const a = document.createElement("a");
+  //       a.href = fileUrl;
+  //       a.download = fileName || "brochure.pdf"; 
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       document.body.removeChild(a);
+  //     } else {
+  //       console.error("Brochure URL not found.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching brochure:", error);
+  //   }
+  // };
+
+  const handleDownloadBrochure = async () => {
+    try {
+      const fetchData = await fetch("/api/public/configuration/brochure");
+      const data = await fetchData.json();
+  
+      if (data?.brochureUrl) {
+        setBrochureUrl(data.brochureUrl);
+  
+        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        window.open(fileUrl, "_blank"); // Opens in new tab
+      } else {
+        console.error("Brochure URL not found.");
       }
-    };
-    fetchBrochureUrl();
-  }, []);
-
-  const handleDownloadBrochure = () => {
-    if (brochureUrl) {
-      console.log("Downloading brochure:", brochureUrl);
-      const link = document.createElement("a");
-      link.href = brochureUrl;
-      link.click();
-    } else {
-      console.error("Brochure URL is not available.");
+    } catch (error) {
+      console.error("Error fetching brochure:", error);
     }
-  };
-
+  };  
+  
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -106,7 +124,7 @@ const Header = () => {
         </div>
 
         {/* CTA Button */}
-        <Button 
+        <Button
           onClick={handleDownloadBrochure}
           className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
         >

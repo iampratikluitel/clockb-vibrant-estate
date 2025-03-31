@@ -23,7 +23,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import AlertDialogBox from "../AlertDialogBox";
 import {
@@ -35,11 +35,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MINIOURL } from "@/lib/constants";
+import { useAdminDeletePartnerMutation, useDeleteMultiplePartnerAdminMutation } from "@/store/api/Admin/adminPartner";
+import { toast } from "sonner";
 
 export default function PartnerTable() {
   const [data, setData] = React.useState<Partner[]>([]);
-  const [loading, setLoading] = React.useState(true); // To handle loading state
-  const [error, setError] = React.useState<string | null>(null); // To handle errors
+  const [error, setError] = React.useState<string | null>(null); 
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -48,6 +49,37 @@ export default function PartnerTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  
+    const [deleteById] = useAdminDeletePartnerMutation();
+    const [deleteMultiple] = useDeleteMultiplePartnerAdminMutation();
+    const [showConfirmation, setShowConfirmation] = useState(false);
+
+    useEffect(() => {
+      const fetchPartners = async () => {
+        try {
+          const response = await fetch("/api/admin/about/partner");
+          const result = await response.json();
+          if (response.ok) {
+            setData(result);
+          } else {
+            console.error("Failed to fetch partners:", result);
+          }
+        } catch (error) {
+          console.error("Error fetching partners:", error);
+        }
+      };
+  
+      fetchPartners();
+    }, []);
+  
+    const confirmDelete = async (itemId: String) => {
+        toast.promise(deleteById(itemId).unwrap(), {
+          loading: "Deleting...",
+          success: <b>Deleted</b>,
+          error: <b>Error while deleting</b>
+        });
+      }
 
   const columns: ColumnDef<Partner>[] = [
     {
@@ -97,29 +129,10 @@ export default function PartnerTable() {
       ),
     },
     {
-      accessorKey: "position",
-      header: "Position",
-      cell: ({ row }) => <div>{row.getValue("position")}</div>,
-    },
-    {
-      accessorKey: "description",
-      header: "Description",
-      cell: ({ row }) => <div>{row.getValue("description")}</div>,
-    },
-    {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
         const faqrow = row.original;
-
-        function setShowConfirmation(arg0: boolean) {
-          throw new Error("Function not implemented.");
-        }
-
-        function confirmDelete() {
-          throw new Error("Function not implemented.");
-        }
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -134,7 +147,7 @@ export default function PartnerTable() {
               <DropdownMenuSeparator />
               <AlertDialogBox
                 onCancel={() => setShowConfirmation(false)}
-                onConfirm={() => confirmDelete()}
+                onConfirm={() => confirmDelete(faqrow.id)}
                 text={"Delete"}
               ></AlertDialogBox>
             </DropdownMenuContent>
@@ -143,26 +156,6 @@ export default function PartnerTable() {
       },
     },
   ];
-
-  useEffect(() => {
-    const fetchPartners = async () => {
-      try {
-        const response = await fetch("/api/admin/about/partner");
-        console.log("response", response);
-        const result = await response.json();
-        console.log("result", result);
-        if (response.ok) {
-          setData(result);
-        } else {
-          console.error("Failed to fetch partners:", result);
-        }
-      } catch (error) {
-        console.error("Error fetching partners:", error);
-      }
-    };
-
-    fetchPartners();
-  }, []);
 
   const table = useReactTable({
     data,
@@ -182,10 +175,6 @@ export default function PartnerTable() {
       rowSelection,
     },
   });
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error: {error}</div>;

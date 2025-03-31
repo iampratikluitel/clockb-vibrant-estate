@@ -1,9 +1,14 @@
+import { LucideIcon } from "lucide-react";
+
 export interface Member {
+  _id: string;
   id: string;
   name: string;
   position: string;
   description: string;
   image: string;
+  icon?: LucideIcon;
+  postedDate: Date;
 }
 
 export interface Partner {

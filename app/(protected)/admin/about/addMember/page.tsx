@@ -19,10 +19,12 @@ import { Button } from "@/components/ui/button";
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
 import { useRouter } from "next/navigation";
+import { Member } from "@/lib/types";
+import { useAdminAddUpdateTeamMemberMutation } from "@/store/api/Admin/adminAboutPage";
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetail?: any;
+  ExistingDetail?: Member | null;
 }
 
 const FormSchema = z.object({
@@ -40,6 +42,7 @@ const FormSchema = z.object({
 
 export default function AddMember({ type, ExistingDetail }: props) {
   const [Loading, setLoading] = useState(false);
+  const [AdminAddUpdateteamMember] = useAdminAddUpdateTeamMemberMutation();
 
   const router = useRouter();
 
@@ -59,7 +62,7 @@ export default function AddMember({ type, ExistingDetail }: props) {
     try {
       setLoading(true);
       if (!data.image) {
-        toast.error("Image data:", data.image);
+        toast.error("image data:", data.image);
         return;
       }
 
@@ -77,7 +80,7 @@ export default function AddMember({ type, ExistingDetail }: props) {
         image: ImageUrl ?? ExistingDetail?.image,
       };
       const response = await fetch("/api/admin/about/teamMember", {
-        method: type === "Edit" ? "PUT" : "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });

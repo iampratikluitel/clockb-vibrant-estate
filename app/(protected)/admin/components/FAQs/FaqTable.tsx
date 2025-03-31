@@ -51,6 +51,8 @@ import {
 } from "@/components/ui/dialog";
 import AlertDialogBox from "../AlertDialogBox";
 import { convertToHumanReadable } from "@/lib/helper";
+import { toast } from "sonner";
+import { useAdminDeleteFaqsMutation, useAdminDeleteMultipleFaqsMutation } from "@/store/api/Admin/adminFaqs";
 
 const FaqTable = () => {
   const router = useRouter();
@@ -63,6 +65,29 @@ const FaqTable = () => {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [showConfirmation, setShowConfirmation] = React.useState(false);
+  const [deleteFaqById] = useAdminDeleteFaqsMutation();
+  const [deleteMultiple] = useAdminDeleteMultipleFaqsMutation();
+
+  const confirmDelete = async (itemId: String) => {
+    toast.promise(deleteFaqById(itemId).unwrap(), {
+      loading: "Deleting...",
+      success: <b>Deleted</b>,
+      error: <b>Error while deleting</b>,
+    });
+  };
+
+  const handleMultipleDelete = async (ids: string[]) => {
+    toast.promise(
+      deleteMultiple({
+        faqIds: ids,
+      }),
+      {
+        loading: "Deleting...",
+        success: <b> Deleted</b>,
+        error: <b>Error while deleting</b>,
+      }
+    );
+  };
 
   React.useEffect(() => {
     const fetchFaqs = async () => {
@@ -73,26 +98,6 @@ const FaqTable = () => {
     fetchFaqs();
   }, []);
 
-  const confirmDelete = async () => {
-    // try {
-    //   const response = await fetch("/api/admin/faqs", {
-    //     method: "DELETE",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ id: selectedRowIds }),
-    //   });
-    //   if (response.ok) {
-    //     console.log("FAQ deleted successfully");
-    //   } else {
-    //     console.error("Failed to delete FAQ");
-    //   }
-    // } catch (error) {
-    //   console.error("Error deleting FAQ", error);
-    // }
-  };
-
-  // const data: FAQTYPE[] = [];
   const columns: ColumnDef<FAQTYPE>[] = [
     {
       id: "_id",
@@ -122,6 +127,11 @@ const FaqTable = () => {
       cell: ({ row }) => <div>{row.getValue("question")}</div>,
     },
     {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }) => <div>{row.getValue("category")}</div>,
+    },
+    {
       accessorKey: "addedDate",
       header: "Added Date",
       cell: ({ row }) => (
@@ -146,13 +156,13 @@ const FaqTable = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => router.push("/admin/faqs/edit")}>
+              <DropdownMenuItem onClick={() => router.push(`/admin/faqs/edit`)}>
                 Edit
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <AlertDialogBox
                 onCancel={() => setShowConfirmation(false)}
-                onConfirm={() => confirmDelete()}
+                onConfirm={() => confirmDelete(faqrow._id)}
                 text={"Delete"}
               ></AlertDialogBox>
             </DropdownMenuContent>

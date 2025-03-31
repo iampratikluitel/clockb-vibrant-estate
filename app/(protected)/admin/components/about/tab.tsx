@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
-import GeneralTab from "./general-tab"
+import GeneralTab from "./investmentCircleForm"
 import TeamTab from "./team-member-tab"
 import PartnersTab from "./partner-tab"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"

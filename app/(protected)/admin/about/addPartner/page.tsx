@@ -59,7 +59,7 @@ export default function AddMember({ type, ExistingDetail }: props) {
 
       let logoUrl = null;
       if (data.logo != `${MINIOURL}${ExistingDetail?.logo}`) {
-        logoUrl = await uploadToMinIO(data.logo, "Member");
+        logoUrl = await uploadToMinIO(data.logo, "Partner");
         if (logoUrl === "") {
           toast.error("logo Upload Failed Please try again");
           return;

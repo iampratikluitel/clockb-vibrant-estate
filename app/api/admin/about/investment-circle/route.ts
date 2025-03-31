@@ -2,7 +2,7 @@ import { currentUser } from "@/lib/auth";
 import { BUCKET_NAME } from "@/lib/constants";
 import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
-import TeamMember from "@/model/about/team-member-add";
+import InvestmentCircle from "@/model/about/investmentCircle";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -15,18 +15,18 @@ export async function POST(request: Request) {
     if (user) {
       let responseMessage = "Added";
       if (data?._id) {
-        const existingConfig = await TeamMember.findById(data._id);
+        const existingConfig = await InvestmentCircle.findById(data._id);
         if (existingConfig) {
           if (existingConfig.image && existingConfig.image !== data.image) {
             await minioClient.removeObject(BUCKET_NAME, existingConfig.image);
           }
-          await TeamMember.findByIdAndUpdate(data._id, data, { new: true });
+          await InvestmentCircle.findByIdAndUpdate(data._id, data, { new: true });
           responseMessage = "Updated";
         } else {
-          await new TeamMember(data).save();
+          await new InvestmentCircle(data).save();
         }
       } else {
-        await new TeamMember(data).save();
+        await new InvestmentCircle(data).save();
       }
       return NextResponse.json({ message: responseMessage }, { status: 200 });
     }
@@ -41,7 +41,7 @@ export const GET = async () => {
   console.log("Running GET request: Get Footer");
   try {
     await connectDb();
-    const data = await TeamMember.find();
+    const data = await InvestmentCircle.find();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error("Error:", error);
@@ -52,7 +52,7 @@ export const GET = async () => {
 };
 
 export const DELETE = async (request: NextRequest) => {
-  console.log("Running DELETE request: Admin DELETE TeamMember by id");
+  console.log("Running DELETE request: Admin DELETE InvestmentCircle by id");
   const user = await currentUser();
   try {
     await connectDb();
@@ -60,12 +60,12 @@ export const DELETE = async (request: NextRequest) => {
     const _id = searchParams.get("id");
 
     if (user) {
-    const exisitingDoc = await TeamMember.findOne({ _id });
+    const exisitingDoc = await InvestmentCircle.findOne({ _id });
     if (!exisitingDoc) {
     return NextResponse.json({ message: "No Testimonial Found" }, { status: 404 });
     }
 
-    await TeamMember.deleteOne({ _id });
+    await InvestmentCircle.deleteOne({ _id });
     if (exisitingDoc.image != null) {
       await minioClient.removeObject(
         BUCKET_NAME,

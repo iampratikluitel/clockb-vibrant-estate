@@ -26,7 +26,6 @@ import {
 import router from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import AlertDialogBox from "../AlertDialogBox";
 import {
   Table,
   TableBody,
@@ -36,6 +35,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MINIOURL } from "@/lib/constants";
+import AlertDialogBox from "../AlertDialogBox";
+import { toast } from "sonner";
+import { useAdminDeleteMemberMutation, useDeleteMultipleMemberAdminMutation } from "@/store/api/Admin/adminTeamMember";
 
 export default function TeamMemberTable() {
   const [data, setData] = React.useState<Member[]>([]);
@@ -46,17 +48,52 @@ export default function TeamMemberTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  const [deleteById] = useAdminDeleteMemberMutation();
+  const [deleteMultiple] = useDeleteMultipleMemberAdminMutation();
+
   useEffect(() => {
     const fetchMember = async () => {
-      console.log("fetchMember", fetchMember);
-      const res = await fetch("/api/admin/about/teamMember");
-      console.log("res", res);
-      const result = await res.json();
-      setData(result);
-      console.log("result", result);
+      try {
+        console.log("Fetching team members...");
+        const res = await fetch("/api/admin/about/teamMember");
+  
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+  
+        const result = await res.json();
+        console.log("Fetched data:", result);
+  
+        // If result is an object instead of an array, wrap it in an array
+        setData(Array.isArray(result) ? result : [result]);
+      } catch (error) {
+        console.error("Error fetching members:", error);
+      }
     };
+  
     fetchMember();
   }, []);
+
+  const confirmDelete = async (itemId: String) => {
+    toast.promise(deleteById(itemId).unwrap(), {
+      loading: "Deleting...",
+      success: <b>Deleted</b>,
+      error: <b>Error while deleting</b>
+    });
+  }
+
+  const handleMultipleDelete = async (ids: string[]) => {
+    toast.promise(
+      deleteMultiple({
+        ids: ids,
+      }),
+      {
+        loading: "Deleting...",
+        success: <b> Deleted</b>,
+        error: <b>Error while deleting</b>,
+      }
+    );
+  };
 
   const columns: ColumnDef<Member>[] = [
     {
@@ -89,7 +126,7 @@ export default function TeamMemberTable() {
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Partner Name
+            Member Name
             <CaretSortIcon className="ml-2 h-4 w-4" />
           </Button>
         );
@@ -107,25 +144,31 @@ export default function TeamMemberTable() {
     },
     {
       accessorKey: "position",
-      header: "Position",
+      header: "position",
       cell: ({ row }) => <div>{row.getValue("position")}</div>,
     },
     {
-      accessorKey: "description",
-      header: "Description",
-      cell: ({ row }) => <div>{row.getValue("description")}</div>,
+      accessorKey: "postedDate",
+      header: "Posted Date",
+      cell: ({ row }) => {
+        const rawDate = row.getValue("postedDate");
+        const formattedDate = rawDate 
+          ? new Date(String(rawDate)).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "2-digit",
+            })
+          : "N/A";
+    
+        return <div>{formattedDate}</div>;
+      },
     },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
         const faqrow = row.original;
-
         function setShowConfirmation(arg0: boolean) {
-          throw new Error("Function not implemented.");
-        }
-
-        function confirmDelete() {
           throw new Error("Function not implemented.");
         }
 
@@ -145,7 +188,7 @@ export default function TeamMemberTable() {
               <DropdownMenuSeparator />
               <AlertDialogBox
                 onCancel={() => setShowConfirmation(false)}
-                onConfirm={() => confirmDelete()}
+                onConfirm={() => confirmDelete(faqrow._id)}
                 text={"Delete"}
               ></AlertDialogBox>
             </DropdownMenuContent>

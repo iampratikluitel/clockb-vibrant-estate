@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       const fileExtension = path.extname(file.name).slice(1);
       const filename = `${uploadType}_${uniqueId}_${i}.${fileExtension}`;
 
-      const objectName = path.join(uploadType, filename);
+      const objectName = `${uploadType}/${filename}`;
 
       const contentType = file.type;
       await minioClient.putObject(

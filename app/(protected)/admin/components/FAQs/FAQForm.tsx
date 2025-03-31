@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAdminAddUpdateFaqsMutation } from "@/store/api/Admin/adminFaqs";
+import { paths } from "@/lib/paths";
 
 interface props {
   type: "Add" | "Edit";
@@ -29,6 +31,7 @@ const FormSchema = z.object({
   answer: z.string().min(2, {
     message: "Answer must be at least 2 characters.",
   }),
+  category: z.string().optional(),
 });
 
 const FAQForm = ({ type, ExistingDetail }: props) => {
@@ -39,38 +42,52 @@ const FAQForm = ({ type, ExistingDetail }: props) => {
     defaultValues: {
       question: ExistingDetail?.question ?? "",
       answer: ExistingDetail?.answer ?? "",
+      category: ExistingDetail?.category ?? "",
     },
   });
   const router = useRouter();
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setLoading(true);
+  const [AdminAddUpdateFaqs] = useAdminAddUpdateFaqsMutation();
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const response = await fetch("/api/admin/FAQs", {
-        method: type === "Edit" ? "PUT" : "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      if (type == "Add") {
+        setLoading(true);
+        const response = await AdminAddUpdateFaqs({
           ...data,
-          id: ExistingDetail?._id,
-        }),
-      });
+        }).unwrap();
+        if (response) {
+          toast.success(response.message);
+          router.push(`${paths.admin.faqs}`);
+          setLoading(false);
+        } else {
+          toast.error(`Couldn't Add`);
+          setLoading(false);
+        }
+      } else if (type == "Edit") {
+        setLoading(true);
 
-      const result = await response.json();
-
-      if (!response.ok)
-        throw new Error(result.message || "Something went wrong");
-
-      toast.success(
-        `FAQ ${type === "Edit" ? "updated" : "added"} successfully`
-      );
-      router.push("/admin/faqs");
-    } catch (error: any) {
-      toast.error(error.message);
+        const response = await AdminAddUpdateFaqs({
+          _id: ExistingDetail?._id,
+          ...data,
+        }).unwrap();
+        if (response) {
+          toast.success(`${response.message}`);
+          setLoading(false);
+          router.push(`${paths.admin.faqs}`);
+        } else {
+          toast.error(`Couldn't Edit`);
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      toast.error(`Failed`);
+      setLoading(false);
     } finally {
       setLoading(false);
     }
-  };
-
+  }
+  
   return (
     <Form {...form}>
       <form
@@ -99,6 +116,19 @@ const FAQForm = ({ type, ExistingDetail }: props) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Answer</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter Faq Answer" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter Faq Answer" {...field} />
                   </FormControl>

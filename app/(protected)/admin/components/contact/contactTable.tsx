@@ -70,6 +70,7 @@ const ContactTable = () => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log("data",data)
         setData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -110,29 +111,17 @@ const ContactTable = () => {
     {
       accessorKey: "email",
       header: "Email Address",
-      cell: ({ row }) => (
-        <div className="capitalize">
-          {convertToHumanReadable(row.getValue("email"))}
-        </div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
     },
     {
       accessorKey: "subject",
       header: "Subject",
-      cell: ({ row }) => (
-        <div className="capitalize">
-          {convertToHumanReadable(row.getValue("subject"))}
-        </div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("subject")}</div>,
     },
     {
       accessorKey: "message",
       header: "Message",
-      cell: ({ row }) => (
-        <div className="capitalize">
-          {convertToHumanReadable(row.getValue("message"))}
-        </div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("message")}</div>,
     },
     {
       id: "actions",
