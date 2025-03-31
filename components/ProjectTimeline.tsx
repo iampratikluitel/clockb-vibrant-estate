@@ -164,29 +164,6 @@ const ProjectTimeline = () => {
               </div>
             ))}
           </div>
-
-          {/* Current Active Phase Display */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-20 max-w-4xl mx-auto border-l-4 border-estates-primary transform transition-all duration-700 hover:shadow-2xl">
-            <div className="flex items-center gap-4 mb-4">
-              <div className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center",
-                milestoneColors[activeIndex % milestoneColors.length]
-              )}>
-                <Calendar className="h-6 w-6 text-estates-primary" />
-              </div>
-              <div>
-                <h3 className="text-sm text-estates-primary font-semibold">CURRENT PHASE</h3>
-                <h4 className="text-2xl font-bold">{timelineData[activeIndex].title}</h4>
-              </div>
-            </div>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              {timelineData[activeIndex].description}
-            </p>
-            <div className="flex items-center text-sm text-estates-primary font-medium">
-              <Clock className="mr-2 h-4 w-4" />
-              <span>Timeline: {timelineData[activeIndex].period}</span>
-            </div>
-          </div>
         </div>
 
         {/* CTA Section */}

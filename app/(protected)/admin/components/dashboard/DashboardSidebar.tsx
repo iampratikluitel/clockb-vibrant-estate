@@ -20,6 +20,7 @@ import {
   Briefcase,
   Mail,
   Settings,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -32,6 +33,8 @@ const DashboardSidebar = () => {
   const mainMenuItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: Home },
     { name: "About", path: "/admin/about", icon: Info },
+    { name: "Testimonial", path: "/admin/testimonial", icon: User},
+    
     {
       name: "Project Description",
       path: "/admin/project-description",

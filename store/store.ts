@@ -8,6 +8,8 @@ import { adminAboutApi } from "./api/Admin/adminAboutPage";
 import { publicAboutApi } from "./api/Public/publicAbout";
 import { adminMemberApi } from "./api/Admin/adminTeamMember";
 import { adminFaqApi } from "./api/Admin/adminFaqs";
+import { adminTestimonialsApi } from "./api/Admin/adminTestimonials";
+import { publicTestimonailsApi } from "./api/Public/publicTestimonails";
 
 export const store = configureStore({
   reducer: {
@@ -15,9 +17,12 @@ export const store = configureStore({
     [adminAboutApi.reducerPath]: adminAboutApi.reducer,
     [adminFaqApi.reducerPath]: adminFaqApi.reducer,
     [adminMemberApi.reducerPath]: adminMemberApi.reducer,
+    [adminTestimonialsApi.reducerPath]: adminTestimonialsApi.reducer,
+
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
     [publicAboutApi.reducerPath]: publicAboutApi.reducer,
+    [publicTestimonailsApi.reducerPath]: publicTestimonailsApi.reducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
@@ -25,10 +30,12 @@ export const store = configureStore({
     adminAboutApi.middleware,
     adminMemberApi.middleware,
     adminFaqApi.middleware,
+    adminTestimonialsApi.middleware,
 
     publicConfigurationApi.middleware,
     publicFunctionsApi.middleware,
     publicAboutApi.middleware,
+    publicTestimonailsApi.middleware,
   ),
 });
 

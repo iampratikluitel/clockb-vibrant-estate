@@ -18,6 +18,15 @@ export interface Partner {
   logo: string;
 }
 
+export interface TESTIMONIALS {
+  description: string;
+  image: string;
+  postedDate: string;
+  name: string;
+  role: string;
+  _id: string;
+}
+
 export interface Brochure {
   brochure?: string;
   name: string;

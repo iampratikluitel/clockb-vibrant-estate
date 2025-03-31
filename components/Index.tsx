@@ -1,13 +1,3 @@
-
-// import Header from "@/components/layout/Header";
-// import Footer from "@/components/layout/Footer";
-// import Hero from "@/components/sections/Hero";
-// import KeyHighlights from "@/components/sections/KeyHighlights";
-// import InvestmentBenefits from "@/components/sections/InvestmentBenefits";
-// import ProjectTimeline from "@/components/sections/ProjectTimeline";
-// import OngoingProjects from "@/components/sections/OngoingProjects";
-// import Testimonials from "@/components/sections/Testimonials";
-// import NewsInsights from "@/components/sections/NewsInsights";
 "use client"
 import Footer from "./Footer";
 import Header from "./Header";
@@ -18,7 +8,6 @@ import NewsInsights from "./NewsInsights";
 import OngoingProjects from "./OngoingProjects";
 import ProjectTimeline from "./ProjectTimeline";
 import Testimonials from "./Testimonials";
-
 
 const Index = () => {
   return (

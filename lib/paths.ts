@@ -21,6 +21,10 @@ export const paths = {
     addTeamMember: `${ROOTS.admin}/about/addMember`,
     editTeamMember: `${ROOTS.admin}/about/editMember`,
 
+    testimonial: `${ROOTS.admin}/testimonial`,
+    addTestimonial: `${ROOTS.admin}/testimonial/addTestimonial`,
+    editTestimonial:  `${ROOTS.admin}/testimonial/editTestimonial`,
+
     faqs: `${ROOTS.admin}/faqs`,
     addfaq: `${ROOTS.admin}/faqs/add`,
     editfaq: `${ROOTS.admin}/faqs/edit`,
