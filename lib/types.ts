@@ -132,3 +132,25 @@ export interface LandingPage {
   card13name: string;
   card13description: string;
 }
+
+export interface News{
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  slug: string;
+  overview: string;
+  categoryId?: string;
+  addedDate: Date;
+  status: boolean;
+}
+
+export interface UpcommingProject{
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  overview: string;
+  addedDate: Date;
+  status: boolean;
+}

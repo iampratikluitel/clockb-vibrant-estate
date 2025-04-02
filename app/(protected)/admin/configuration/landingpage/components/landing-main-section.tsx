@@ -35,7 +35,7 @@ const FormSchema = z.object({
   card3description: z.string(),
 });
 
-interface props {
+interface props { 
   ConfigData: any | undefined;
 }
 

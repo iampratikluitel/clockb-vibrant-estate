@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import LandingPageConfigForm from "../../components/configuration/landingPageConfigForm";
 import { useGetAdminConfigLandingPageQuery } from "@/store/api/Admin/adminConfiguration";
 import {
   Breadcrumb,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { paths } from "@/lib/paths";
 import LandingConfigTab from "./components/landingConfigTab";
+import LandingConfiguration from "./components/landingConfigTab";
 
 const LandingPageConfig = () => {
   const { data: ConfigData, isLoading: Loading } =
@@ -45,7 +45,7 @@ const LandingPageConfig = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <LandingConfigTab />
+        <LandingConfiguration />
       )}
       </div>
   );

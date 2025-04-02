@@ -10,6 +10,9 @@ import { adminMemberApi } from "./api/Admin/adminTeamMember";
 import { adminFaqApi } from "./api/Admin/adminFaqs";
 import { adminTestimonialsApi } from "./api/Admin/adminTestimonials";
 import { publicTestimonailsApi } from "./api/Public/publicTestimonails";
+import { adminNewsApi } from "./api/Admin/adminNewsInsight";
+import { adminUpcommingProjectApi } from "./api/Admin/adminUpcommingProject";
+import { adminTermsAndConditionsApi } from "./api/Admin/adminTermsAndCondition";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +21,9 @@ export const store = configureStore({
     [adminFaqApi.reducerPath]: adminFaqApi.reducer,
     [adminMemberApi.reducerPath]: adminMemberApi.reducer,
     [adminTestimonialsApi.reducerPath]: adminTestimonialsApi.reducer,
+    [adminNewsApi.reducerPath]: adminNewsApi.reducer,
+    [adminUpcommingProjectApi.reducerPath]: adminUpcommingProjectApi.reducer,
+    [adminTermsAndConditionsApi.reducerPath]: adminTermsAndConditionsApi.reducer,
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
@@ -31,6 +37,9 @@ export const store = configureStore({
     adminMemberApi.middleware,
     adminFaqApi.middleware,
     adminTestimonialsApi.middleware,
+    adminNewsApi.middleware,
+    adminUpcommingProjectApi.middleware,
+    adminTermsAndConditionsApi.middleware,
 
     publicConfigurationApi.middleware,
     publicFunctionsApi.middleware,
