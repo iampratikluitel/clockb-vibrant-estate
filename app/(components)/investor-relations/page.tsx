@@ -91,6 +91,9 @@ const InvestmentRelations = () => {
       {/* Terms & Conditions Section */}
       <TermAndCondition />
 
+
+      
+
       {/* Investment Team Section */}
       <InvestmentTeamSection />
 
