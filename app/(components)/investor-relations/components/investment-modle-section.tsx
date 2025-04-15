@@ -181,7 +181,7 @@ export default function InvestmentModelSection() {
                     Value Growth
                   </h4>
                   <p className="text-gray-600 mb-4">
-                    Track your investment's appreciation through our investor
+                    Track your investment&apos;s appreciation through our investor
                     portal.
                   </p>
                   <TrendingUp className="h-12 w-12 text-estates-primary/20" />

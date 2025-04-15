@@ -3,51 +3,61 @@ import { BUCKET_NAME } from "@/lib/constants";
 import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
 import TeamMember from "@/model/about/team-member-add";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+export const POST = async (request: NextRequest) => {
+  console.log("Running POST request: Admin Add/Update TeamMembers");
   const user = await currentUser();
 
   try {
+    const Data = await request.json();
     await connectDb();
-    const data = await request.json();
+    console.log("MongoDb Connected");
 
     if (user) {
-      let responseMessage = "Added";
-      if (data?._id) {
-        const existingConfig = await TeamMember.findById(data._id);
-        if (existingConfig) {
-          if (existingConfig.image && existingConfig.image !== data.image) {
-            await minioClient.removeObject(BUCKET_NAME, existingConfig.image);
-          }
-          await TeamMember.findByIdAndUpdate(data._id, data, { new: true });
-          responseMessage = "Updated";
-        } else {
-          await new TeamMember(data).save();
+      const existingDoc = await TeamMember.findOne({ _id: Data?._id });
+      if (existingDoc) {
+        //check if logo has been changed or not if yes delete previous one
+        if (existingDoc.logo && existingDoc.logo != Data.logo) {
+          await minioClient.removeObject(BUCKET_NAME, existingDoc.logo);
         }
+        await existingDoc.updateOne(Data);
+        return NextResponse.json({ message: "TeamMember Updated" }, { status: 201 });
       } else {
-        await new TeamMember(data).save();
+        const newDoc = new TeamMember({ ...Data });
+        await newDoc.save();
+        return NextResponse.json(
+          { message: "New TeamMember Added" },
+          { status: 201 }
+        );
       }
-      return NextResponse.json({ message: responseMessage }, { status: 200 });
+    } else {
+      return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
     }
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
-}
+};
 
 export const GET = async () => {
-  console.log("Running GET request: Get Footer");
+  console.log("Running GET request: Get all TeamMembers");
+
   try {
     await connectDb();
-    const data = await TeamMember.find();
-    return NextResponse.json(data, { status: 200 });
+    const docs = await TeamMember.find().sort({
+      postedDate: -1,
+    });
+    return NextResponse.json(docs, { status: 201 });
   } catch (error) {
-    console.error("Error:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
 };
 
@@ -62,17 +72,17 @@ export const DELETE = async (request: NextRequest) => {
     if (user) {
     const exisitingDoc = await TeamMember.findOne({ _id });
     if (!exisitingDoc) {
-    return NextResponse.json({ message: "No Testimonial Found" }, { status: 404 });
+    return NextResponse.json({ message: "No TeamMember Found" }, { status: 404 });
     }
 
     await TeamMember.deleteOne({ _id });
-    if (exisitingDoc.image != null) {
+    if (exisitingDoc.logo != null) {
       await minioClient.removeObject(
         BUCKET_NAME,
-        exisitingDoc.image
+        exisitingDoc.logo
       );
     }
-    return NextResponse.json({ message: "Testimonial Deleted" }, { status: 201 });
+    return NextResponse.json({ message: "TeamMember Deleted" }, { status: 201 });
 
     }else{
       return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });

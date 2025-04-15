@@ -6,13 +6,13 @@ import React, { useEffect, useState } from "react";
 
 const TeamMember = ({
   name,
-  position,
+  role,
   description,
   icon: Icon,
   image,
 }: {
   name: string;
-  position: string;
+  role: string;
   description: string;
   icon: LucideIcon;
   image?: string;
@@ -37,7 +37,7 @@ const TeamMember = ({
         {name}
       </h3>
       <p className="text-estates-secondary font-medium text-center">
-        {position}
+        {role}
       </p>
       <p className="text-gray-600 text-center line-clamp-3 overflow-hidden text-ellipsis">
         {description}
@@ -116,7 +116,7 @@ const TeamMemberView = () => {
                     <TeamMember
                       key={index}
                       name={member.name}
-                      position={member.position}
+                      role={member.role}
                       description={member.description}
                       icon={member.icon || User}
                       image={member.image ? `${MINIOURL}/${member.image}` : "/placeholder.jpg"}

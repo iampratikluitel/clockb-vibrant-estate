@@ -30,8 +30,8 @@ export default function KeyHighlightsInvestment() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      fetchData();
     };
+    fetchData();
   }, []);
 
   return (

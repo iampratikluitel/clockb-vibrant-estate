@@ -61,6 +61,7 @@ const Contact = () => {
       setSubjectInput("");
       setMessageInput("");
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -106,6 +107,7 @@ const Contact = () => {
       setAppointmentNote("");
       setIsAppointmentModalOpen(false);
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to schedule appointment. Please try again.",

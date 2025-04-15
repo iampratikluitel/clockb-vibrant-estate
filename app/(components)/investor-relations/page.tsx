@@ -1,12 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Download } from "lucide-react";
 import KeyHighlightsInvestment from "./components/key-highlights";
 import InvestmentModelSection from "./components/investment-modle-section";
 import TermAndCondition from "./components/terms-and-comdition";

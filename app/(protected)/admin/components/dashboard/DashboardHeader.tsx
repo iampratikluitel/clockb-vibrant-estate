@@ -1,8 +1,7 @@
 "use client";
 import React from "react";
-import { Bell, LogOut, Search, User } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 const DashboardHeader = () => {
   return (

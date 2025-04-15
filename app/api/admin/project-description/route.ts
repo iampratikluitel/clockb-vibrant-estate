@@ -3,7 +3,7 @@ import { BUCKET_NAME } from "@/lib/constants";
 import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
 import UpcommingProject from "@/model/project-description/project-description";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const user = await currentUser();

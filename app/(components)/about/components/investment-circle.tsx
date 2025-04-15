@@ -1,5 +1,4 @@
 import { MINIOURL } from "@/lib/constants";
-import { Users } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 interface Investment {
@@ -21,7 +20,7 @@ export default function InvestmentCircle() {
         const data = await response.json();
         setInvestmentCircle(data);
       } catch (error) {
-        console.log("Error fetching Data");
+        console.log("Error fetching Data", error);
       }
     };
     fetchData();
@@ -75,39 +74,6 @@ export default function InvestmentCircle() {
                     ))}
                   </ul>
                 )}
-
-                  {/* <ul className="space-y-3">
-                    <li className="flex items-start">
-                      <div className="flex-shrink-0 mr-2 mt-1">
-                        <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                      </div>
-                      <span className="text-gray-700">
-                        Professional financial management and oversight
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="flex-shrink-0 mr-2 mt-1">
-                        <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                      </div>
-                      <span className="text-gray-700">
-                        Transparent investor communications and reporting
-                      </span>
-                    </li>
-                    <li className="flex items-start">
-                      <div className="flex-shrink-0 mr-2 mt-1">
-                        <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                      </div>
-                      <span className="text-gray-700">
-                        Strategic risk assessment and mitigation protocols
-                      </span>
-                    </li>
-                  </ul> */}
                 </div>
               </div>
             </div>

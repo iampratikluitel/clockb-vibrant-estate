@@ -1,15 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import TestimonialForm from "../../components/testimonial/testimonialForm";
-import { useGetAdminTestimonialsByIdQuery } from "@/store/api/Admin/adminTestimonials";
+import TeamMemberForm from "../../components/about/TeamMemberForm";
+import { useGetAdminMemberByIdQuery } from "@/store/api/Admin/adminTeamMember";
 
 const Edit = () => {
   const search = useSearchParams();
   const _id = search.get("id") as string;
 
   const { data: ExistingDetail, isLoading: Loading } =
-    useGetAdminTestimonialsByIdQuery(_id);
+    useGetAdminMemberByIdQuery(_id);
 
   return (
     <>
@@ -20,7 +20,7 @@ const Edit = () => {
       ) : (
         <>
           {ExistingDetail && (
-            <TestimonialForm type={"Edit"} ExistingDetail={ExistingDetail} />
+            <TeamMemberForm type={"Edit"} ExistingDetail={ExistingDetail} />
           )}
         </>
       )}

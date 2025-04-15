@@ -23,7 +23,7 @@ export default function CallToAction() {
               Join Our Growing Investment Network
             </h2>
             <p className="text-lg text-white/90 mb-8 max-w-3xl mx-auto">
-              Be part of Nepal's next major real estate success story. Invest in
+              Be part of Nepal&apos;s next major real estate success story. Invest in
               Saukhel Real Estate and secure long-term financial growth.
             </p>
             <form

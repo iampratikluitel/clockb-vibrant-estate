@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainSectionEditor from "./main-section";
-import KeyHighlight from "../../investor-relations/key-highlight/page";
 import InvestmentCircleEditor from "./investment-circle-section";
 import KeyHighlightsEditor from "./key-highlight-section";
 

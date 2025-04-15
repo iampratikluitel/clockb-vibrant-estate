@@ -39,7 +39,7 @@ const KeyHighlights = () => {
             Why Choose Us?
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Discover why we're your trusted partner in real estate development
+            Discover why we&apos;re your trusted partner in real estate development
             and investment.
           </p>
         </div>

@@ -1,6 +1,5 @@
 import { Schema, model, models, Model } from 'mongoose';
 
-
 const testimonialsSchema = new Schema({
     name:String,
     image: String,

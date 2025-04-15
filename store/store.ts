@@ -14,6 +14,7 @@ import { adminUpcommingProjectApi } from "./api/Admin/adminUpcommingProject";
 import { adminTermsAndConditionsApi } from "./api/Admin/adminTermsAndCondition";
 import { adminNewsInsightsApi } from "./api/Admin/adminNewsInsight";
 import { publicNewsInsightsApi } from "./api/Public/publicNewsInsight";
+import { adminPartnerApi } from "./api/Admin/adminPartner";
 
 export const store = configureStore({
   reducer: {
@@ -21,10 +22,12 @@ export const store = configureStore({
     [adminAboutApi.reducerPath]: adminAboutApi.reducer,
     [adminFaqApi.reducerPath]: adminFaqApi.reducer,
     [adminMemberApi.reducerPath]: adminMemberApi.reducer,
+    [adminPartnerApi.reducerPath]: adminPartnerApi.reducer,
     [adminTestimonialsApi.reducerPath]: adminTestimonialsApi.reducer,
     [adminUpcommingProjectApi.reducerPath]: adminUpcommingProjectApi.reducer,
     [adminTermsAndConditionsApi.reducerPath]: adminTermsAndConditionsApi.reducer,
     [adminNewsInsightsApi.reducerPath]: adminNewsInsightsApi.reducer,
+
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
@@ -42,6 +45,7 @@ export const store = configureStore({
     adminUpcommingProjectApi.middleware,
     adminTermsAndConditionsApi.middleware,
     adminNewsInsightsApi.middleware,
+    adminPartnerApi.middleware,
 
     publicConfigurationApi.middleware,
     publicFunctionsApi.middleware,

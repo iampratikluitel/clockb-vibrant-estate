@@ -135,6 +135,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
 
       toast.success("Configuration updated successfully.");
     } catch (error) {
+      console.log(error)
       toast.error("Failed to update configuration. Please try again.");
     } finally {
       setIsSubmitting(false);

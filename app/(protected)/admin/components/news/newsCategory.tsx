@@ -51,6 +51,7 @@ const AddNewsCategory: React.FC<AddNewsCategoryProps> = ({ type, setIsOpen }) =>
       toast.success("News category added successfully!");
       setIsOpen(false); // Close modal or popup
     } catch (error) {
+      console.log(errorMonitor)
       toast.error("Failed to add category.");
     } finally {
       setIsLoading(false);

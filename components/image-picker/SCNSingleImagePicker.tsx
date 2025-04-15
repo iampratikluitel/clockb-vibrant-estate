@@ -66,7 +66,7 @@ const SCNSingleImagePicker = ({
           name={schemaName}
           control={control}
           render={({
-            field: { value, onChange, ...fieldProps },
+            field: { onChange, ...fieldProps },
             fieldState: { error },
           }) => (
             <>
@@ -294,7 +294,7 @@ const SCNSingleImagePicker = ({
             name={schemaName}
             control={control}
             render={({
-              field: { value, onChange, ...fieldProps },
+              field: { onChange, ...fieldProps },
               fieldState: { error },
             }) => (
               <>

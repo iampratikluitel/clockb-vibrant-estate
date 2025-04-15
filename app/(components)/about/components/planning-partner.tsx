@@ -2,7 +2,6 @@
 
 import { MINIOURL } from "@/lib/constants";
 import { Partner } from "@/lib/types";
-import { Building } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 export default function PlanningPartner() {

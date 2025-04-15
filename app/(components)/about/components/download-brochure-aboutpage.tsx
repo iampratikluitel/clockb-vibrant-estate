@@ -13,7 +13,7 @@ export default function DownloadAboutBrochure() {
         setBrochureUrl(data.brochureUrl);
 
         const fileUrl = `${MINIOURL}${data.brochureUrl}`;
-        window.open(fileUrl, "_blank"); // Opens in new tab
+        window.open(fileUrl, "_blank"); 
       } else {
         console.error("Brochure URL not found.");
       }

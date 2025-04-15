@@ -93,6 +93,7 @@ export default function InvestmentCircleEditor() {
           "Your changes to the investment circle section have been saved successfully.",
       });
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to save changes. Please try again.",

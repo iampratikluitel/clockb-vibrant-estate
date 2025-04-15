@@ -93,7 +93,7 @@ export default function TermAndCondition() {
               </h3>
             </div>
             <p className="text-gray-600 mb-6">
-              We facilitate custom investment projects under the investor's
+              We facilitate custom investment projects under the investor&apos;s
               brand or institution.
             </p>
             <Button

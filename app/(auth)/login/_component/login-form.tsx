@@ -3,7 +3,6 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { login } from "@/action/login/index";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { paths } from "@/lib/paths";
@@ -27,7 +26,6 @@ const registerSchema = z.object({
   password: z.string().min(1, "Password should not be empty"),
 });
 const LoginForm = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -47,8 +45,9 @@ const LoginForm = () => {
           toast.error(response.error);
         }
       });
-    } catch (error: any) {
-      toast.error(`${error.message}`);
+    } catch (error) {
+      console.log(error)
+      toast.error(`Failed to login`);
     }
   }
 

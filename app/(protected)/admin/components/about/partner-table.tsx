@@ -1,31 +1,36 @@
 "use client";
 
+import * as React from "react";
+
+import {
+  CaretSortIcon,
+  ChevronDownIcon,
+  DotsHorizontalIcon,
+} from "@radix-ui/react-icons";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Partner } from "@/lib/types";
-import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import AlertDialogBox from "../AlertDialogBox";
 import {
   Table,
   TableBody,
@@ -34,14 +39,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MINIOURL } from "@/lib/constants";
-import { useAdminDeletePartnerMutation, useDeleteMultiplePartnerAdminMutation } from "@/store/api/Admin/adminPartner";
+import { useRouter } from "next/navigation";
+import { paths } from "@/lib/paths";
 import { toast } from "sonner";
+import { Partner } from "@/lib/types";
+import { convertToHumanReadable } from "@/lib/helper";
+import AlertDialogBox from "../AlertDialogBox";
+import { MINIOURL } from "@/lib/constants";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  useAdminDeletePartnerMutation,
+  useDeleteMultiplePartnerAdminMutation,
+  useGetAllAdminPartnerQuery,
+} from "@/store/api/Admin/adminPartner";
 
-export default function PartnerTable() {
-  const [data, setData] = React.useState<Partner[]>([]);
-  const [error, setError] = React.useState<string | null>(null); 
-
+const PartnerTable = () => {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -49,38 +70,34 @@ export default function PartnerTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
 
-  
-    const [deleteById] = useAdminDeletePartnerMutation();
-    const [deleteMultiple] = useDeleteMultiplePartnerAdminMutation();
-    const [showConfirmation, setShowConfirmation] = useState(false);
+  const { data: Data, isLoading: Loading } = useGetAllAdminPartnerQuery("");
 
-    useEffect(() => {
-      const fetchPartners = async () => {
-        try {
-          const response = await fetch("/api/admin/about/partner");
-          const result = await response.json();
-          if (response.ok) {
-            setData(result);
-          } else {
-            console.error("Failed to fetch partners:", result);
-          }
-        } catch (error) {
-          console.error("Error fetching partners:", error);
-        }
-      };
-  
-      fetchPartners();
-    }, []);
-  
-    const confirmDelete = async (itemId: String) => {
-        toast.promise(deleteById(itemId).unwrap(), {
-          loading: "Deleting...",
-          success: <b>Deleted</b>,
-          error: <b>Error while deleting</b>
-        });
+  const [deleteById] = useAdminDeletePartnerMutation();
+  const [deleteMultiple] = useDeleteMultiplePartnerAdminMutation();
+
+  const confirmDelete = async (itemId: string) => {
+    toast.promise(deleteById(itemId).unwrap(), {
+      loading: "Deleting...",
+      success: <b>Deleted</b>,
+      error: <b>Error while deleting</b>,
+    });
+  };
+  const handleMultipleDelete = async (ids: string[]) => {
+    toast.promise(
+      deleteMultiple({
+        ids: ids,
+      }),
+      {
+        loading: "Deleting...",
+        success: <b> Deleted</b>,
+        error: <b>Error while deleting</b>,
       }
+    );
+  };
 
+  const data: Partner[] = Data!;
   const columns: ColumnDef<Partner>[] = [
     {
       id: "_id",
@@ -91,7 +108,7 @@ export default function PartnerTable() {
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          arai-label="Select all"
+          aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
@@ -128,6 +145,16 @@ export default function PartnerTable() {
         </div>
       ),
     },
+
+    {
+      accessorKey: "postedDate",
+      header: "Posted Date",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {convertToHumanReadable(row.getValue("postedDate"))}
+        </div>
+      ),
+    },
     {
       id: "actions",
       enableHiding: false,
@@ -143,11 +170,19 @@ export default function PartnerTable() {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push(`${paths.admin.editPartner}?id=${faqrow._id}`)
+                }
+              >
+                Edit
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
+
               <AlertDialogBox
+                open={showConfirmation}
                 onCancel={() => setShowConfirmation(false)}
-                onConfirm={() => confirmDelete(faqrow.id)}
+                onConfirm={() => faqrow._id && confirmDelete(faqrow._id)}
                 text={"Delete"}
               ></AlertDialogBox>
             </DropdownMenuContent>
@@ -175,97 +210,183 @@ export default function PartnerTable() {
       rowSelection,
     },
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const openDeleteModal = (ids: string[]) => {
+    setSelectedRowIds(ids);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedRowIds([]);
+    setRowSelection({});
+  };
 
   return (
-    <div className="w-full">
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter member..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(e) => {
-            table.getColumn("name")?.setFilterValue(e.target.value);
-          }}
-          className="max-w-sm"
-        />
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
+    <div className="w-full h- ">
+      {Loading ? (
+        <div className="h-[100vh] w-full flex justify-center items-center">
+          <p className="loader"></p>
+        </div>
+      ) : (
+        <>
+          {" "}
+          <div className="flex items-center py-4">
+            <Input
+              placeholder="Filter Name..."
+              value={
+                (table.getColumn("name")?.getFilterValue() as string) ?? ""
+              }
+              onChange={(event) =>
+                table.getColumn("name")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+            {table.getFilteredSelectedRowModel().rows.length > 0 && (
+              <Button
+                onClick={() =>
+                  openDeleteModal(
+                    table
+                      .getFilteredSelectedRowModel()
+                      .rows.map((row) => row.original._id ?? "")
+                  )
+                }
+                variant={"destructive"}
+                className="m-2"
+              >
+                Delete
+              </Button>
             )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+            <Dialog open={isDeleteModalOpen} onOpenChange={closeDeleteModal}>
+              <DialogTrigger asChild></DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Are you sure?</DialogTitle>
+                  <DialogDescription>
+                    This will delete your data permanently.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                  <Button onClick={closeDeleteModal}>Cancel</Button>
+                  <Button
+                    onClick={async () => {
+                      await handleMultipleDelete(selectedRowIds);
+                      closeDeleteModal();
+                    }}
+                    variant={"destructive"}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="ml-auto">
+                  Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id}>
+                    {headerGroup.headers.map((header) => {
+                      return (
+                        <TableHead key={header.id}>
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                        </TableHead>
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
+                      No results.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="flex items-center justify-end space-x-2 py-4">
+            <div className="flex-1 text-sm text-muted-foreground">
+              {table.getFilteredSelectedRowModel().rows.length} of{" "}
+              {table.getFilteredRowModel().rows.length} row(s) selected.
+            </div>
+            <div className="space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
-}
+};
+export default PartnerTable;

@@ -63,6 +63,7 @@ export default function MainSectionEditor({ formData }: Props) {
 
       toast.success("Main-section updated successfully");
     } catch (error) {
+      console.log(error)
       toast.error("Failed to update");
     } finally {
       setIsSubmitting(false);

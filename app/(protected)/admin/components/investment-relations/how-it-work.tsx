@@ -151,6 +151,7 @@ export default function HowItWorksEditor() {
           "Your changes to the 'How It Works' section have been saved successfully.",
       });
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to save changes. Please try again.",

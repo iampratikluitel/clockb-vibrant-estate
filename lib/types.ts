@@ -1,21 +1,19 @@
 import { LucideIcon } from "lucide-react";
 
 export interface Member {
-  _id: string;
-  id: string;
+  _id?: string;
   name: string;
-  position: string;
+  role: string;
   description: string;
   image: string;
   icon?: LucideIcon;
-  postedDate: Date;
 }
 
 export interface Partner {
-  id: string;
   name: string;
   description: string;
   logo: string;
+  _id?: string;
 }
 
 export interface TESTIMONIALS {
@@ -153,4 +151,9 @@ export interface UpcommingProject{
   overview: string;
   addedDate: Date;
   status: boolean;
+}
+
+export interface ApiResponse {
+  message: string;
+  data: string;
 }

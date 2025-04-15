@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
@@ -22,29 +22,36 @@ import {
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
 
+interface InvestmentCircleData {
+  name?: string;
+  description?: string;
+  logo?: string;
+  points?: string[];
+}
+
+interface Props {
+  investmentCircleData?: InvestmentCircleData;
+}
+
 const FormSchema = z.object({
   name: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Subtitle is required"),
   logo: z.any(),
-  points: z.array(z.string()).min(1, "At least one point is required"), // Points field added
+  points: z.array(z.string()).min(1, "At least one point is required"),
 });
 
-interface props {
-  ConfigData: any | undefined;
-}
+export default function InvestmentCircle({ investmentCircleData }: Props) {
+  const [loading, setLoading] = useState(false);
 
-export default function LandingMainConfig({ ConfigData }: props) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Use React Hook Form with Zod resolver for validation
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: ConfigData?.name ?? "",
-      description: ConfigData?.description ?? "",
-      logo: ConfigData?.logo ? `${MINIOURL}${ConfigData?.logo}` : "",
-      points: ConfigData?.points ?? [""], // Initialize with existing points or empty
+      name: investmentCircleData?.name ?? "",
+      description: investmentCircleData?.description ?? "",
+      logo: investmentCircleData?.logo
+        ? `${MINIOURL}${investmentCircleData?.logo}`
+        : "",
+      points: investmentCircleData?.points ?? [""],
     },
   });
 
@@ -55,10 +62,9 @@ export default function LandingMainConfig({ ConfigData }: props) {
 
   // Handle form submission
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log("Data", data);
-    setIsSubmitting(true);
+    setLoading(true);
     try {
-      setIsLoading(true);
+      setLoading(true);
 
       if (!data.logo || data.logo === "") {
         toast.error("No background image selected");
@@ -67,7 +73,7 @@ export default function LandingMainConfig({ ConfigData }: props) {
 
       let backgroundUrl = null;
 
-      if (data.logo !== `${MINIOURL}${ConfigData?.logo}`) {
+      if (data.logo !== `${MINIOURL}${investmentCircleData?.logo}`) {
         backgroundUrl = await uploadToMinIO(data.logo, "InvestmentCircle");
         if (backgroundUrl === "") {
           toast.error("Background upload failed. Please try again.");
@@ -77,9 +83,8 @@ export default function LandingMainConfig({ ConfigData }: props) {
 
       const formData = {
         ...data,
-        logo: backgroundUrl ?? ConfigData?.logo,
+        logo: backgroundUrl ?? investmentCircleData?.logo,
       };
-      console.log("formData", formData);
 
       const response = await fetch("/api/admin/about/investment-circle", {
         method: "POST",
@@ -88,15 +93,15 @@ export default function LandingMainConfig({ ConfigData }: props) {
         },
         body: JSON.stringify(formData),
       });
-      console.log("response", response);
 
       if (!response.ok) throw new Error("Failed to submit");
 
       toast.success("Updated successfully");
     } catch (error) {
+      console.log(error);
       toast.error("Failed to update");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
 
@@ -170,7 +175,7 @@ export default function LandingMainConfig({ ConfigData }: props) {
 
               <div className="w-1/3 flex justify-end">
                 <SCNSingleImagePicker
-                  name=""
+                  name="logo"
                   variant="avatar"
                   schemaName="logo"
                 />
@@ -179,8 +184,8 @@ export default function LandingMainConfig({ ConfigData }: props) {
           </CardContent>
         </Card>
         <div className="flex items-end justify-end pt-4">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
+          <Button type="submit" disabled={loading}>
+            {loading ? "Submitting..." : "Submit"}
           </Button>
         </div>
       </form>

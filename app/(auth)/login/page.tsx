@@ -1,9 +1,7 @@
 import React from "react";
 import LoginForm from "./_component/login-form";
 
-type Props = {};
-
-const Page = (props: Props) => {
+const Page = () => {
   return (
     <div className="flex gap-x-10 border p-10 rounded-lg">
       <div className="flex flex-col gap-y-10">

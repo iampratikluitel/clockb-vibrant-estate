@@ -1,8 +1,7 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Calendar, Clock, CheckCircle2, TrendingUp } from "lucide-react";
+import { Calendar, CheckCircle2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TimelineMilestone = {

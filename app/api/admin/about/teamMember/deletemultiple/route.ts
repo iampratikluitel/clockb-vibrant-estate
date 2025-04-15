@@ -6,11 +6,11 @@ import TeamMember from "@/model/about/team-member-add";
 import { NextRequest, NextResponse } from "next/server";
 
 export const DELETE = async (request: NextRequest) => {
-  console.log("Running DELETE request: Admin DELETE Multiple TeamMember by id");
+  console.log("Running DELETE request: Admin DELETE Multiple TeamMembers by id");
   const user = await currentUser();
 
   try {
-    await connectDb()
+    await connectDb();
     const { ids } = await request.json();
     if (user) {
       const ToDelete = await TeamMember.find({
@@ -19,7 +19,7 @@ export const DELETE = async (request: NextRequest) => {
 
       if (!ToDelete || ToDelete.length === 0) {
         return NextResponse.json(
-          { message: "No TeamMember Found" },
+          { message: "No TeamMembers Found" },
           { status: 404 }
         );
       }
@@ -33,7 +33,7 @@ export const DELETE = async (request: NextRequest) => {
         }
       }
 
-      return NextResponse.json({ message: "TeamMember Deleted" }, { status: 201 });
+      return NextResponse.json({ message: "TeamMembers Deleted" }, { status: 201 });
     } else {
       return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
     }

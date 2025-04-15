@@ -3,7 +3,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { Label } from "./ui/label";
 import { FormMessage } from "./ui/form";
-import { League_Spartan } from "next/font/google";
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => <>loading</>,

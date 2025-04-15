@@ -41,6 +41,7 @@ const ForgotPasswordForm = () => {
         toast.error(`Couldn't Submit`);
       }
     } catch (error) {
+      console.log(error)
       toast.error(`Failed`);
     }
   }

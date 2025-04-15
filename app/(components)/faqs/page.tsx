@@ -237,7 +237,7 @@ const Faqs = () => {
             </Accordion>
           ) : (
             <div className="py-12 text-center">
-              <p className="text-lg text-gray-600">No questions found matching "{searchQuery}"</p>
+              <p className="text-lg text-gray-600">No questions found matching &quot;{searchQuery}</p>
               <p className="mt-2 text-estates-primary">Try a different search term or browse all questions by clearing the search.</p>
               <button 
                 onClick={() => {

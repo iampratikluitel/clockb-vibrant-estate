@@ -58,6 +58,7 @@ const ResetPasswordForm = () => {
         toast.error(`Something Went Wrong`);
       }
     } catch (error) {
+      console.log(error)
       toast.error(`Failed`);
     }
   }

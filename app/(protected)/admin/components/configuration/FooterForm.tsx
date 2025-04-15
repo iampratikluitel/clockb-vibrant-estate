@@ -16,10 +16,7 @@ import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
-import { useAdminAddUpdateFooterConfigMutation } from "@/store/api/Admin/adminConfiguration";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { paths } from "@/lib/paths";
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
 
@@ -53,9 +50,6 @@ interface props {
 
 const FooterForm = ({ ConfigData }: props) => {
   const [Loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [AddUpdateFooterConfig] = useAdminAddUpdateFooterConfigMutation();
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -77,7 +71,7 @@ const FooterForm = ({ ConfigData }: props) => {
   });
 
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
-    setIsSubmitting(true);
+    setLoading(true);
 
     try {
       setLoading(true);
@@ -111,9 +105,10 @@ const FooterForm = ({ ConfigData }: props) => {
 
       toast.success("Configuration updated successfully.");
     } catch (error) {
+      console.log(error)
       toast.error("Failed to update configuration. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
 

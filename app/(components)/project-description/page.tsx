@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Box, Building, Check, FileText, Leaf, PiggyBank, ShieldCheck, Calendar, MapPin, LayoutGrid, Droplets, Zap, Sun, Store, Clock, Users, DollarSign, ArrowUpRight, LandPlot, TrendingUp } from "lucide-react";
+import { ArrowRight, Building, Check, FileText, Leaf, PiggyBank, ShieldCheck, Calendar, MapPin, LayoutGrid, Droplets, Zap, Sun, Store, Users, DollarSign, ArrowUpRight, LandPlot, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";

@@ -1,18 +1,12 @@
 "use client";
 
 import {
-  Download,
   Phone,
-  FileText,
   MapPin,
-  Users,
-  Building,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TeamMemberView from "./components/team-member";
-import { useEffect, useState } from "react";
 import DownloadAboutBrochure from "./components/download-brochure-aboutpage";
 import PlanningPartner from "./components/planning-partner";
 import InvestmentCircle from "./components/investment-circle";
@@ -38,13 +32,10 @@ const About = () => {
           </div>
         </section>
 
-        {/* Meet the Team Section */}
         <TeamMemberView />
 
-        {/* Engineering & Planning Partner Section */}
         <PlanningPartner />
 
-        {/* Managed by Investment Circle Section */}
         <InvestmentCircle />
 
         {/* Call to Action Section */}

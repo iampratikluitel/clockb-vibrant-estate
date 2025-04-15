@@ -32,7 +32,8 @@ export async function POST(request: NextRequest) {
       { message: "Password Reset successfull" },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
+    console.log(error)
     return NextResponse.json(
       { error: "Invalid request body" },
       { status: 400 }
