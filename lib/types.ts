@@ -133,7 +133,7 @@ export interface LandingPage {
   card13description: string;
 }
 
-export interface News{
+export interface NewsInsight{
   _id: string;
   title: string;
   description: string;

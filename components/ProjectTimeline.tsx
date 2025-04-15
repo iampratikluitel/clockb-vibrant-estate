@@ -165,19 +165,6 @@ const ProjectTimeline = () => {
             ))}
           </div>
         </div>
-
-        {/* CTA Section */}
-        <div className="text-center mt-16 transform transition-all duration-500 hover:scale-105">
-          <div className="inline-block bg-estates-primary/5 p-1 rounded-xl">
-            <Button 
-              className="group bg-estates-primary hover:bg-estates-primary/90 text-white px-8 py-7 h-auto text-lg rounded-lg shadow-lg shadow-estates-primary/20" 
-              size="lg"
-            >
-              Be a Part of the Next Phase – Invest Now!
-              <ArrowRight className="ml-2 group-hover:animate-pulse group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );

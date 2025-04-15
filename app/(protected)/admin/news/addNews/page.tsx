@@ -1,5 +1,4 @@
 import React from "react";
-import TestimonialForm from "../../components/testimonial/testimonialForm";
 import {
   Breadcrumb,
   BreadcrumbItem,

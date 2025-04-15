@@ -21,7 +21,7 @@ const LandingPageConfig = () => {
 
   return (
     <div>
-      <Breadcrumb className="p-4">
+      {/* <Breadcrumb className="p-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href={paths.admin.dashboard}>
@@ -39,13 +39,13 @@ const LandingPageConfig = () => {
             <BreadcrumbPage>LandingPage</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb>
+      </Breadcrumb> */}
       {Loading ? (
         <div className="h-[100vh] w-full flex justify-center items-center">
           <p className="loader"></p>
         </div>
       ) : (
-        <LandingConfiguration />
+        <LandingConfiguration ExistingDetail={ConfigData}/>
       )}
       </div>
   );

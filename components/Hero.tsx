@@ -1,37 +1,7 @@
-"use client";
-
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-
-interface HeroData {
-  name: string;
-  description: string;
-  card1name: string;
-  card1description: string;
-  card2name: string;
-  card2description: string;
-  card3name: string;
-  card3description: string;
-  backgroundImage: string;
-}
 
 const Hero = () => {
-  const [heroData, setHeroData] = useState<HeroData | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/public/configuration/landing");
-        const data = await response.json();
-        setHeroData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Background Image with Overlay */}
@@ -50,12 +20,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            {heroData?.name ||
-              "Transforming Real Estate into Value-Driven Investments"}
+            Transforming Real Estate into Value-Driven Investments
           </h1>
           <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
-            {heroData?.description ||
-              "Sustainable, Functional, and Profitable Developments for Investors"}
+            Sustainable, Functional, and Profitable Developments for Investors
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
@@ -87,11 +55,10 @@ const Hero = () => {
               className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
             >
               <h3 className="text-estates-primary font-bold text-xl mb-2">
-                {heroData?.card1name || "Premium Locations"}
+                Premium Locations
               </h3>
               <p className="text-gray-600">
-                {heroData?.card1description ||
-                  "Strategic properties in high-growth areas"}
+                Strategic properties in high-growth areas
               </p>
             </div>
 
@@ -101,11 +68,10 @@ const Hero = () => {
               className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
             >
               <h3 className="text-estates-primary font-bold text-xl mb-2">
-                {heroData?.card2name || "Sustainable Design"}
+                Sustainable Design
               </h3>
               <p className="text-gray-600">
-                {heroData?.card2description ||
-                  "Eco-friendly construction with modern amenities"}
+                Eco-friendly construction with modern amenities
               </p>
             </div>
 
@@ -115,11 +81,10 @@ const Hero = () => {
               className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
             >
               <h3 className="text-estates-primary font-bold text-xl mb-2">
-                {heroData?.card3name || "High ROI"}
+                High ROI
               </h3>
               <p className="text-gray-600">
-                {heroData?.card3description ||
-                  "Consistent returns on investment portfolios"}
+                Consistent returns on investment portfolios
               </p>
             </div>
           </div>

@@ -29,7 +29,6 @@ export default function NewsInsight() {
             </Link>
         </div>
       </div>
-      
       <NewsTable />
     </div>
   )

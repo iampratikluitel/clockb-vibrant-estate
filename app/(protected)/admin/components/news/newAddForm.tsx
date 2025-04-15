@@ -27,14 +27,13 @@ import {
 import AddNewsCategory from "./newsCategory";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
-import { useAdminAddUpdateNewsMutation } from "@/store/api/Admin/adminNewsInsight";
 import { uploadToMinIO } from "@/lib/helper";
 import { useRouter } from "next/navigation";
-import { News } from "@/lib/types";
+import { NewsInsight } from "@/lib/types";
 
 interface Props {
   type: "Add" | "Edit";
-  ExistingDetail?: News | null;
+  ExistingDetail?: NewsInsight | null;
   newsCategory: any[];
 }
 

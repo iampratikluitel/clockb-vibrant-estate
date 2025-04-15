@@ -2,11 +2,6 @@
 
 import * as React from "react";
 import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
-import {
   ColumnDef,
   SortingState,
   VisibilityState,
@@ -29,24 +24,19 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { convertToHumanReadable } from "@/lib/helper";
 import { MINIOURL } from "@/lib/constants";
-import {
-  useAdminDeleteNewsMutation,
-  useAdminToggleNewsMutation,
-  useDeleteMultipleNewsAdminMutation,
-  useGetAllAdminNewsQuery,
-} from "@/store/api/Admin/adminNewsInsight";
-import { News } from "@/lib/types";
 import { Switch } from "@/components/ui/switch";
+import { useAdminDeleteNewsInsightMutation, useAdminToggleNewsInsightMutation, useDeleteMultipleNewsInsightsAdminMutation, useGetAllAdminNewsInsightsQuery } from "@/store/api/Admin/adminNewsInsight";
+import { NewsInsight } from "@/lib/types";
 
 const NewsTable = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   
-  const { data: Data, isLoading: Loading } = useGetAllAdminNewsQuery("");
-  const [deleteById] = useAdminDeleteNewsMutation();
-  const [Toggle] = useAdminToggleNewsMutation();
-  const [deleteMultiple] = useDeleteMultipleNewsAdminMutation();
+  const { data: Data, isLoading: Loading } = useGetAllAdminNewsInsightsQuery("");
+  const [deleteById] = useAdminDeleteNewsInsightMutation();
+  const [Toggle] = useAdminToggleNewsInsightMutation();
+  const [deleteMultiple] = useDeleteMultipleNewsInsightsAdminMutation();
   
   const confirmDelete = async (itemId: string) => {
     toast.promise(deleteById(itemId).unwrap(), {
@@ -73,9 +63,9 @@ const NewsTable = () => {
     });
   };
 
-  const data: News[] = Data ?? [];
+  const data: NewsInsight[] = Data ?? [];
   
-  const columns: ColumnDef<News>[] = [
+  const columns: ColumnDef<NewsInsight>[] = [
     {
       accessorKey: "title",
       header: "News Title",

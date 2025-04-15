@@ -1,3 +1,12 @@
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { paths } from "@/lib/paths";
 import Link from "next/link";
 import React from "react";
 
@@ -39,11 +48,6 @@ const configLinks = [
     name: "Footer",
     path: "/admin/configuration/footer",
     description: "Edit footer links, design, and information.",
-  },
-  {
-    name: "Logo",
-    path: "/admin/configuration/logo",
-    description: "Edit Logo of the Header",
   },
 ];
 

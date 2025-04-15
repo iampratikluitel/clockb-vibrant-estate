@@ -1,119 +1,177 @@
-// "use client"
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import FormSchema from "./landingConfigSchema";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// import { useState } from "react"
-// import { useToast } from "@/hooks/use-toast"
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-// import LandingMainConfig from "./landing-main-section"
-// import LandingSecondSection from "./Landing-why-choose-use-card"
-// import LandingThirdSection from "./landing-why-invest-with-us"
+interface Props {
+  ExistingDetail?: any;
+}
 
-// export default function LandingConfigTab() {
-//   const { toast } = useToast()
-//   const [activeTab, setActiveTab] = useState("general")
+export default function LandingConfiguration({ ExistingDetail }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("card1");
 
-//   const saveChanges = () => {
-//     toast({
-//       title: "Changes saved",
-//       description: "Your changes have been saved successfully.",
-//     })
-//   }
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      card1title: ExistingDetail?.card1title ?? "",
+      card1description: ExistingDetail?.card1description ?? "",
+      card1Date: ExistingDetail?.card1Date ?? "",
 
-//   return (
-//     <div className="container mx-auto py-8">
-//       <div className="flex justify-between items-center mb-6">
-//         <h1 className="text-3xl font-bold text-gray-800">About Page Management</h1>
-//       </div>
+      card2title: ExistingDetail?.card2title ?? "",
+      card2description: ExistingDetail?.card2description ?? "",
+      card2Date: ExistingDetail?.card2Date ?? "",
 
-//       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-//         <TabsList className="grid grid-cols-3 mb-8 gap-4">
-//           <TabsTrigger
-//             value="general"
-//             className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
-//           >
-//             Main Section
-//           </TabsTrigger>
-//           <TabsTrigger
-//             value="team"
-//             className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
-//           >
-//             Why Choose us
-//           </TabsTrigger>
-//           <TabsTrigger
-//             value="partners"
-//             className="py-2 px-4 text-center font-semibold border bg-white rounded-2xl hover:bg-blue-200 transition-all"
-//           >
-//            Why Invest With us
-//           </TabsTrigger>
-//         </TabsList>
+      card3title: ExistingDetail?.card3title ?? "",
+      card3description: ExistingDetail?.card3description ?? "",
+      card3Date: ExistingDetail?.card3Date ?? "",
 
-//         {/* Tab Components */}
-//         <TabsContent value="general">
-//           <LandingMainConfig ConfigData={undefined} />
-//         </TabsContent>
+      card4title: ExistingDetail?.card4title ?? "",
+      card4description: ExistingDetail?.card4description ?? "",
+      card4Date: ExistingDetail?.card4Date ?? "",
 
-//         <TabsContent value="team">
-//           <LandingSecondSection ConfigData={undefined} />
-//         </TabsContent>
+      card5title: ExistingDetail?.card5title ?? "",
+      card5description: ExistingDetail?.card5description ?? "",
+      card5Date: ExistingDetail?.card5Date ?? "",
+    },
+  });
 
-//         <TabsContent value="partners">
-//           <LandingThirdSection ConfigData={undefined} />
-//         </TabsContent>
-//       </Tabs>
-//     </div>
-//   )
-// }
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    try {
+      setIsLoading(true);
+      const formData = { _id: ExistingDetail?._id, ...data };
+      const response = await fetch("/api/admin/configuration/landingpage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-import React from "react";
+      if (!response.ok) throw new Error("Failed to save data");
+      toast.success("Changes saved successfully");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-export default function LandingConfiguration() {
+  // Helper function to create card fields
+  const renderCardFields = (cardNumber: number) => {
+    const prefix = `card${cardNumber}`;
+
+    return (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Project {cardNumber}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <FormField
+            control={form.control}
+            name={`${prefix}title` as any}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter Project Title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={`${prefix}description` as any}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter project Description"
+                    className="min-h-32"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name={`${prefix}Date` as any}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <Input
+                    type="date"
+                    {...field}
+                    value={
+                      field.value
+                        ? new Date(field.value).toISOString().split("T")[0]
+                        : ""
+                    }
+                    onChange={(e) => field.onChange(e.target.value)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
-    <div>
-      <div>
-        <h1 className="text-2xl font-semibold">Project Journey</h1>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 justify-center">
-        {[...Array(5)].map((_, index) => (
-          <div
-            key={index}
-            className="w-full p-6 bg-white rounded-2xl shadow-md"
+    <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h1 className="text-2xl font-semibold mb-6">Projects Journey</h1>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
           >
-            <h3 className="text-lg font-semibold">Card {index + 1}</h3>
-            <form className="mt-2">
-              <label className="block text-sm font-medium text-gray-700">
-                Title
-              </label>
-              <input
-                type="text"
-                className="w-full p-2 mt-1 border rounded-md"
-                placeholder="Enter title"
-              />
+            <TabsList className="grid grid-cols-5 mb-6">
+              <TabsTrigger value="card1">Project 1</TabsTrigger>
+              <TabsTrigger value="card2">Project 2</TabsTrigger>
+              <TabsTrigger value="card3">Project 3</TabsTrigger>
+              <TabsTrigger value="card4">Project 4</TabsTrigger>
+              <TabsTrigger value="card5">Project 5</TabsTrigger>
+            </TabsList>
 
-              <label className="block mt-2 text-sm font-medium text-gray-700">
-                Date
-              </label>
-              <input
-                type="date"
-                className="w-full p-2 mt-1 border rounded-md"
-              />
+            <TabsContent value="card1">{renderCardFields(1)}</TabsContent>
+            <TabsContent value="card2">{renderCardFields(2)}</TabsContent>
+            <TabsContent value="card3">{renderCardFields(3)}</TabsContent>
+            <TabsContent value="card4">{renderCardFields(4)}</TabsContent>
+            <TabsContent value="card5">{renderCardFields(5)}</TabsContent>
+          </Tabs>
 
-              <label className="block mt-2 text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                className="w-full p-2 mt-1 border rounded-md"
-                placeholder="Enter description"
-              ></textarea>
-
-              <button
-                type="submit"
-                className="w-full mt-3 p-2 bg-blue-500 text-white rounded-md"
-              >
-                Submit
-              </button>
-            </form>
+          <div className="flex justify-end mt-8">
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? "Saving..." : "Save All Projects"}
+            </Button>
           </div>
-        ))}
-      </div>
+        </form>
+      </Form>
     </div>
   );
 }

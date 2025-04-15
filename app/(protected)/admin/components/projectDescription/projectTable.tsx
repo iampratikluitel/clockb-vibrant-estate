@@ -28,7 +28,7 @@ import { toast } from "sonner";
 
 import { convertToHumanReadable } from "@/lib/helper";
 import { Switch } from "@/components/ui/switch";
-import { useAdminToggleNewsMutation } from "@/store/api/Admin/adminNewsInsight";
+import { useAdminToggleNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
 import { useAdminDeletePartnerMutation } from "@/store/api/Admin/adminPartner";
 import { useDeleteMultipleUpcommingProjectAdminMutation } from "@/store/api/Admin/adminUpcommingProject";
 
@@ -40,7 +40,7 @@ export default function ProjectTable() {
   );
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [Toggle] = useAdminToggleNewsMutation();
+  const [Toggle] = useAdminToggleNewsInsightMutation();
 
   const [deleteById] = useAdminDeletePartnerMutation();
   const [deleteMultiple] = useDeleteMultipleUpcommingProjectAdminMutation();

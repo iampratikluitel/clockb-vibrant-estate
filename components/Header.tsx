@@ -82,7 +82,7 @@ const Header = () => {
           className="flex items-center space-x-3 text-estates-primary hover:opacity-80 transition-all duration-300 group"
         >
           <img
-            className="w-8 h-8 group-hover:scale-110 transition-transform duration-30"
+            className="w-12 h-12 group-hover:scale-110 transition-transform duration-30"
             src="logo/project-estate.png"
             alt="nss-logo-png"
           />

@@ -1,76 +1,77 @@
-import { News } from "@/lib/types";
-  import { baseQuery } from "@/store/global";
-  import { createApi } from "@reduxjs/toolkit/query/react";
-  
-  export const adminNewsApi = createApi({
-    reducerPath: "adminNewsApi",
-    tagTypes: [
-      "Admin News",
-    ],
-    baseQuery: baseQuery,
-    keepUnusedDataFor: 2,
-    endpoints: (builder) => ({
-      //Get All News
-      getAllAdminNews: builder.query<News[], string>({
-        query: () => `admin/News`,
-        providesTags: ["Admin News"],
-      }),
-  
-      // News by Id
-      getAdminNewsById: builder.query<News, string>({
-        query: (id) => `admin/News/byid?id=${id}`,
-        providesTags: ["Admin News"],
-      }),
-  
-      // Admin Delete News
-      AdminDeleteNews: builder.mutation<{ message: string }, any>({
-        query: (id) => ({
-          url: `admin/News?id=${id}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["Admin News"],
-      }),
-  
-      //Add Update News
-      AdminAddUpdateNews: builder.mutation<{ message: string }, any>({
-        query: ({ ...body }) => ({
-          url: `admin/News`,
-          method: "POST",
-          body: body,
-        }),
-        invalidatesTags: ["Admin News"],
-      }),
-  
-      // Admin Toggle News Status
-      AdminToggleNews: builder.mutation<{ message: string }, any>({
-        query: (id) => ({
-          url: `admin/News/toggle?id=${id}`,
-          method: "POST",
-        }),
-        invalidatesTags: ["Admin News"],
-      }),
-  
-      //Delete Multiple News
-      deleteMultipleNewsAdmin: builder.mutation<
-        { message: string },
-        { ids: string[] }
-      >({
-        query: (body) => ({
-          url: `admin/News/deletemultiple`,
-          method: "DELETE",
-          body: body,
-        }),
-        invalidatesTags: ["Admin News"],
-      }),
+import { NewsInsight } from "@/lib/types";
+import { baseQuery } from "@/store/global";
+import { createApi } from "@reduxjs/toolkit/query/react";
+
+export const adminNewsInsightsApi = createApi({
+  reducerPath: "adminNewsInsightsApi",
+  tagTypes: [
+    "Admin NewsInsights",
+    "Admin NewsInsights Enquiry",
+    "Admin NewsInsights Download",
+  ],
+  baseQuery: baseQuery,
+  keepUnusedDataFor: 2,
+  endpoints: (builder) => ({
+    //Get All NewsInsights
+    getAllAdminNewsInsights: builder.query<NewsInsight[], string>({
+      query: () => `admin/newsinsights`,
+      providesTags: ["Admin NewsInsights"],
     }),
-  });
-  
-  export const {
-    useAdminAddUpdateNewsMutation,
-    useAdminDeleteNewsMutation,
-    useGetAdminNewsByIdQuery,
-    useGetAllAdminNewsQuery,
-    useAdminToggleNewsMutation,
-    useDeleteMultipleNewsAdminMutation,
-  } = adminNewsApi;
-  
+
+    // NewsInsight by Id
+    getAdminNewsInsightById: builder.query<NewsInsight, string>({
+      query: (id) => `admin/newsInsights/byid?id=${id}`,
+      providesTags: ["Admin NewsInsights"],
+    }),
+
+    // Admin Delete NewsInsight
+    AdminDeleteNewsInsight: builder.mutation<{ message: string }, any>({
+      query: (id) => ({
+        url: `admin/newsInsights?id=${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Admin NewsInsights"],
+    }),
+
+    //Add Update NewsInsight
+    AdminAddUpdateNewsInsight: builder.mutation<{ message: string }, any>({
+      query: ({ ...body }) => ({
+        url: `admin/newsInsights`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["Admin NewsInsights"],
+    }),
+
+    // Admin Toggle NewsInsight Status
+    AdminToggleNewsInsight: builder.mutation<{ message: string }, any>({
+      query: (id) => ({
+        url: `admin/newsInsights/toggle?id=${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Admin NewsInsights"],
+    }),
+
+    //Delete Multiple NewsInsights
+    deleteMultipleNewsInsightsAdmin: builder.mutation<
+      { message: string },
+      { ids: string[] }
+    >({
+      query: (body) => ({
+        url: `admin/newsInsights/deletemultiple`,
+        method: "DELETE",
+        body: body,
+      }),
+      invalidatesTags: ["Admin NewsInsights"],
+    }),
+  }),
+});
+
+export const {
+  useAdminAddUpdateNewsInsightMutation,
+  useAdminDeleteNewsInsightMutation,
+  useGetAdminNewsInsightByIdQuery,
+  useGetAllAdminNewsInsightsQuery,
+  useAdminToggleNewsInsightMutation,
+  useDeleteMultipleNewsInsightsAdminMutation,
+} = adminNewsInsightsApi;
