@@ -1,0 +1,27 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  admin
+}
+
+model User {
+  id                        String    @id @default(auto()) @map("_id") @db.ObjectId
+  email                     String    @unique
+  password                  String
+  userType                  UserType  @default(admin)
+  status                    Boolean   @default(true)
+  createdAt                 DateTime  @default(now())
+   // Optional fields
+  forgotPasswordToken         String?
+  forgotPasswordTokenExpiry  DateTime?
+  verifyToken                String?
+  verifyTokenExpiry          DateTime?
+}

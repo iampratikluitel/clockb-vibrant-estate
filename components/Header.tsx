@@ -1,20 +1,14 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { Building2, Download, Shield } from "lucide-react";
+import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { MINIOURL } from "@/lib/constants";
 
 const Header = () => {
-  const router = useRouter()
+  const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-
-  const handleLogin = () => {
-    router.push('/login')
-  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +17,23 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleDownloadBrochure = async () => {
+    try {
+      const fetchData = await fetch("/api/public/configuration/brochure");
+      const data = await fetchData.json();
+
+      if (data?.brochureUrl) {
+        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        // Open the file in a new tab
+        window.open(fileUrl, "_blank");
+      } else {
+        console.error("Brochure URL not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching brochure:", error);
+    }
+  };
 
   return (
     <header
@@ -36,8 +47,14 @@ const Header = () => {
           href="/"
           className="flex items-center space-x-3 text-estates-primary hover:opacity-80 transition-all duration-300 group"
         >
-          <Building2 className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" />
-          <span className="text-xl font-bold tracking-tight">Project Estates</span>
+          <img
+            className="w-12 h-12 group-hover:scale-110 transition-transform duration-30"
+            src="logo/project-estate.png"
+            alt="nss-logo-png"
+          />
+          <span className="text-xl font-bold tracking-tight">
+            Project Estates
+          </span>
         </Link>
 
         {/* Navigation Links */}
@@ -48,25 +65,15 @@ const Header = () => {
           <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
           <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
           <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
-          {/* <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
-            <Shield className="w-4 h-4 mr-1" /> Admin
-          </NavLink> */}
         </div>
 
         {/* CTA Button */}
         <Button
+          onClick={handleDownloadBrochure}
           className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
         >
           <Download className="w-4 h-4 mr-2 animate-bounce" />
           Download Brochure
-        </Button>
-
-        <Button
-          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-          onClick={(handleLogin)}
-        >
-          {/* <Download className="w-4 h-4 mr-2 animate-bounce" /> */}
-          login
         </Button>
 
         {/* Mobile Menu Button */}
@@ -102,15 +109,11 @@ const NavLink = ({
 }) => (
   <Link
     href={href}
-    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${
-      isActive ? "text-estates-primary" : ""
-    }`}
+    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${isActive ? "text-estates-primary" : ""}`}
   >
     {children}
     <span
-      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${
-        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-      }`}
+      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
     />
   </Link>
 );

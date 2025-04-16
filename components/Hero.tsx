@@ -1,19 +1,36 @@
-'use client'
-
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MINIOURL } from "@/lib/constants";
+
+const handleDownloadBrochure = async () => {
+    try {
+      const fetchData = await fetch("/api/public/configuration/brochure");
+      const data = await fetchData.json();
+
+      if (data?.brochureUrl) {
+        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        window.open(fileUrl, "_blank");
+      } else {
+        console.error("Brochure URL not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching brochure:", error);
+    }
+  };
 
 const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1773&q=80')",
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1773&q=80')",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-estates-secondary/80 to-estates-primary/70" /> {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-estates-secondary/80 to-estates-primary/70" />{" "}
+        {/* Gradient overlay */}
       </div>
 
       {/* Content */}
@@ -30,13 +47,16 @@ const Hero = () => {
               className="bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-8 py-6 text-lg rounded-lg 
                 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
                 shadow-lg hover:shadow-estates-primary/20 group"
+                onClick={handleDownloadBrochure}
             >
               <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
               Download Brochure
             </Button>
+
+            {/* <DownloadAboutBrochure /> */}
             <Button
               variant="outline"
-              className="border-2 border-white text-white hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg
+              className="border-2 border-white text-estates-primary/90 hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg
                 transition-all duration-300"
             >
               Our Projects
@@ -49,19 +69,44 @@ const Hero = () => {
       <div className="absolute bottom-[-30px] left-0 right-0 px-4 hidden md:block">
         <div className="container mx-auto">
           <div className="grid grid-cols-3 gap-6">
-            {[
-              { title: "Premium Locations", desc: "Strategic properties in high-growth areas" },
-              { title: "Sustainable Design", desc: "Eco-friendly construction with modern amenities" },
-              { title: "High ROI", desc: "Consistent returns on investment portfolios" }
-            ].map((item, index) => (
-              <div 
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
-              >
-                <h3 className="text-estates-primary font-bold text-xl mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.desc}</p>
-              </div>
-            ))}
+            {/*Card1*/}
+            <div
+              key="card1"
+              className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <h3 className="text-estates-primary font-bold text-xl mb-2">
+                Premium Locations
+              </h3>
+              <p className="text-gray-600">
+                Strategic properties in high-growth areas
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div
+              key="card2"
+              className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <h3 className="text-estates-primary font-bold text-xl mb-2">
+                Sustainable Design
+              </h3>
+              <p className="text-gray-600">
+                Eco-friendly construction with modern amenities
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div
+              key="card3"
+              className="bg-white p-6 rounded-lg shadow-lg transform hover:-translate-y-2 transition-transform duration-300"
+            >
+              <h3 className="text-estates-primary font-bold text-xl mb-2">
+                High ROI
+              </h3>
+              <p className="text-gray-600">
+                Consistent returns on investment portfolios
+              </p>
+            </div>
           </div>
         </div>
       </div>

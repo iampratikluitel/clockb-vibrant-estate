@@ -1,8 +1,7 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Calendar, Clock, CheckCircle2, TrendingUp } from "lucide-react";
+import { Calendar, CheckCircle2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type TimelineMilestone = {
@@ -164,42 +163,6 @@ const ProjectTimeline = () => {
               </div>
             ))}
           </div>
-
-          {/* Current Active Phase Display */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-20 max-w-4xl mx-auto border-l-4 border-estates-primary transform transition-all duration-700 hover:shadow-2xl">
-            <div className="flex items-center gap-4 mb-4">
-              <div className={cn(
-                "w-12 h-12 rounded-xl flex items-center justify-center",
-                milestoneColors[activeIndex % milestoneColors.length]
-              )}>
-                <Calendar className="h-6 w-6 text-estates-primary" />
-              </div>
-              <div>
-                <h3 className="text-sm text-estates-primary font-semibold">CURRENT PHASE</h3>
-                <h4 className="text-2xl font-bold">{timelineData[activeIndex].title}</h4>
-              </div>
-            </div>
-            <p className="text-gray-600 leading-relaxed mb-4">
-              {timelineData[activeIndex].description}
-            </p>
-            <div className="flex items-center text-sm text-estates-primary font-medium">
-              <Clock className="mr-2 h-4 w-4" />
-              <span>Timeline: {timelineData[activeIndex].period}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="text-center mt-16 transform transition-all duration-500 hover:scale-105">
-          <div className="inline-block bg-estates-primary/5 p-1 rounded-xl">
-            <Button 
-              className="group bg-estates-primary hover:bg-estates-primary/90 text-white px-8 py-7 h-auto text-lg rounded-lg shadow-lg shadow-estates-primary/20" 
-              size="lg"
-            >
-              Be a Part of the Next Phase – Invest Now!
-              <ArrowRight className="ml-2 group-hover:animate-pulse group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
         </div>
       </div>
     </section>
@@ -215,7 +178,7 @@ interface TimelineItemProps {
   bgColor: string;
 }
 
-const TimelineItem = ({ milestone, isActive = false, index, total, onClick, bgColor }: TimelineItemProps) => {
+const TimelineItem = ({ milestone, isActive = false, index, onClick, bgColor }: TimelineItemProps) => {
   return (
     <div 
       className={cn(

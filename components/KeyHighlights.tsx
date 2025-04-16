@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { MapPin, TrendingUp, ShieldCheck, Leaf } from "lucide-react";
 
@@ -6,7 +6,8 @@ const highlights = [
   {
     icon: MapPin,
     title: "Strategic Location",
-    description: "Great strategic location near fast-track road and only 8KM from Ekantakuna Ring Road",
+    description:
+      "Great strategic location near fast-track road and only 8KM from Ekantakuna Ring Road",
     bgColor: "bg-[#D3E4FD]", // Soft blue
   },
   {
@@ -37,13 +38,9 @@ const KeyHighlights = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-estates-secondary mb-6 tracking-tight">
             Why Choose Us?
           </h2>
-          <div className="relative">
-            <div className="w-24 h-1.5 bg-estates-primary mx-auto mb-8 rounded-full">
-              <div className="absolute -inset-x-4 -inset-y-3 bg-estates-primary/20 blur-lg rounded-full" />
-            </div>
-          </div>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Discover why we're your trusted partner in real estate development and investment.
+            Discover why we&apos;re your trusted partner in real estate development
+            and investment.
           </p>
         </div>
 
@@ -57,18 +54,24 @@ const KeyHighlights = () => {
               style={{ animationDelay: `${index * 150}ms` }}
             >
               <div className="relative">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-6 
+                <div
+                  className="inline-flex items-center justify-center w-16 h-16 mb-6 
                   rounded-xl bg-white text-estates-primary 
                   group-hover:bg-estates-primary group-hover:text-white 
-                  transition-colors duration-300">
+                  transition-colors duration-300"
+                >
                   <highlight.icon className="w-8 h-8" />
-                  <div className="absolute -inset-4 bg-estates-primary/10 blur-xl 
+                  <div
+                    className="absolute -inset-4 bg-estates-primary/10 blur-xl 
                     rounded-full opacity-0 group-hover:opacity-100 
-                    transition-opacity duration-300" />
+                    transition-opacity duration-300"
+                  />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold mb-4 text-estates-secondary 
-                group-hover:text-estates-primary transition-colors duration-300">
+              <h3
+                className="text-xl font-semibold mb-4 text-estates-secondary 
+                group-hover:text-estates-primary transition-colors duration-300"
+              >
                 {highlight.title}
               </h3>
               <p className="text-gray-600 leading-relaxed">

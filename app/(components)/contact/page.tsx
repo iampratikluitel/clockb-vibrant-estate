@@ -31,14 +31,12 @@ const Contact = () => {
   const [appointmentNote, setAppointmentNote] = useState("");
   const [isAppointmentSubmitting, setIsAppointmentSubmitting] = useState(false);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     try {
-      const response = await fetch(`api/contact`, {
+      const response = await fetch(`api/public/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,6 +61,7 @@ const Contact = () => {
       setSubjectInput("");
       setMessageInput("");
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -108,6 +107,7 @@ const Contact = () => {
       setAppointmentNote("");
       setIsAppointmentModalOpen(false);
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
         description: "Failed to schedule appointment. Please try again.",
@@ -131,7 +131,7 @@ const Contact = () => {
               </h1>
               <p className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
                 Have questions about our properties or investment opportunities?
-                We're here to help you every step of the way.
+                We&apos;re here to help you every step of the way.
               </p>
             </div>
           </div>
