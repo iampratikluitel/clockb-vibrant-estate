@@ -51,7 +51,7 @@ const AddNewsCategory: React.FC<AddNewsCategoryProps> = ({ type, setIsOpen }) =>
       toast.success("News category added successfully!");
       setIsOpen(false); // Close modal or popup
     } catch (error) {
-      console.log(errorMonitor)
+      console.log(error)
       toast.error("Failed to add category.");
     } finally {
       setIsLoading(false);
@@ -84,7 +84,7 @@ const AddNewsCategory: React.FC<AddNewsCategoryProps> = ({ type, setIsOpen }) =>
           <FormField
             control={form.control}
             name="icon"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormLabel>Category Icon</FormLabel>
                 <FormControl>

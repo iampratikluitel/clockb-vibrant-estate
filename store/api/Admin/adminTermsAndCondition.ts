@@ -1,5 +1,5 @@
 import { baseQuery } from "@/store/global";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const adminTermsAndConditionsApi = createApi({
   reducerPath: "adminTermsAndConditionsApi",

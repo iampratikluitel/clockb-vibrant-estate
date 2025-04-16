@@ -71,7 +71,7 @@ const TestimonialTable = () => {
   const [deleteById] = useAdminDeleteTestimonialsMutation();
   const [deleteMultiple] = useDeleteMultipleTestimonialsAdminMutation();
 
-  const confirmDelete = async (itemId: String) => {
+  const confirmDelete = async (itemId: string) => {
     toast.promise(deleteById(itemId).unwrap(), {
       loading: "Deleting...",
       success: <b>Deleted</b>,
@@ -180,7 +180,6 @@ const TestimonialTable = () => {
               <DropdownMenuSeparator />
 
               <AlertDialogBox
-                open={showConfirmation}
                 onCancel={() => setShowConfirmation(false)}
                 onConfirm={() => faqrow._id && confirmDelete(faqrow._id)}
                 text={"Delete"}

@@ -23,6 +23,18 @@ import {
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import { Button } from "@/components/ui/button";
 
+interface ConfigDataProps {
+  card1icon: string | null;
+  card2icon: string | null;
+  card3icon: string | null;
+  card1name: string;
+  card2name: string;
+  card3name: string;
+  card1description: string;
+  card2description: string;
+  card3description: string;
+}
+
 const FormSchema = z.object({
   card1icon: z.any(),
   card2icon: z.any(),
@@ -50,12 +62,11 @@ const FormSchema = z.object({
 });
 
 interface props {
-  ConfigData: any | undefined;
+  ConfigData: ConfigDataProps | undefined;
 }
 
 export default function KeyHighlightsEditor({ ConfigData }: props) {
   const [Loading, setLoading] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -81,7 +92,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    setIsSubmitting(true);
+    setLoading(true);
 
     try {
       setLoading(true);
@@ -138,7 +149,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
       console.log(error)
       toast.error("Failed to update configuration. Please try again.");
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   }
   return (

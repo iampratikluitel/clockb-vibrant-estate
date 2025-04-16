@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import BrochureConfigForm from "../../components/configuration/BrochureConfigForm";
@@ -7,12 +7,18 @@ import { Provider } from "react-redux";
 import { store } from "@/store/store";
 
 const DownloadBrochure = () => {
-  const { data: ConfigData, isLoading: Loading } = 
+  const { data: ConfigData, isLoading: Loading } =
     useGetAdminConfigurationBrochureQuery("");
 
   return (
     <div>
-      <BrochureConfigForm ConfigData={ConfigData} />
+      {Loading ? (
+        <div className="w-full h-[100vh] flex justify-center items-center">
+          <p className="loader"></p>
+        </div>
+      ) : (
+        <BrochureConfigForm ConfigData={ConfigData} />
+      )}
     </div>
   );
 };

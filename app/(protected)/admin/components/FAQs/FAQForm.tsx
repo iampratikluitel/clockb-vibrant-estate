@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState } from "react";
 import { z } from "zod";
@@ -19,9 +19,16 @@ import { useRouter } from "next/navigation";
 import { useAdminAddUpdateFaqsMutation } from "@/store/api/Admin/adminFaqs";
 import { paths } from "@/lib/paths";
 
+interface FaqDetail {
+  _id?: string;
+  question: string;
+  answer: string;
+  category?: string;
+}
+
 interface props {
   type: "Add" | "Edit";
-  ExistingDetail?: any;
+  ExistingDetail?: FaqDetail;
 }
 
 const FormSchema = z.object({
@@ -51,43 +58,36 @@ const FAQForm = ({ type, ExistingDetail }: props) => {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      if (type == "Add") {
-        setLoading(true);
-        const response = await AdminAddUpdateFaqs({
-          ...data,
-        }).unwrap();
+      setLoading(true);
+
+      if (type === "Add") {
+        const response = await AdminAddUpdateFaqs({ ...data }).unwrap();
         if (response) {
           toast.success(response.message);
           router.push(`${paths.admin.faqs}`);
-          setLoading(false);
         } else {
           toast.error(`Couldn't Add`);
-          setLoading(false);
         }
-      } else if (type == "Edit") {
-        setLoading(true);
-
+      } else if (type === "Edit") {
         const response = await AdminAddUpdateFaqs({
           _id: ExistingDetail?._id,
           ...data,
         }).unwrap();
         if (response) {
           toast.success(`${response.message}`);
-          setLoading(false);
           router.push(`${paths.admin.faqs}`);
         } else {
           toast.error(`Couldn't Edit`);
-          setLoading(false);
         }
       }
     } catch (error) {
+      console.log(error);
       toast.error(`Failed`);
-      setLoading(false);
     } finally {
       setLoading(false);
     }
   }
-  
+
   return (
     <Form {...form}>
       <form
@@ -130,7 +130,7 @@ const FAQForm = ({ type, ExistingDetail }: props) => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Faq Answer" {...field} />
+                    <Input placeholder="Enter Faq Category" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

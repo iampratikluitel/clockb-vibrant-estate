@@ -44,7 +44,7 @@ const ReportTable = ({ data }: ReportTableProps) => {
     }
   };
 
-  const getFileIcon = (type: string) => {
+  const getFileIcon = () => {
     return <FileText className="h-4 w-4" />;
   };
 
@@ -66,7 +66,7 @@ const ReportTable = ({ data }: ReportTableProps) => {
             <TableRow key={report.id} className="hover:bg-estates-gray-100/50">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
-                  {getFileIcon(report.type)}
+                  {getFileIcon()}
                   {report.title}
                 </div>
               </TableCell>

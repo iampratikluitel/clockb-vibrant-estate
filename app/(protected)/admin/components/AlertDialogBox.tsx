@@ -10,15 +10,21 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog";
   import { cn } from "@/lib/utils";
+
+  interface AlertDialogBoxProps {
+    onCancel?: () => void;
+    onConfirm?: () => void;
+    text: string;
+    classname?: string;
+  }
   
   const AlertDialogBox = ({
     onCancel,
     onConfirm,
     text,
     classname
-  }: any) => {
+  }: AlertDialogBoxProps) => {
    
-  
     return (
       <AlertDialog>
         <AlertDialogTrigger className={cn("text-sm  hover:bg-slate-100 w-full justify-start flex pl-2 py-1",classname)} >

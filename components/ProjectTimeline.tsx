@@ -178,7 +178,7 @@ interface TimelineItemProps {
   bgColor: string;
 }
 
-const TimelineItem = ({ milestone, isActive = false, index, total, onClick, bgColor }: TimelineItemProps) => {
+const TimelineItem = ({ milestone, isActive = false, index, onClick, bgColor }: TimelineItemProps) => {
   return (
     <div 
       className={cn(

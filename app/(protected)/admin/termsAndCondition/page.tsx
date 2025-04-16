@@ -6,25 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { TrashIcon } from "lucide-react";
-import { z } from "zod";
 import { toast } from "sonner";
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
 import { useRouter } from "next/navigation";
 
-const FormSchema = z.object({
-  name: z.string().min(2, { message: "Name Should be atleast 2 character" }),
-  description: z
-    .string()
-    .min(10, { message: "Description should be atleast 10 words" }),
-  icon: z.any(),
-});
-
-interface Props {
-  ConfigData?: any | undefined;
-}
-
-const TermsAndCondition = ({ ConfigData }: Props) => {
+const TermsAndCondition = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const [terms, setTerms] = useState([
@@ -32,12 +19,10 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
     { title: "Term 2", content: "This is the second term.", icon: "" },
   ]);
 
-  // Add a new term
   const addNewTerm = () => {
     setTerms([...terms, { title: "", content: "", icon: "" }]);
   };
 
-  // Update a specific term
   const updateTerm = (
     index: number,
     updatedTerm: { title: string; content: string; icon: string }
@@ -47,12 +32,10 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
     );
   };
 
-  // Delete a specific term
   const deleteTerm = (index: number): void => {
     setTerms((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle image change for the term icon
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -73,8 +56,7 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
   async function onSubmit() {
     try {
       setLoading(true);
-      
-      // Validate all terms
+
       for (const term of terms) {
         if (!term.icon) {
           toast.error("Please upload an icon for each term.");
@@ -84,10 +66,11 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
 
       const updatedTerms = await Promise.all(
         terms.map(async (term) => {
-          // Upload the icon image to MinIO if it's new
           let iconUrl = term.icon;
           if (term.icon && !term.icon.startsWith(MINIOURL)) {
-            const file = new File([term.icon], "icon.png", { type: "image/png" });
+            const file = new File([term.icon], "icon.png", {
+              type: "image/png",
+            });
             iconUrl = await uploadToMinIO(file, "conditionuse");
             if (!iconUrl) {
               toast.error("Image upload failed. Please try again.");
@@ -99,8 +82,7 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
       );
 
       const formData = {
-        terms: updatedTerms, // Sending all terms
-        _id: ConfigData?._id,
+        terms: updatedTerms,
       };
 
       const response = await fetch("/api/admin/termsAndCondition", {
@@ -119,6 +101,7 @@ const TermsAndCondition = ({ ConfigData }: Props) => {
         setLoading(false);
       }
     } catch (error) {
+      console.log(error);
       toast.error(`Failed`);
       setLoading(false);
     } finally {

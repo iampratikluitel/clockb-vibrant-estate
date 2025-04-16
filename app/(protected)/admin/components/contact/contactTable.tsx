@@ -46,38 +46,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AlertDialogBox from "../AlertDialogBox";
+import { paths } from "@/lib/paths";
 
 const ContactTable = () => {
   const router = useRouter();
   const [data, setData] = React.useState<Contact[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [showConfirmation, setShowConfirmation] = React.useState(false);
-  const confirmDelete = async () => {};
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("/api/admin/contact");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+        if (!response.ok) throw new Error("Network response was not ok");
         const data = await response.json();
-        console.log("data",data)
         setData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Optionally show a user-friendly error message in the UI
       }
     };
     fetchData();
   }, []);
-  
+
+  const confirmDelete = async () => {
+    // Placeholder delete logic — you can plug in actual delete API here
+    console.log("Deleting...");
+  };
+
   const columns: ColumnDef<Contact>[] = [
     {
       id: "_id",
@@ -87,14 +85,18 @@ const ContactTable = () => {
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
-          onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
+          onCheckedChange={(value: boolean | "indeterminate") =>
+            table.toggleAllPageRowsSelected(!!value)
+          }
           aria-label="Select all"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value: boolean | "indeterminate") =>
+            row.toggleSelected(!!value)
+          }
           aria-label="Select row"
         />
       ),
@@ -124,32 +126,27 @@ const ContactTable = () => {
     {
       id: "actions",
       enableHiding: false,
-      cell: ({ row }) => {
-        const faqrow = row.original;
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => router.push("/admin/faqs/edit")}>
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <AlertDialogBox
-                onCancel={() => setShowConfirmation(false)}
-                onConfirm={() => confirmDelete()}
-                text={"Delete"}
-              ></AlertDialogBox>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: () => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <DotsHorizontalIcon className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <AlertDialogBox
+              onCancel={() => {}}
+              onConfirm={confirmDelete}
+              text="Delete"
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
     },
   ];
 
@@ -172,43 +169,18 @@ const ContactTable = () => {
     },
   });
 
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-  const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
-
-  const openDeleteModal = (ids: string[]) => {
-    setSelectedRowIds(ids);
-    setIsDeleteModalOpen(true);
-  };
-
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedRowIds([]);
     setRowSelection({});
   };
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        {/* <Input
-          placeholder="Filter FAQ..."
-          value={
-            (table.getColumn("question")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("question")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        /> */}
         {table.getFilteredSelectedRowModel().rows.length > 0 && (
           <Button
-            onClick={() =>
-              openDeleteModal(
-                table
-                  .getFilteredSelectedRowModel()
-                  .rows.map((row) => row.original._id ?? "")
-              )
-            }
-            variant={"destructive"}
+            onClick={() => setIsDeleteModalOpen(true)}
+            variant="destructive"
             className="m-2"
           >
             Delete
@@ -223,15 +195,9 @@ const ContactTable = () => {
                 This will delete your data permanently.
               </DialogDescription>
             </DialogHeader>
-
             <DialogFooter>
               <Button onClick={closeDeleteModal}>Cancel</Button>
-              <Button
-                onClick={async () => {
-                  closeDeleteModal();
-                }}
-                variant={"destructive"}
-              >
+              <Button onClick={confirmDelete} variant="destructive">
                 Delete
               </Button>
             </DialogFooter>
@@ -247,40 +213,37 @@ const ContactTable = () => {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) =>
+                    column.toggleVisibility(!!value)
+                  }
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -314,6 +277,7 @@ const ContactTable = () => {
           </TableBody>
         </Table>
       </div>
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

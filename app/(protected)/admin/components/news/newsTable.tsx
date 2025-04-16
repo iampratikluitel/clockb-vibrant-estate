@@ -20,11 +20,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "sonner";
 import { convertToHumanReadable } from "@/lib/helper";
 import { MINIOURL } from "@/lib/constants";
-import { Switch } from "@/components/ui/switch";
-import { useAdminDeleteNewsInsightMutation, useAdminToggleNewsInsightMutation, useDeleteMultipleNewsInsightsAdminMutation, useGetAllAdminNewsInsightsQuery } from "@/store/api/Admin/adminNewsInsight";
+import { useGetAllAdminNewsInsightsQuery } from "@/store/api/Admin/adminNewsInsight";
 import { NewsInsight } from "@/lib/types";
 
 const NewsTable = () => {
@@ -33,34 +31,34 @@ const NewsTable = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   
   const { data: Data, isLoading: Loading } = useGetAllAdminNewsInsightsQuery("");
-  const [deleteById] = useAdminDeleteNewsInsightMutation();
-  const [Toggle] = useAdminToggleNewsInsightMutation();
-  const [deleteMultiple] = useDeleteMultipleNewsInsightsAdminMutation();
+  // const [deleteById] = useAdminDeleteNewsInsightMutation();
+  // const [Toggle] = useAdminToggleNewsInsightMutation();
+  // const [deleteMultiple] = useDeleteMultipleNewsInsightsAdminMutation();
   
-  const confirmDelete = async (itemId: string) => {
-    toast.promise(deleteById(itemId).unwrap(), {
-      loading: "Deleting...",
-      success: <b>Deleted</b>,
-      error: <b>Error while deleting</b>,
-    });
-  };
+  // const confirmDelete = async (itemId: string) => {
+  //   toast.promise(deleteById(itemId).unwrap(), {
+  //     loading: "Deleting...",
+  //     success: <b>Deleted</b>,
+  //     error: <b>Error while deleting</b>,
+  //   });
+  // };
   
-  const handleToggle = async (itemId: string) => {
-    try {
-      const response = await Toggle(itemId).unwrap();
-      response ? toast.success(response.message) : toast.error("Couldn't Toggle");
-    } catch {
-      toast.error("Error Toggling");
-    }
-  };
+  // const handleToggle = async (itemId: string) => {
+  //   try {
+  //     const response = await Toggle(itemId).unwrap();
+  //     response ? toast.success(response.message) : toast.error("Couldn't Toggle");
+  //   } catch {
+  //     toast.error("Error Toggling");
+  //   }
+  // };
 
-  const handleMultipleDelete = async (ids: string[]) => {
-    toast.promise(deleteMultiple({ ids }).unwrap(), {
-      loading: "Deleting...",
-      success: <b>Deleted</b>,
-      error: <b>Error while deleting</b>,
-    });
-  };
+  // const handleMultipleDelete = async (ids: string[]) => {
+  //   toast.promise(deleteMultiple({ ids }).unwrap(), {
+  //     loading: "Deleting...",
+  //     success: <b>Deleted</b>,
+  //     error: <b>Error while deleting</b>,
+  //   });
+  // };
 
   const data: NewsInsight[] = Data ?? [];
   
@@ -89,13 +87,13 @@ const NewsTable = () => {
       header: "Added Date",
       cell: ({ row }) => <div>{convertToHumanReadable(row.getValue("addedDate"))}</div>,
     },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => (
-        <Switch checked={row.getValue("status")} onCheckedChange={() => handleToggle(row.original._id)} />
-      ),
-    },
+    // {
+    //   accessorKey: "status",
+    //   header: "Status",
+    //   cell: ({ row }) => (
+    //     <Switch checked={row.getValue("status")} onCheckedChange={() => handleToggle(row.original._id)} />
+    //   ),
+    // },
   ];
 
   const table = useReactTable({

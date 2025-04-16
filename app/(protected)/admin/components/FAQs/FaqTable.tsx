@@ -1,10 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -51,7 +48,7 @@ import {
 import AlertDialogBox from "../AlertDialogBox";
 import { convertToHumanReadable } from "@/lib/helper";
 import { toast } from "sonner";
-import { useAdminDeleteFaqsMutation, useAdminDeleteMultipleFaqsMutation } from "@/store/api/Admin/adminFaqs";
+import { useAdminDeleteFaqsMutation } from "@/store/api/Admin/adminFaqs";
 
 const FaqTable = () => {
   const router = useRouter();
@@ -65,9 +62,9 @@ const FaqTable = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [deleteFaqById] = useAdminDeleteFaqsMutation();
-  const [deleteMultiple] = useAdminDeleteMultipleFaqsMutation();
+  // const [deleteMultiple] = useAdminDeleteMultipleFaqsMutation();
 
-  const confirmDelete = async (itemId: String) => {
+  const confirmDelete = async (itemId: string) => {
     toast.promise(deleteFaqById(itemId).unwrap(), {
       loading: "Deleting...",
       success: <b>Deleted</b>,
@@ -75,18 +72,18 @@ const FaqTable = () => {
     });
   };
 
-  const handleMultipleDelete = async (ids: string[]) => {
-    toast.promise(
-      deleteMultiple({
-        faqIds: ids,
-      }),
-      {
-        loading: "Deleting...",
-        success: <b> Deleted</b>,
-        error: <b>Error while deleting</b>,
-      }
-    );
-  };
+  // const handleMultipleDelete = async (ids: string[]) => {
+  //   toast.promise(
+  //     deleteMultiple({
+  //       faqIds: ids,
+  //     }),
+  //     {
+  //       loading: "Deleting...",
+  //       success: <b> Deleted</b>,
+  //       error: <b>Error while deleting</b>,
+  //     }
+  //   );
+  // };
 
   React.useEffect(() => {
     const fetchFaqs = async () => {
@@ -232,29 +229,31 @@ const FaqTable = () => {
             Delete
           </Button>
         )}
-        <Dialog open={isDeleteModalOpen} onOpenChange={closeDeleteModal}>
-          <DialogTrigger asChild></DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Are you sure?</DialogTitle>
-              <DialogDescription>
-                This will delete your data permanently.
-              </DialogDescription>
-            </DialogHeader>
+        {showConfirmation && (
+          <Dialog open={isDeleteModalOpen} onOpenChange={closeDeleteModal}>
+            <DialogTrigger asChild></DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <DialogDescription>
+                  This will delete your data permanently.
+                </DialogDescription>
+              </DialogHeader>
 
-            <DialogFooter>
-              <Button onClick={closeDeleteModal}>Cancel</Button>
-              <Button
-                onClick={async () => {
-                  closeDeleteModal();
-                }}
-                variant={"destructive"}
-              >
-                Delete
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button onClick={closeDeleteModal}>Cancel</Button>
+                <Button
+                  onClick={async () => {
+                    closeDeleteModal();
+                  }}
+                  variant={"destructive"}
+                >
+                  Delete
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">

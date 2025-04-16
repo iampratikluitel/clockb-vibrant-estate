@@ -34,13 +34,11 @@ import { NewsInsight } from "@/lib/types";
 interface Props {
   type: "Add" | "Edit";
   ExistingDetail?: NewsInsight | null;
-  newsCategory: any[];
 }
 
 export default function AddNewsForm({
   type,
   ExistingDetail,
-  newsCategory,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -124,13 +122,12 @@ export default function AddNewsForm({
         `News ${type === "Edit" ? "updated" : "added"} successfully`
       );
   
-      // Reset the form after successful submission
       form.reset();
   
       router.push("/admin/about");
   
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      console.log(error)
     } finally {
       setIsLoading(false);
     }

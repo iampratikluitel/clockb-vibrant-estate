@@ -1,5 +1,22 @@
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { MINIOURL } from "@/lib/constants";
+
+const handleDownloadBrochure = async () => {
+    try {
+      const fetchData = await fetch("/api/public/configuration/brochure");
+      const data = await fetchData.json();
+
+      if (data?.brochureUrl) {
+        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        window.open(fileUrl, "_blank");
+      } else {
+        console.error("Brochure URL not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching brochure:", error);
+    }
+  };
 
 const Hero = () => {
   return (
@@ -30,10 +47,13 @@ const Hero = () => {
               className="bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-8 py-6 text-lg rounded-lg 
                 transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
                 shadow-lg hover:shadow-estates-primary/20 group"
+                onClick={handleDownloadBrochure}
             >
               <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
               Download Brochure
             </Button>
+
+            {/* <DownloadAboutBrochure /> */}
             <Button
               variant="outline"
               className="border-2 border-white text-estates-primary/90 hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg

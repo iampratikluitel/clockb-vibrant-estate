@@ -22,6 +22,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { uploadToMinIO } from "@/lib/helper";
 
+interface ProjectSchemaProps {
+  title: string;
+  description: string;
+  image: string;
+  addedDate: Date;
+  overview: string;
+}
+
 const ProjectSchema = z.object({
   title: z.string().min(2, { message: "Title should be at least 2 word" }),
   description: z
@@ -36,8 +44,7 @@ const ProjectSchema = z.object({
 
 interface Props {
   type: "Add" | "Edit";
-  ExistingDetail?: any;
-  newsCategory: any[];
+  ExistingDetail?: ProjectSchemaProps;
 }
 
 export default function AddProjectForm({ type, ExistingDetail }: Props) {
@@ -47,9 +54,11 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
   const form = useForm<z.infer<typeof ProjectSchema>>({
     resolver: zodResolver(ProjectSchema),
     defaultValues: {
-      title: ExistingDetail?.name ?? "",
+      title: ExistingDetail?.title ?? "",
       description: ExistingDetail?.description ?? "",
-      addedDate: ExistingDetail?.addedDate ?? "",
+      addedDate: ExistingDetail?.addedDate
+        ? new Date(ExistingDetail.addedDate)
+        : undefined,
       image: ExistingDetail?.image
         ? `${MINIOURL}${ExistingDetail.image}`
         : null,
@@ -58,11 +67,10 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
   });
 
   const onSubmit = async (data: z.infer<typeof ProjectSchema>) => {
-    console.log("data", data)
+    console.log("data", data);
     try {
       setIsLoading(true);
 
-      // Image validation
       if (!data.image) {
         toast.error("Please upload a project image.");
         return;
@@ -79,14 +87,11 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
         }
       }
 
-      // Prepare the form data
       const formData = {
-        _id: ExistingDetail?._id,
         ...data,
         image: ImageUrl ?? ExistingDetail?.image,
       };
 
-      // Submit the data to the API
       const response = await fetch("/api/admin/project-description", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,22 +99,22 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
       });
 
       if (response.ok) {
-              const responseData = await response.json();
-              toast.success(`${responseData.message}`);
-              setIsLoading(false);
-              router.push("/admin/configuration");
-            } else {
-              toast.error(`Couldn't Update`);
-              setIsLoading(false);
-            }
-          } catch (error) {
-            toast.error(`Failed`);
-            setIsLoading(false);
-          } finally {
-            setIsLoading(false);
-          }
-        }
-      
+        const responseData = await response.json();
+        toast.success(`${responseData.message}`);
+        setIsLoading(false);
+        router.push("/admin/configuration");
+      } else {
+        toast.error(`Couldn't Update`);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(`Failed`);
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>

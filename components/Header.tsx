@@ -1,22 +1,14 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
 import { MINIOURL } from "@/lib/constants";
 
 const Header = () => {
   const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
-  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-
-  const handleLogin = () => {
-    router.push("/login");
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,49 +18,23 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // const handleDownloadBrochure = async () => {
-  //   try {
-  //     const fetchData = await fetch("/api/public/configuration/brochure");
-  //     const data = await fetchData.json();
-  
-  //     if (data?.brochureUrl) {
-  //       setBrochureUrl(data.brochureUrl);
-  
-  //       const fileUrl = `${MINIOURL}${data.brochureUrl}`;
-  //       const fileName = data.brochureUrl.split('/').pop(); 
-        
-  //       const a = document.createElement("a");
-  //       a.href = fileUrl;
-  //       a.download = fileName || "brochure.pdf"; 
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       document.body.removeChild(a);
-  //     } else {
-  //       console.error("Brochure URL not found.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching brochure:", error);
-  //   }
-  // };
-
   const handleDownloadBrochure = async () => {
     try {
       const fetchData = await fetch("/api/public/configuration/brochure");
       const data = await fetchData.json();
-  
+
       if (data?.brochureUrl) {
-        setBrochureUrl(data.brochureUrl);
-  
         const fileUrl = `${MINIOURL}${data.brochureUrl}`;
-        window.open(fileUrl, "_blank"); // Opens in new tab
+        // Open the file in a new tab
+        window.open(fileUrl, "_blank");
       } else {
         console.error("Brochure URL not found.");
       }
     } catch (error) {
       console.error("Error fetching brochure:", error);
     }
-  };  
-  
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -86,7 +52,6 @@ const Header = () => {
             src="logo/project-estate.png"
             alt="nss-logo-png"
           />
-          {/* <Building2 className="w-8 h-8 group-hover:scale-110 transition-transform duration-300" /> */}
           <span className="text-xl font-bold tracking-tight">
             Project Estates
           </span>
@@ -94,33 +59,12 @@ const Header = () => {
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-10">
-          <NavLink href="/" isActive={pathname === "/"}>
-            Home
-          </NavLink>
-          <NavLink href="/about" isActive={pathname === "/about"}>
-            About
-          </NavLink>
-          <NavLink
-            href="/project-description"
-            isActive={pathname === "/project-description"}
-          >
-            Project Description
-          </NavLink>
-          <NavLink href="/faqs" isActive={pathname === "/faqs"}>
-            FAQs
-          </NavLink>
-          <NavLink
-            href="/investor-relations"
-            isActive={pathname === "/investor-relations"}
-          >
-            Investor Relations
-          </NavLink>
-          <NavLink href="/contact" isActive={pathname === "/contact"}>
-            Contact
-          </NavLink>
-          {/* <NavLink href="/admin" isActive={pathname.startsWith("/admin")}>
-            <Shield className="w-4 h-4 mr-1" /> Admin
-          </NavLink> */}
+          <NavLink href="/" isActive={pathname === "/"}>Home</NavLink>
+          <NavLink href="/about" isActive={pathname === "/about"}>About</NavLink>
+          <NavLink href="/project-description" isActive={pathname === "/project-description"}>Project Description</NavLink>
+          <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
+          <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
+          <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
         </div>
 
         {/* CTA Button */}
@@ -165,15 +109,11 @@ const NavLink = ({
 }) => (
   <Link
     href={href}
-    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${
-      isActive ? "text-estates-primary" : ""
-    }`}
+    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${isActive ? "text-estates-primary" : ""}`}
   >
     {children}
     <span
-      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${
-        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
-      }`}
+      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
     />
   </Link>
 );

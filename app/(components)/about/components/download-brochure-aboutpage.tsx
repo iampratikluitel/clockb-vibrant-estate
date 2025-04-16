@@ -13,7 +13,7 @@ export default function DownloadAboutBrochure() {
         setBrochureUrl(data.brochureUrl);
 
         const fileUrl = `${MINIOURL}${data.brochureUrl}`;
-        window.open(fileUrl, "_blank"); 
+        window.open(fileUrl, "_blank");
       } else {
         console.error("Brochure URL not found.");
       }
@@ -25,12 +25,14 @@ export default function DownloadAboutBrochure() {
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
       <FileText className="h-10 w-10 mx-auto mb-4 text-white" />
-      <h3
-        className="text-xl font-semibold mb-2"
-        onClick={handleDownloadBrochure}
-      >
-        Download Investment Brochure
-      </h3>
+      {brochureUrl && (
+        <h3
+          className="text-xl font-semibold mb-2"
+          onClick={handleDownloadBrochure}
+        >
+          Download Investment Brochure
+        </h3>
+      )}
       <p className="text-white/80 mb-4">
         Get detailed information about our project and returns.
       </p>

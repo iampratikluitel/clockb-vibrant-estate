@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -66,7 +66,7 @@ const SCNSingleImagePicker = ({
           name={schemaName}
           control={control}
           render={({
-            field: { onChange, ...fieldProps },
+            field: { value, onChange, ...fieldProps },
             fieldState: { error },
           }) => (
             <>
@@ -294,7 +294,7 @@ const SCNSingleImagePicker = ({
             name={schemaName}
             control={control}
             render={({
-              field: { onChange, ...fieldProps },
+              field: { value, onChange, ...fieldProps },
               fieldState: { error },
             }) => (
               <>

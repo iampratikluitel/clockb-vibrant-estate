@@ -40,6 +40,6 @@ export async function generateRandomPassword() {
   return randomString;
 }
 
-export function convertToHumanReadable(params: any) {
+export function convertToHumanReadable(params: string | number | Date) {
   return moment(params).format("MMM Do YYYY");
 }

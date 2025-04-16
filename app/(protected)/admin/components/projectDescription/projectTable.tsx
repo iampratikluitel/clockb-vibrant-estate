@@ -29,8 +29,6 @@ import { toast } from "sonner";
 import { convertToHumanReadable } from "@/lib/helper";
 import { Switch } from "@/components/ui/switch";
 import { useAdminToggleNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
-import { useAdminDeletePartnerMutation } from "@/store/api/Admin/adminPartner";
-import { useDeleteMultipleUpcommingProjectAdminMutation } from "@/store/api/Admin/adminUpcommingProject";
 
 export default function ProjectTable() {
   const [data, setData] = React.useState<UpcommingProject[]>([]);
@@ -42,8 +40,8 @@ export default function ProjectTable() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [Toggle] = useAdminToggleNewsInsightMutation();
 
-  const [deleteById] = useAdminDeletePartnerMutation();
-  const [deleteMultiple] = useDeleteMultipleUpcommingProjectAdminMutation();
+  // const [deleteById] = useAdminDeletePartnerMutation();
+  // const [deleteMultiple] = useDeleteMultipleUpcommingProjectAdminMutation();
 
   useEffect(() => {
     const fetchMember = async () => {
@@ -68,34 +66,37 @@ export default function ProjectTable() {
     fetchMember();
   }, []);
 
-  const confirmDelete = async (itemId: String) => {
-    toast.promise(deleteById(itemId).unwrap(), {
-      loading: "Deleting...",
-      success: <b>Deleted</b>,
-      error: <b>Error while deleting</b>,
-    });
-  };
+  // const confirmDelete = async (itemId: String) => {
+  //   toast.promise(deleteById(itemId).unwrap(), {
+  //     loading: "Deleting...",
+  //     success: <b>Deleted</b>,
+  //     error: <b>Error while deleting</b>,
+  //   });
+  // };
 
-  const handleMultipleDelete = async (ids: string[]) => {
-    toast.promise(
-      deleteMultiple({
-        ids: ids,
-      }),
-      {
-        loading: "Deleting...",
-        success: <b> Deleted</b>,
-        error: <b>Error while deleting</b>,
-      }
-    );
-  };
+  // const handleMultipleDelete = async (ids: string[]) => {
+  //   toast.promise(
+  //     deleteMultiple({
+  //       ids: ids,
+  //     }),
+  //     {
+  //       loading: "Deleting...",
+  //       success: <b> Deleted</b>,
+  //       error: <b>Error while deleting</b>,
+  //     }
+  //   );
+  // };
 
   const handleToggle = async (itemId: string) => {
     try {
-      const response = await Toggle(itemId).unwrap();
-      response
-        ? toast.success(response.message)
-        : toast.error("Couldn't Toggle");
-    } catch {
+      const response = await Toggle(itemId).unwrap(); 
+      if (response) {
+        toast.success(response.message);
+      } else {
+        toast.error("Couldn't Toggle");
+      }
+    } catch (error) {
+      console.log(error)
       toast.error("Error Toggling");
     }
   };

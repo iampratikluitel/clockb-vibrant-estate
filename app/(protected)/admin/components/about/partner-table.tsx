@@ -180,7 +180,6 @@ const PartnerTable = () => {
               <DropdownMenuSeparator />
 
               <AlertDialogBox
-                open={showConfirmation}
                 onCancel={() => setShowConfirmation(false)}
                 onConfirm={() => faqrow._id && confirmDelete(faqrow._id)}
                 text={"Delete"}

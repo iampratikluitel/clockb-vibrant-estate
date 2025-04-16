@@ -1,9 +1,11 @@
+"use client";
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import FormSchema from "./landingConfigSchema";
+import FormSchema, { FormSchemaType } from "./landingConfigSchema";
+
 import {
   Form,
   FormControl,
@@ -19,14 +21,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface Props {
-  ExistingDetail?: any;
+  ExistingDetail?: Partial<FormSchemaType> & { _id?: string };
 }
 
 export default function LandingConfiguration({ ExistingDetail }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("card1");
 
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const form = useForm<FormSchemaType>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       card1title: ExistingDetail?.card1title ?? "",
@@ -51,7 +53,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: FormSchemaType) => {
     try {
       setIsLoading(true);
       const formData = { _id: ExistingDetail?._id, ...data };
@@ -63,16 +65,20 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
 
       if (!response.ok) throw new Error("Failed to save data");
       toast.success("Changes saved successfully");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save changes");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Helper function to create card fields
   const renderCardFields = (cardNumber: number) => {
-    const prefix = `card${cardNumber}`;
+    const prefix = `card${cardNumber}` as const;
+
+    const titleKey = `${prefix}title` as keyof FormSchemaType;
+    const descriptionKey = `${prefix}description` as keyof FormSchemaType;
+    const dateKey = `${prefix}Date` as keyof FormSchemaType;
 
     return (
       <Card className="w-full">
@@ -82,7 +88,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
         <CardContent className="space-y-4">
           <FormField
             control={form.control}
-            name={`${prefix}title` as any}
+            name={titleKey}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Title</FormLabel>
@@ -96,7 +102,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
 
           <FormField
             control={form.control}
-            name={`${prefix}description` as any}
+            name={descriptionKey}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
@@ -114,14 +120,13 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
 
           <FormField
             control={form.control}
-            name={`${prefix}Date` as any}
+            name={dateKey}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date</FormLabel>
                 <FormControl>
                   <Input
                     type="date"
-                    {...field}
                     value={
                       field.value
                         ? new Date(field.value).toISOString().split("T")[0]
@@ -151,18 +156,18 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
             className="w-full"
           >
             <TabsList className="grid grid-cols-5 mb-6">
-              <TabsTrigger value="card1">Project 1</TabsTrigger>
-              <TabsTrigger value="card2">Project 2</TabsTrigger>
-              <TabsTrigger value="card3">Project 3</TabsTrigger>
-              <TabsTrigger value="card4">Project 4</TabsTrigger>
-              <TabsTrigger value="card5">Project 5</TabsTrigger>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <TabsTrigger key={index} value={`card${index + 1}`}>
+                  Project {index + 1}
+                </TabsTrigger>
+              ))}
             </TabsList>
 
-            <TabsContent value="card1">{renderCardFields(1)}</TabsContent>
-            <TabsContent value="card2">{renderCardFields(2)}</TabsContent>
-            <TabsContent value="card3">{renderCardFields(3)}</TabsContent>
-            <TabsContent value="card4">{renderCardFields(4)}</TabsContent>
-            <TabsContent value="card5">{renderCardFields(5)}</TabsContent>
+            {Array.from({ length: 5 }).map((_, index) => (
+              <TabsContent key={index} value={`card${index + 1}`}>
+                {renderCardFields(index + 1)}
+              </TabsContent>
+            ))}
           </Tabs>
 
           <div className="flex justify-end mt-8">

@@ -32,7 +32,7 @@ const AddNews = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <AddNewsForm type={"Add"} newsCategory={[]} />
+      <AddNewsForm type={"Add"} />
     </div>
   );
 };

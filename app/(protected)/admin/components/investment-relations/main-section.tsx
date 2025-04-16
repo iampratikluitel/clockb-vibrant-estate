@@ -33,7 +33,6 @@ interface Props {
 
 export default function MainSectionEditor({ formData }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   // Use React Hook Form with Zod resolver for validation
   const form = useForm<FormData>({
@@ -121,8 +120,8 @@ export default function MainSectionEditor({ formData }: Props) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={isLoading || isSubmitting}>
-            {isLoading || isSubmitting ? "Saving..." : "Save Changes"}
+          <Button type="submit" disabled={isSubmitting || isSubmitting}>
+            {isSubmitting || isSubmitting ? "Saving..." : "Save Changes"}
           </Button>
         </CardFooter>
       </form>

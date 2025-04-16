@@ -1,23 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MainSectionEditor from "./main-section";
 import InvestmentCircleEditor from "./investment-circle-section";
 import KeyHighlightsEditor from "./key-highlight-section";
 
 export default function AdminAboutPage() {
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("general");
-
-  const saveChanges = () => {
-    toast({
-      title: "Changes saved",
-      description: "Your changes have been saved successfully.",
-    });
-  };
 
   return (
     <div className="container mx-auto py-8">

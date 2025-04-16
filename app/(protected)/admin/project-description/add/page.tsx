@@ -1,5 +1,4 @@
 import React from "react";
-import TestimonialForm from "../../components/testimonial/testimonialForm";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { paths } from "@/lib/paths";
-import AddNewsForm from "../../components/news/newAddForm";
 import AddProjectForm from "../../components/projectDescription/projectForm";
 
 const AddProject = () => {
@@ -34,7 +32,7 @@ const AddProject = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <AddProjectForm type={"Add"} newsCategory={[]} />
+      <AddProjectForm type={"Add"} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   console.log("Uploading Document");
   const data = await request.formData();
-  let uploadType: string | null = data.get("uploadType") as string | null;
+  const uploadType: string | null = data.get("uploadType") as string | null;
 
   const fileEntries: FormDataEntryValue[] = data.getAll(
     "file"
