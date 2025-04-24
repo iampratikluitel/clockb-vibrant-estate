@@ -10,19 +10,19 @@ export interface Member {
 }
 
 export interface Partner {
+  _id?: string;
   name: string;
   description: string;
   logo: string;
-  _id?: string;
 }
 
 export interface TESTIMONIALS {
+  _id: string;
   description: string;
   image: string;
   postedDate: string;
   name: string;
   role: string;
-  _id: string;
 }
 
 export interface Brochure {
@@ -31,9 +31,9 @@ export interface Brochure {
   description: string;
 }
 export interface FAQTYPE {
+  _id: string;
   answer: string;
   question: string;
-  _id: string;
   addedDate: Date;
 }
 
@@ -86,49 +86,25 @@ export interface Contact {
 }
 
 export interface LandingPage {
-  name: string;
-  description: string;
-  backgroundImage: string;
-
-  card1name: string;
-  card1description: string;
-  card2name: string;
-  card2description: string;
-  card3name: string;
-  card3description: string;
-
-  card4icon: string;
-  card4name: string;
-  card4description: string;
-  card5icon: string;
-  card5name: string;
-  card5description: string;
-  card6icon: string;
-  card6name: string;
-  card6description: string;
-
-  card7icon: string;
-  card7name: string;
-  card7description: string;
-  card8icon: string;
-  card8name: string;
-  card8description: string;
-  card9icon: string;
-  card9name: string;
-  card9description: string;
-  card10icon: string;
-  card10name: string;
-  card10description: string;
-
-  card11icon: string;
-  card11name: string;
-  card11description: string;
-  card12icon: string;
-  card12name: string;
-  card12description: string;
-  card13icon: string;
-  card13name: string;
-  card13description: string;
+  card1title: string,
+    card1description: string,
+    card1Date: string,
+  
+    card2title: string,
+    card2description: string,
+    card2Date: string,
+  
+    card3title: string,
+    card3description: string,
+    card3Date: string,
+  
+    card4title: string,
+    card4description: string,
+    card4Date: string,
+  
+    card5title: string,
+    card5description: string,
+    card5Date: string,
 }
 
 export interface NewsInsight{

@@ -21,13 +21,13 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { uploadToMinIO } from "@/lib/helper";
+import { useAdminAddUpdateUpcommingProjectMutation } from "@/store/api/Admin/adminUpcommingProject";
+import { paths } from "@/lib/paths";
+import { ApiResponse, UpcommingProject } from "@/lib/types";
 
-interface ProjectSchemaProps {
-  title: string;
-  description: string;
-  image: string;
-  addedDate: Date;
-  overview: string;
+interface props {
+  type: "Add" | "Edit";
+  ExistingDetail?: UpcommingProject;
 }
 
 const ProjectSchema = z.object({
@@ -42,14 +42,11 @@ const ProjectSchema = z.object({
   }),
 });
 
-interface Props {
-  type: "Add" | "Edit";
-  ExistingDetail?: ProjectSchemaProps;
-}
-
-export default function AddProjectForm({ type, ExistingDetail }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function AddProjectForm({ type, ExistingDetail }: props) {
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const [AdminUpcommingProject] = useAdminAddUpdateUpcommingProjectMutation();
 
   const form = useForm<z.infer<typeof ProjectSchema>>({
     resolver: zodResolver(ProjectSchema),
@@ -67,52 +64,78 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
   });
 
   const onSubmit = async (data: z.infer<typeof ProjectSchema>) => {
-    console.log("data", data);
     try {
-      setIsLoading(true);
-
-      if (!data.image) {
-        toast.error("Please upload a project image.");
-        return;
-      }
-
-      let ImageUrl = null;
-      if (data.image !== `${MINIOURL}${ExistingDetail?.image}`) {
-        console.log("Uploading new image...");
-        ImageUrl = await uploadToMinIO(data.image, "projectImage");
-        console.log("Uploaded Image URL:", ImageUrl);
-        if (!ImageUrl) {
-          toast.error("Image upload failed. Please try again.");
+      if (type == "Add") {
+        setLoading(true);
+        if (!data.image) {
+          toast.error("Please select Image");
           return;
         }
-      }
 
-      const formData = {
-        ...data,
-        image: ImageUrl ?? ExistingDetail?.image,
-      };
+        let uploadedFileName;
+        if (data.image) {
+          uploadedFileName = await uploadToMinIO(data.image, "project");
+          if (uploadedFileName === "") {
+            toast.error("Image Upload Failed Please try again");
+            return;
+          }
+        }
 
-      const response = await fetch("/api/admin/project-description", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+        const formData = {
+          ...data,
+          image: uploadedFileName || "",
+        };
 
-      if (response.ok) {
-        const responseData = await response.json();
-        toast.success(`${responseData.message}`);
-        setIsLoading(false);
-        router.push("/admin/configuration");
-      } else {
-        toast.error(`Couldn't Update`);
-        setIsLoading(false);
+        const response = await AdminUpcommingProject({
+          ...formData,
+        }).unwrap();
+
+        if (response) {
+          const responseData = response as ApiResponse;
+          toast.success(responseData.message);
+          router.push(`${paths.admin.projectdescription}`);
+          setLoading(false);
+        } else {
+          toast.error("Could not Add");
+          setLoading(false);
+        }
+      } else if (type == "Edit") {
+        setLoading(true);
+        let ImageUrl = null;
+
+        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+          ImageUrl = await uploadToMinIO(data.image, "project");
+          if (ImageUrl === "") {
+            toast.error("Image Upload Failed Please try again");
+            return;
+          }
+        }
+
+        const formData = {
+          _id: ExistingDetail?._id,
+          ...data,
+          image: ImageUrl ?? ExistingDetail?.image,
+        };
+
+        const response = await AdminUpcommingProject({
+          ...formData,
+          _id: ExistingDetail?._id || "",
+          logo: formData.image || "",
+        }).unwrap();
+        if (response) {
+          toast.success(`${response.message}`);
+          setLoading(false);
+          router.push(`${paths.admin.projectdescription}`);
+        } else {
+          toast.error(`Couldn't Edit`);
+          setLoading(false);
+        }
       }
     } catch (error) {
-      console.log(error)
       toast.error(`Failed`);
-      setIsLoading(false);
+      setLoading(false);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -188,8 +211,8 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
             />
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Submit"}
+              <Button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Submit"}
               </Button>
             </div>
           </form>

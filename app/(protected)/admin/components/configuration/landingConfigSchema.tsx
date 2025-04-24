@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const FormSchema = z.object({
+const LandingConfigSchema = z.object({
   card1title: z.string(),
   card1description: z.string(),
   card1Date: z.string().optional(),
@@ -22,5 +22,4 @@ const FormSchema = z.object({
   card5Date: z.string().optional(),
 });
 
-export default FormSchema;
-export type FormSchemaType = z.infer<typeof FormSchema>;
+export default LandingConfigSchema;

@@ -1,12 +1,16 @@
 import { model, Model, models, Schema } from "mongoose";
 
 const projectSchema = new Schema({
-  _id: String,
+  slug: String,
   title: String,
   description: String,
   image: String,
   date: String,
   overview: String,
+  status: {
+    type: Boolean,
+    default: true,
+  },
   addedDate: {
     type: Date,
     default: Date.now(),

@@ -24,7 +24,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import  Link from "next/link";
 import { cn } from "@/lib/utils";
-import ReportTable from "@/app/(components)/report/reporttable";
+import ReportTable from "@/app/(public)/_components/report/reporttable";
 
 interface ResourceCardProps {
   icon: React.ReactNode;

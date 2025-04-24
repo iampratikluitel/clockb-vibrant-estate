@@ -1,6 +1,6 @@
 import { Contact } from "@/lib/types";
 import { baseQuery } from "@/store/global";
-import { createApi } from "@reduxjs/toolkit/query";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const publicContactApi = createApi({
   reducerPath: "publicContactApi",
@@ -15,6 +15,6 @@ export const publicContactApi = createApi({
   }),
 });
 
-// export const {
-//     useGetAllPublicContactQuery,
-// } = publicContactApi;
+export const {
+    useGetAllPublicContactQuery,
+} = publicContactApi;

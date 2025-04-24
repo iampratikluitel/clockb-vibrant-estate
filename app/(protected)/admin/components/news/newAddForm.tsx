@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { NewsSchema } from "./newsSchema";
@@ -29,31 +29,21 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadToMinIO } from "@/lib/helper";
 import { useRouter } from "next/navigation";
-import { NewsInsight } from "@/lib/types";
+import { ApiResponse, NewsInsight } from "@/lib/types";
+import { useAdminAddUpdateNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
+import { paths } from "@/lib/paths";
 
 interface Props {
   type: "Add" | "Edit";
-  ExistingDetail?: NewsInsight | null;
+  ExistingDetail?: NewsInsight;
 }
 
-export default function AddNewsForm({
-  type,
-  ExistingDetail,
-}: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function AddNewsForm({ type, ExistingDetail }: Props) {
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (window.MutationObserver) {
-      const originalObserve = window.MutationObserver.prototype.observe;
-      window.MutationObserver.prototype.observe = function (target, options) {
-        if (options?.attributes || options?.childList) {
-          originalObserve.call(this, target, options);
-        }
-      };
-    }
-  }, []);
+  const [AdminNewsInsight] = useAdminAddUpdateNewsInsightMutation();
 
   const form = useForm<z.infer<typeof NewsSchema>>({
     resolver: zodResolver(NewsSchema),
@@ -72,67 +62,73 @@ export default function AddNewsForm({
   });
 
   const onSubmit = async (data: z.infer<typeof NewsSchema>) => {
-    console.log("data", data);
-  
     try {
-      setIsLoading(true);
-      
-      // Check if the image is missing
-      if (!data.image) {
-        toast.error("Please upload an image.");
-        return;
-      }
-  
-      let ImageUrl = null;
-  
-      // Upload the image only if it is different from the existing one
-      if (data.image !== ExistingDetail?.image) {
-        ImageUrl = await uploadToMinIO(data.image, "news");
-        if (ImageUrl === "") {
-          toast.error("Image upload failed. Please try again.");
-          return;
+      if (type === "Add") {
+        setLoading(true);
+        if (!data.image) {
+          toast.error("Please Select Image");
+        }
+
+        let uploadedFileName;
+        if (data.image) {
+          uploadedFileName = await uploadToMinIO(data.image, "news");
+          if (uploadedFileName === "") {
+            toast.error("Please insert an Image First");
+          }
+        }
+
+        const formData = {
+          ...data,
+          image: uploadedFileName || "",
+        };
+
+        const response = await AdminNewsInsight({
+          ...formData,
+        }).unwrap();
+
+        if (response) {
+          const responseData = response as ApiResponse;
+          toast.success(responseData.message);
+          router.push(`${paths.admin.news}`);
+          setLoading(false);
+        } else {
+          toast.error("Could not Add");
+          setLoading(false);
+        }
+      } else if (type === "Edit") {
+        let ImageUrl = null;
+
+        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+          ImageUrl = await uploadToMinIO(data.image, "news");
+          if (ImageUrl === "") {
+            toast.error("Image upload Failed Please try again");
+            return;
+          }
+        }
+        const formData = {
+          ...data,
+          image: ImageUrl ?? ExistingDetail?.image,
+        };
+
+        const response = await AdminNewsInsight({
+          ...formData,
+        }).unwrap();
+        if (response) {
+          toast.success(`${response.message}`);
+          setLoading(false);
+          router.push(`${paths.admin.news}`);
+        } else {
+          toast.error(`Couldn't Edit`);
+          setLoading(false);
         }
       }
-  
-      // Check if categoryId is present
-      // if (!data.categoryId) {
-      //   toast.error("Please select a category.");
-      //   return;
-      // }
-  
-      const formData = {
-        _id: ExistingDetail?._id,
-        ...data,
-        image: ImageUrl ?? ExistingDetail?.image,
-      };
-  
-      const response = await fetch("/api/admin/newsInsight", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-  
-      const result = await response.json();
-  
-      if (!response.ok) {
-        throw new Error(result.message || "Something went wrong");
-      }
-  
-      toast.success(
-        `News ${type === "Edit" ? "updated" : "added"} successfully`
-      );
-  
-      form.reset();
-  
-      router.push("/admin/about");
-  
     } catch (error) {
-      console.log(error)
+      toast.error(`Failed`);
+      setLoading(false);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -199,10 +195,6 @@ export default function AddNewsForm({
                                   .split("T")[0]
                               : ""
                           }
-                          onChange={(e) => {
-                            const selectedDate = new Date(e.target.value);
-                            field.onChange(selectedDate); // Store as Date object
-                          }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -242,8 +234,8 @@ export default function AddNewsForm({
             />
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Submit"}
+              <Button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Submit"}
               </Button>
             </div>
           </form>

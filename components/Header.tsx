@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { MINIOURL } from "@/lib/constants";
 
 const Header = () => {
-  const [brochureUrl, setBrochureUrl] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 

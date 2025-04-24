@@ -13,7 +13,7 @@ export default function AdminAboutPage() {
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">
-          About Page Management
+          Investment Page Management
         </h1>
       </div>
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useGetAdminConfigLandingPageQuery } from "@/store/api/Admin/adminConfiguration";
-import LandingConfiguration from "./components/landingConfigTab";
+import LandingConfiguration from "../../components/configuration/landingConfigTab";
 
 const LandingPageConfig = () => {
   const { data: ConfigData, isLoading: Loading } =

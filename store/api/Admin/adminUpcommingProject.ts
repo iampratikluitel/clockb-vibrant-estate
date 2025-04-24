@@ -8,19 +8,20 @@ export const adminUpcommingProjectApi = createApi({
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
+    
     getAllAdminUpcommingProject: builder.query<UpcommingProject[], void>({
-      query: () => `admin/UpcommingProject`,
+      query: () => `admin/projectdescription`,
       providesTags: ["Admin Upcomming Project"],
     }),
 
     getAdminProjectById: builder.query<UpcommingProject, string>({
-      query: (id) => `admin/UpcommingProject/byid?id=${id}`,
+      query: (id) => `admin/projectdescription/byid?id=${id}`,
       providesTags: ["Admin Upcomming Project"],
     }),
 
     AdminDeleteProject: builder.mutation<{ message: string }, any>({
       query: (id) => ({
-        url: `admin/UpcommingProject?id=${id}`,
+        url: `admin/projectdescription?id=${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Admin Upcomming Project"],
@@ -28,7 +29,7 @@ export const adminUpcommingProjectApi = createApi({
 
     adminAddUpdateUpcommingProject: builder.mutation<{ message: string }, any>({
       query: (body) => ({
-        url: `admin/UpcommingProject`,
+        url: `admin/projectdescription`,
         method: "POST",
         body,
       }),
@@ -37,7 +38,7 @@ export const adminUpcommingProjectApi = createApi({
 
     AdminToggleUpcommingProject: builder.mutation<{ message: string }, any>({
       query: (id) => ({
-        url: `admin/UpcommingProject/toggle?id=${id}`,
+        url: `admin/projectdescription/toggle?id=${id}`,
         method: "POST",
       }),
       invalidatesTags: ["Admin Upcomming Project"],
@@ -48,7 +49,7 @@ export const adminUpcommingProjectApi = createApi({
       { ids: string[] }
     >({
       query: (body) => ({
-        url: `admin/UpcommingProject/deletemultiple`,
+        url: `admin/projectdescription/deletemultiple`,
         method: "DELETE",
         body,
       }),

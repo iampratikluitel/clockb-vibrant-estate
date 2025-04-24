@@ -1,15 +1,12 @@
 "use client";
 
-import {
-  Phone,
-  MapPin,
-} from "lucide-react";
+import { Phone, MapPin } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import TeamMemberView from "./components/team-member";
-import DownloadAboutBrochure from "./components/download-brochure-aboutpage";
-import PlanningPartner from "./components/planning-partner";
-import InvestmentCircle from "./components/investment-circle";
+import TeamMemberView from "../_components/About/team-member";
+import DownloadAboutBrochure from "../_components/About/download-brochure-aboutpage";
+import PlanningPartner from "../_components/About/planning-partner";
+import InvestmentCircle from "../_components/About/investment-circle";
 
 const About = () => {
   return (
@@ -33,9 +30,7 @@ const About = () => {
         </section>
 
         <TeamMemberView />
-
         <PlanningPartner />
-
         <InvestmentCircle />
 
         {/* Call to Action Section */}

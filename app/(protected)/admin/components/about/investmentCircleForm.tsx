@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/form";
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
+import { useAdminAddUpdateInvestmentCircleMutation } from "@/store/api/Admin/adminAboutPage";
 
 interface InvestmentCircleData {
   name?: string;
@@ -42,6 +43,8 @@ const FormSchema = z.object({
 
 export default function InvestmentCircle({ investmentCircleData }: Props) {
   const [loading, setLoading] = useState(false);
+
+  const [AdminInvestmentCircle] = useAdminAddUpdateInvestmentCircleMutation();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -86,15 +89,9 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
         logo: backgroundUrl ?? investmentCircleData?.logo,
       };
 
-      const response = await fetch("/api/admin/about/investment-circle", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error("Failed to submit");
+      const response = await AdminInvestmentCircle({
+        ...formData,
+      }).unwrap();
 
       toast.success("Updated successfully");
     } catch (error) {

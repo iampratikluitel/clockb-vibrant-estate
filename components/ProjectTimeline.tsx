@@ -1,8 +1,10 @@
 'use client'
 
 import { cn } from "@/lib/utils";
+import { useGetPublicConfigLandingPageQuery } from "@/store/api/Public/publicConfiguration";
 import { Calendar, CheckCircle2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
+import PageLoader from "./PageLoader";
 
 type TimelineMilestone = {
   period: string;
@@ -27,7 +29,7 @@ const timelineData: TimelineMilestone[] = [
     description: "Opened investment opportunities, began infrastructure upgrades. Early investors witnessed significant value appreciation."
   },
   {
-    period: "2025 - 2027",
+    period: "2025 – 2027",
     title: "Phase 2 Initiation",
     description: "Launched the second phase of the project due to overwhelming investor success in Phase 1. Secured over 250 ropanis, making it a part of our large expansion plan. Existing investors exited with great returns or continued their journey in Phase 2."
   },
@@ -51,6 +53,8 @@ const ProjectTimeline = () => {
   const [activeIndex, setActiveIndex] = useState(2);
   const [isVisible, setIsVisible] = useState(false);
 
+  const {data: ProjectTimeline, isLoading: isProjectTimelineLoading} = useGetPublicConfigLandingPageQuery("");
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -71,6 +75,9 @@ const ProjectTimeline = () => {
 
   return (
     <section className="py-24 bg-gradient-to-b from-white to-estates-gray-100" id="timeline">
+      {isProjectTimelineLoading ? (
+        <PageLoader />
+      ): (
       <div className="container px-4 mx-auto">
         {/* Section Header */}
         <div className="mb-16 text-center max-w-3xl mx-auto">
@@ -165,6 +172,7 @@ const ProjectTimeline = () => {
           </div>
         </div>
       </div>
+      )}
     </section>
   );
 };

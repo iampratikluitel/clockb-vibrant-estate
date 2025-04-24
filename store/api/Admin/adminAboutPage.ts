@@ -5,26 +5,16 @@ import { Partner, Member } from "@/lib/types";
 export const adminAboutApi = createApi({
   reducerPath: "adminAboutApi",
   baseQuery: baseQuery,
-  tagTypes: ["AdminAboutMain", "AdminTeam", "AdminPartner"],
+  tagTypes: ["Admin Team Member", "Admin Partner", "Admin Investment Circle"],
   endpoints: (builder) => ({
-
-    getAdminAboutMainApi: builder.query<any, void>({
-      query: () => `admin/about/main-section`,
-      providesTags: ["AdminAboutMain"],
-    }),
-
-    adminAddUpdateAboutMain: builder.mutation<{ message: string }, any>({
-      query: (body) => ({
-        url: `admin/about/main-section`,
-        method: "POST",
-        body,
-      }),
-      invalidatesTags: ["AdminAboutMain"],
-    }),
-
-    getAdminTeamMembers: builder.query<Member[], void>({
+    getAllAdminTeamMember: builder.query<Member[], string>({
       query: () => `admin/about/teamMember`,
-      providesTags: ["AdminTeam"],
+      providesTags: ["Admin Partner"],
+    }),
+
+    getAdminTeamMemberById: builder.query<Member, string>({
+      query: (id) => `admin/about/teamMember/byid?id=${id}`,
+      providesTags: ["Admin Team Member"],
     }),
 
     adminAddUpdateTeamMember: builder.mutation<{ message: string }, Member>({
@@ -33,12 +23,37 @@ export const adminAboutApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["AdminTeam"],
+      invalidatesTags: ["Admin Team Member"],
     }),
 
-    getAdminPartners: builder.query<Partner[], void>({
+    adminDeleteTeamMember: builder.mutation<{ member: string }, any>({
+      query: (id) => ({
+        url: `admin/about/teamMember?id=${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Admin Team Member"],
+    }),
+
+    deleteMultipleTeamMemberAdmin: builder.mutation<
+      { message: string },
+      { ids: string[] }
+    >({
+      query: (body) => ({
+        url: `admin/about/teamMember/deletemultiple`,
+        method: "DELETE",
+        body: body,
+      }),
+      invalidatesTags: ["Admin Team Member"],
+    }),
+
+    getAllAdminPartner: builder.query<Partner[], string>({
       query: () => `admin/about/partner`,
-      providesTags: ["AdminPartner"],
+      providesTags: ["Admin Partner"],
+    }),
+
+    getAdminPartnerById: builder.query<Partner, string>({
+      query: (id) => `admin/abput/partner/byid?id=${id}`,
+      providesTags: ["Admin Partner"],
     }),
 
     adminAddUpdatePartner: builder.mutation<{ message: string }, Partner>({
@@ -47,17 +62,50 @@ export const adminAboutApi = createApi({
         method: "POST",
         body,
       }),
-      invalidatesTags: ["AdminPartner"],
+      invalidatesTags: ["Admin Partner"],
     }),
 
+    adminDeletePartner: builder.mutation<{ message: string }, any>({
+      query: (id) => ({
+        url: `admin/about/partner?id=${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Admin Partner"],
+    }),
+
+    deleteMultiplePartnerAdmin: builder.mutation<
+      { message: string },
+      { ids: string[] }
+    >({
+      query: (body) => ({
+        url: `admin/about/partner/deletemultiple`,
+        method: "DELETE",
+        body: body,
+      }),
+      invalidatesTags: ["Admin Partner"],
+    }),
+
+    adminAddUpdateInvestmentCircle: builder.mutation<{ message: string }, any>({
+      query: (body) => ({
+        url: `admin/about/investment-circle`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Admin Investment Circle"],
+    }),
   }),
 });
 
 export const {
-  useGetAdminAboutMainApiQuery,
-  useAdminAddUpdateAboutMainMutation,
-  useGetAdminTeamMembersQuery,
+  useGetAllAdminTeamMemberQuery,
+  useGetAdminTeamMemberByIdQuery,
   useAdminAddUpdateTeamMemberMutation,
-  useGetAdminPartnersQuery,
+  useAdminDeleteTeamMemberMutation,
+  useDeleteMultipleTeamMemberAdminMutation,
+  useGetAllAdminPartnerQuery,
+  useGetAdminPartnerByIdQuery,
   useAdminAddUpdatePartnerMutation,
+  useAdminDeletePartnerMutation,
+  useDeleteMultiplePartnerAdminMutation,
+  useAdminAddUpdateInvestmentCircleMutation,
 } = adminAboutApi;

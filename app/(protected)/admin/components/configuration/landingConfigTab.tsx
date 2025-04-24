@@ -4,8 +4,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import FormSchema, { FormSchemaType } from "./landingConfigSchema";
-
 import {
   Form,
   FormControl,
@@ -19,17 +17,28 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAdminAddUpdateLandingPageConfigMutation } from "@/store/api/Admin/adminConfiguration";
+import FormSchema from "./landingConfigSchema";
+import { LandingPage } from "@/lib/types";
+import LandingConfigSchema from "./landingConfigSchema";
+import { z } from "zod";
+import { paths } from "@/lib/paths";
+import { useRouter } from "next/navigation";
 
 interface Props {
-  ExistingDetail?: Partial<FormSchemaType> & { _id?: string };
+  ExistingDetail: LandingPage;
 }
 
 export default function LandingConfiguration({ ExistingDetail }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("card1");
+  
+  const router = useRouter();
 
-  const form = useForm<FormSchemaType>({
-    resolver: zodResolver(FormSchema),
+  const [AdminLandingConfig] = useAdminAddUpdateLandingPageConfigMutation();
+
+  const form = useForm<z.infer<typeof LandingConfigSchema>>({
+    resolver: zodResolver(LandingConfigSchema),
     defaultValues: {
       card1title: ExistingDetail?.card1title ?? "",
       card1description: ExistingDetail?.card1description ?? "",
@@ -53,17 +62,21 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
     },
   });
 
-  const onSubmit = async (data: FormSchemaType) => {
+  async function onSubmit(data: z.infer<typeof LandingConfigSchema>) {
     try {
       setIsLoading(true);
-      const formData = { _id: ExistingDetail?._id, ...data };
-      const response = await fetch("/api/admin/configuration/landingpage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) throw new Error("Failed to save data");
+      const formData = { _id: ExistingDetail, ...data };
+      const response = await AdminLandingConfig({
+        ...formData,
+      }).unwrap();
+      if (response) {
+        toast.success(`${response.message}`);
+        setIsLoading(false);
+        router.push(paths.admin.configuration);
+      } else {
+        toast.error(`Couldn't Update`);
+        setIsLoading(false);
+      }
       toast.success("Changes saved successfully");
     } catch (error) {
       console.error(error);
@@ -76,9 +89,9 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
   const renderCardFields = (cardNumber: number) => {
     const prefix = `card${cardNumber}` as const;
 
-    const titleKey = `${prefix}title` as keyof FormSchemaType;
-    const descriptionKey = `${prefix}description` as keyof FormSchemaType;
-    const dateKey = `${prefix}Date` as keyof FormSchemaType;
+    const titleKey = `${prefix}title` as keyof LandingPage;
+    const descriptionKey = `${prefix}description` as keyof LandingPage;
+    const dateKey = `${prefix}Date` as keyof LandingPage;
 
     return (
       <Card className="w-full">
