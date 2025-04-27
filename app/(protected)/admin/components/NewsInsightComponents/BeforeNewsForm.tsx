@@ -2,6 +2,7 @@ import { useGetAdminNewsInsightByIdQuery, useGetAllAdminNewsInsightsQuery } from
 import React from "react";
 import AddNewsForm from "./newAddForm";
 import PageLoader from "@/components/PageLoader";
+import NewsForm from "./newAddForm";
 
 export default function BeforeNewsForm() {
   const { data: NewsData, isLoading: NewsInsightLoading } =
@@ -11,7 +12,7 @@ export default function BeforeNewsForm() {
       {NewsInsightLoading ? (
         <PageLoader />
       ) : (
-        <AddNewsForm type={"Edit"} ExistingDetail={NewsData} />
+        <NewsForm type={"Edit"} newsCategory={[]} />
       )}
     </div>
   );

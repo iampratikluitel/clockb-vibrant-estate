@@ -20,7 +20,7 @@ export const publicConfigurationApi = createApi({
 
     //LandingPage
     getPublicConfigLandingPage: builder.query<any, string>({
-      query: () => `public/configuration/landingpage`,
+      query: () => `public/configuration/landingConfiguration`,
       providesTags: ["Public LandingPage Config"],
     }),
 

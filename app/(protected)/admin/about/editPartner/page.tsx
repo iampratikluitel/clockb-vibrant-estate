@@ -1,8 +1,8 @@
 "use client";
 
-import { useGetAdminPartnerByIdQuery } from "@/store/api/Admin/adminPartner";
 import { useSearchParams } from "next/navigation";
 import PartnerForm from "../../components/about/partnerForm";
+import { useGetAdminPartnerByIdQuery } from "@/store/api/Admin/adminAboutPage";
 
 const Edit = () => {
   const search = useSearchParams();

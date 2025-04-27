@@ -61,7 +61,7 @@ const Header = () => {
           <NavLink href="/" isActive={pathname === "/"}>Home</NavLink>
           <NavLink href="/about" isActive={pathname === "/about"}>About</NavLink>
           <NavLink href="/project-description" isActive={pathname === "/project-description"}>Project Description</NavLink>
-          <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink>
+          {/* <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink> */}
           <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
           <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
         </div>

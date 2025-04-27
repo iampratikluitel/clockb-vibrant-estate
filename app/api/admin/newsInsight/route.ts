@@ -37,6 +37,11 @@ export const POST = async (request: NextRequest) => {
         if (existingDoc.image && existingDoc.image != Data.image) {
           await minioClient.removeObject(BUCKET_NAME, existingDoc.image);
         }       
+
+        if (existingDoc.bannerImage && existingDoc.bannerImage != Data.bannerImage) {
+          await minioClient.removeObject(BUCKET_NAME, existingDoc.bannerImage);
+        }
+        
         await existingDoc.updateOne(Data);
         return NextResponse.json({ message: "NewsInsight Updated" }, { status: 201 });
       } else {

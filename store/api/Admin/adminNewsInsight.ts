@@ -1,4 +1,4 @@
-import { NewsInsight } from "@/lib/types";
+import { NewsInsight, NEWSINSIGHTCATEGORY } from "@/lib/types";
 import { baseQuery } from "@/store/global";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -14,7 +14,7 @@ export const adminNewsInsightsApi = createApi({
   endpoints: (builder) => ({
     //Get All NewsInsights
     getAllAdminNewsInsights: builder.query<NewsInsight[], string>({
-      query: () => `admin/newsinsights`,
+      query: () => `admin/newsInsights`,
       providesTags: ["Admin NewsInsights"],
     }),
 
@@ -64,6 +64,11 @@ export const adminNewsInsightsApi = createApi({
       }),
       invalidatesTags: ["Admin NewsInsights"],
     }),
+
+    getAllAdminNewsInsightCategories: builder.query<NEWSINSIGHTCATEGORY[], string>({
+      query: () => `admin/courses/category`,
+      providesTags: ["Admin NewsInsights"],
+    }),
   }),
 });
 
@@ -74,4 +79,5 @@ export const {
   useGetAllAdminNewsInsightsQuery,
   useAdminToggleNewsInsightMutation,
   useDeleteMultipleNewsInsightsAdminMutation,
+  useGetAllAdminNewsInsightCategoriesQuery,
 } = adminNewsInsightsApi;

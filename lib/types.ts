@@ -110,13 +110,18 @@ export interface LandingPage {
 export interface NewsInsight{
   _id: string;
   title: string;
-  description: string;
   image: string;
+  bannerImage: string
   slug: string;
   overview: string;
   categoryId?: string;
   addedDate: Date;
   status: boolean;
+}
+
+export interface NEWSINSIGHTCATEGORY{
+  name: string,
+  slug: string,
 }
 
 export interface UpcommingProject{
