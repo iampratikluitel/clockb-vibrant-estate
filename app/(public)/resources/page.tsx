@@ -20,11 +20,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
 import  Link from "next/link";
 import { cn } from "@/lib/utils";
-import ReportTable from "@/app/(public)/_components/report/reporttable";
+import ReportTable from "@/components/report/reporttable";
 
 interface ResourceCardProps {
   icon: React.ReactNode;

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useGetPublicConfigLandingPageQuery } from "@/store/api/Public/publicConfiguration";
 import { Calendar, CheckCircle2, TrendingUp } from "lucide-react";
 import { useEffect, useState } from "react";
-import PageLoader from "./PageLoader";
+import PageLoader from "../PageLoader";
 
 type TimelineMilestone = {
   period: string;

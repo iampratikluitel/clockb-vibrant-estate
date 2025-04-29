@@ -1,12 +1,12 @@
 "use client";
 
 import { Phone, MapPin } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import TeamMemberView from "../_components/About/team-member";
-import DownloadAboutBrochure from "../_components/About/download-brochure-aboutpage";
-import PlanningPartner from "../_components/About/planning-partner";
-import InvestmentCircle from "../_components/About/investment-circle";
+import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
+import TeamMemberView from "./_components/team-member";
+import DownloadAboutBrochure from "./_components/download-brochure-aboutpage";
+import PlanningPartner from "./_components/planning-partner";
+import InvestmentCircle from "./_components/investment-circle";
 
 const About = () => {
   return (

@@ -3,14 +3,14 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import PageLoader from "./PageLoader";
+import PageLoader from "../PageLoader";
 import { useGetPublicUpcommingProjectQuery } from "@/store/api/Public/publicUpcommingProject";
 import { MINIOURL } from "@/lib/constants";
 import Link from "next/link";
 import { paths } from "@/lib/paths";
 import { useSearchParams } from "next/navigation";
 import { UPCOMMINGPROJECT } from "@/lib/types";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
 
 const OngoingProjects = () => {
   const searchParams = useSearchParams();

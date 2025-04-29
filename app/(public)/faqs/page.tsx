@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
 import {
   Accordion,
   AccordionContent,

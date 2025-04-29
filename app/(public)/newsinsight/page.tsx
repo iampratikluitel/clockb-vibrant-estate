@@ -18,6 +18,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useGetPublicNewsInsightsQuery } from "@/store/api/Public/publicNewsInsight";
 import { NEWSINSIGHT } from "@/lib/types";
 import NewsInsightCardComponent from "@/components/newsinsight/NewsInsightCardComponent";
+import Footer from "@/components/homepage/Footer";
 
 const NewsInsight = () => {
   const searchParams = useSearchParams();
@@ -178,6 +179,7 @@ const NewsInsight = () => {
           </Pagination>
         )}
       </div>
+      <Footer />
     </>
   );
 };

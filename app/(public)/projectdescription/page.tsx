@@ -2,8 +2,8 @@
 
 import { ArrowRight, Building, Check, FileText, Leaf, PiggyBank, ShieldCheck, Calendar, MapPin, LayoutGrid, Droplets, Zap, Sun, Store, Users, DollarSign, ArrowUpRight, LandPlot, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
 
 const ProjectDescription = () => {
   return (

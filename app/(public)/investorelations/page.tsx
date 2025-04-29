@@ -1,14 +1,14 @@
 "use client";
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import DownloadInvestmentBrochure from "../_components/investor-relations/download-investment-brochure";
-import KeyHighlightsInvestment from "../_components/investor-relations/key-highlights";
-import InvestmentModelSection from "../_components/investor-relations/investment-modle-section";
-import TermAndCondition from "../_components/investor-relations/terms-and-comdition";
-import InvestmentTeamSection from "../_components/investor-relations/investment-team-section";
-import CallToAction from "../_components/investor-relations/call-to-action-section";
-import ContactInformationSection from "../_components/investor-relations/contact-information-section";
+import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
+import DownloadInvestmentBrochure from "./_components/download-investment-brochure";
+import KeyHighlightsInvestment from "./_components/key-highlights";
+import InvestmentModelSection from "./_components/investment-modle-section";
+import TermAndCondition from "./_components/terms-and-comdition";
+import InvestmentTeamSection from "./_components/investment-team-section";
+import CallToAction from "./_components/call-to-action-section";
+import ContactInformationSection from "./_components/contact-information-section";
 
 
 const InvestmentRelations = () => {

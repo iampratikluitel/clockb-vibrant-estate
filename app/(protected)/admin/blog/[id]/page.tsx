@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useRouter } from 'next/navigation'
 import { Plus, Tag, X, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import Header from '@/components/Header'
+import Header from '@/components/homepage/Header'
 
 interface BlogPost {
   id: string
