@@ -1,5 +1,7 @@
+"use client"
+
 import React from "react";
-import NewsTable from "../components/NewsInsightComponents/newsTable";
+import NewsTable from "../components/NewsInsightComponents/newsInsightTable";
 import { paths } from "@/lib/paths";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -11,11 +13,11 @@ export default function NewsInsight() {
     <Breadcrumb className="">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={paths.admin.news}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href={paths.admin.newsinsight}>Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>News</BreadcrumbPage>
+          <BreadcrumbPage>News Insight</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

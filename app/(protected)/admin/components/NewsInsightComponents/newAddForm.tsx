@@ -11,11 +11,24 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MINIOURL } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import AddNewsCategory from "./newsCategory";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import ReactQuillEditor from "@/components/ReactQuillEditor";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { TrashIcon, Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -90,9 +103,9 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
           ...formData,
         }).unwrap();
         if (response) {
-          const responseData = response as ApiResponse; // Type assertion
+          const responseData = response as ApiResponse;
           toast.success(responseData.message);
-          router.push(`${paths.admin.editNews}?id=${responseData.data}`);
+          router.push(`${paths.admin.newsinsight}?id=${responseData.data}`);
           setLoading(false);
         } else {
           toast.error(`Couldn't Add`);
@@ -104,7 +117,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         let BannerImageUrl = null;
 
         if (data.image != `${MINIOURL}${ExistingDetails?.image}`) {
-          ImageUrl = await uploadToMinIO(data.image, "courses");
+          ImageUrl = await uploadToMinIO(data.image, "newsinsight");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");
             return;
@@ -129,7 +142,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         if (response) {
           toast.success(`${response.message}`);
           setLoading(false);
-          // router.push(`${paths.admin.editcourse}?id=${ExistingDetail._id}`);
+          router.push(`${paths.admin.newsinsight}`);
         } else {
           toast.error(`Couldn't Edit`);
           setLoading(false);
@@ -169,19 +182,15 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         </DialogContent>
       </Dialog>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 p-4 bg-white">
-        <div className="flex justify-between">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="w-full space-y-6 p-4 bg-white"
+        >
+          <div className="flex justify-between">
             <h1 className="font-semibold text-2xl">{type} News</h1>
-            {Loading ? (
-              <div>
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <Button type="submit">Submit</Button>
-            )}
           </div>
-          <div className="flex w-full gap-4">
-            <div className="w-1/2 flex flex-col gap-2">
+          <div className="flex w-full gap-4 flex-col md:flex-row">
+            <div className="w-full md:w-1/2 flex flex-col gap-2">
               <div className="text-2xl font-semibold">News Detail</div>
               <FormField
                 control={form.control}
@@ -196,14 +205,14 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                   </FormItem>
                 )}
               />
-              
-              <div className="relative flex items-center justify-start ">
+
+              <div className="relative flex items-center justify-start">
                 <FormField
                   control={form.control}
                   name="categoryId"
                   render={({ field }) => (
-                    <FormItem className=" w-[15rem]">
-                      <FormLabel className="">Category</FormLabel>
+                    <FormItem className="w-full md:w-[15rem]">
+                      <FormLabel>Category</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -214,39 +223,46 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {newsCategory.map((element, index) => (
-                            <div
-                              key={index}
-                              className="flex gap-x-2 items-center"
-                            >
-                              <SelectItem key={index} value={element._id}>
-                                <div className="flex items-center justify-between space-x-2">
-                                  <p>{element.name}</p>
-                                </div>
-                              </SelectItem>
-                              <TrashIcon
-                                className="text-red-500 hover:text-red-800 cursor-pointer duration-300"
-                                onClick={() =>
-                                  handleCategoryDelete(element._id)
-                                }
-                              />
-                            </div>
-                          ))}
+                          {newsCategory && newsCategory.length > 0 ? (
+                            newsCategory.map((element, index) => (
+                              <div
+                                key={index}
+                                className="flex gap-x-2 items-center"
+                              >
+                                <SelectItem key={index} value={element._id}>
+                                  <div className="flex items-center justify-between space-x-2">
+                                    <p>{element.name}</p>
+                                  </div>
+                                </SelectItem>
+                                <TrashIcon
+                                  className="text-red-500 hover:text-red-800 cursor-pointer duration-300"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleCategoryDelete(element._id);
+                                  }}
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <SelectItem value="no-options" disabled>
+                              No categories available
+                            </SelectItem>
+                          )}
                         </SelectContent>
                       </Select>
-
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <div
-                  className="absolute top-10 left-72"
+                  className="absolute top-10 right-0 md:left-72 cursor-pointer"
                   onClick={() => setIsOpen(true)}
                 >
                   <Plus />
                 </div>
               </div>
-              {/* <div className="flex justify-start gap-2"> */}          
+
+              <ReactQuillEditor name="overview" label="News Overview" />
             </div>
             <div className="w-1/2 space-y-2">
               <SCNSingleImagePicker
@@ -259,7 +275,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                 variant="imageBox"
                 schemaName="bannerImage"
               ></SCNSingleImagePicker>
-              <ReactQuillEditor name="overview" label="News Overview" />
+              {/* <ReactQuillEditor name="overview" label="News Overview" /> */}
             </div>
           </div>
           {Loading ? (

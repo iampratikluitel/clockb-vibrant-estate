@@ -1,4 +1,4 @@
-import { UpcommingProject } from "@/lib/types";
+import { UPCOMMINGPROJECT } from "@/lib/types";
 import { baseQuery } from "@/store/global";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -8,13 +8,13 @@ export const publicUpcommingProjectApi = createApi({
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
-    getPublicUpcommingProject: builder.query<UpcommingProject[], string>({
-      query: () => `public/projectdescription`,
+    getPublicUpcommingProject: builder.query<UPCOMMINGPROJECT[], string>({
+      query: () => `public/ongoingprojects`,
       providesTags: ["Public Upcomming Project"],
     }), 
 
-    getPublicUpcommingProjectBySlug: builder.query<UpcommingProject, string>({
-      query: (slug) => `public/projectdescription/byslug?slug=${slug}`,
+    getPublicUpcommingProjectBySlug: builder.query<UPCOMMINGPROJECT, string>({
+      query: (slug) => `public/ongoingprojects/byslug?slug=${slug}`,
       providesTags: ["Public Upcomming Project"],
     }),
   }),

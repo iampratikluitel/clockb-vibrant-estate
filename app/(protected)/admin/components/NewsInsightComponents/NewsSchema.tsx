@@ -8,7 +8,4 @@ export const NewsSchema = z.object({
   categoryId: z.string().min(2, {
     message: "CategoryId is required.",
   }),
-  addedDate: z.string().min(2, {
-    message: "Training Date must be at least 2 characters.",
-  }),
 });

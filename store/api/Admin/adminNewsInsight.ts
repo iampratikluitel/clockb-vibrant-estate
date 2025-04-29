@@ -14,20 +14,20 @@ export const adminNewsInsightsApi = createApi({
   endpoints: (builder) => ({
     //Get All NewsInsights
     getAllAdminNewsInsights: builder.query<NewsInsight[], string>({
-      query: () => `admin/newsInsights`,
+      query: () => `admin/newsInsight`,
       providesTags: ["Admin NewsInsights"],
     }),
 
     // NewsInsight by Id
     getAdminNewsInsightById: builder.query<NewsInsight, string>({
-      query: (id) => `admin/newsInsights/byid?id=${id}`,
+      query: (id) => `admin/newsInsight/byid?id=${id}`,
       providesTags: ["Admin NewsInsights"],
     }),
 
     // Admin Delete NewsInsight
     AdminDeleteNewsInsight: builder.mutation<{ message: string }, any>({
       query: (id) => ({
-        url: `admin/newsInsights?id=${id}`,
+        url: `admin/newsInsight?id=${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Admin NewsInsights"],
@@ -36,7 +36,7 @@ export const adminNewsInsightsApi = createApi({
     //Add Update NewsInsight
     AdminAddUpdateNewsInsight: builder.mutation<{ message: string }, any>({
       query: ({ ...body }) => ({
-        url: `admin/newsInsights`,
+        url: `admin/newsInsight`,
         method: "POST",
         body: body,
       }),
@@ -46,7 +46,7 @@ export const adminNewsInsightsApi = createApi({
     // Admin Toggle NewsInsight Status
     AdminToggleNewsInsight: builder.mutation<{ message: string }, any>({
       query: (id) => ({
-        url: `admin/newsInsights/toggle?id=${id}`,
+        url: `admin/newsInsight/toggle?id=${id}`,
         method: "POST",
       }),
       invalidatesTags: ["Admin NewsInsights"],
@@ -58,7 +58,7 @@ export const adminNewsInsightsApi = createApi({
       { ids: string[] }
     >({
       query: (body) => ({
-        url: `admin/newsInsights/deletemultiple`,
+        url: `admin/newsInsight/deletemultiple`,
         method: "DELETE",
         body: body,
       }),
@@ -66,7 +66,7 @@ export const adminNewsInsightsApi = createApi({
     }),
 
     getAllAdminNewsInsightCategories: builder.query<NEWSINSIGHTCATEGORY[], string>({
-      query: () => `admin/courses/category`,
+      query: () => `admin/newsinsight/category`,
       providesTags: ["Admin NewsInsights"],
     }),
   }),

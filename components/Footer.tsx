@@ -52,15 +52,15 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/projects" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/projectdescription" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Project Description
                 </Link>
               </li>
               <li>
-                <Link href="/inveshrefr-relations" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/investorelations" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
-                  Inveshrefr Relations
+                  Investor Relations
                 </Link>
               </li>
               <li>
@@ -76,7 +76,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/news" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/newsinsight" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   News & Insights
                 </Link>

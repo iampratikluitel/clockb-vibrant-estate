@@ -1,19 +1,34 @@
-import { useGetAdminNewsInsightByIdQuery, useGetAllAdminNewsInsightsQuery } from "@/store/api/Admin/adminNewsInsight";
+"use client"
+import { useGetAdminNewsInsightByIdQuery } from "@/store/api/Admin/adminNewsInsight";
 import React from "react";
-import AddNewsForm from "./newAddForm";
-import PageLoader from "@/components/PageLoader";
 import NewsForm from "./newAddForm";
 
-export default function BeforeNewsForm() {
-  const { data: NewsData, isLoading: NewsInsightLoading } =
-    useGetAdminNewsInsightByIdQuery('id');
+interface props {
+  type: "Add" | "Edit"
+  newsCategory: any[];
+  id: string;
+}
+
+export default function BeforeNewsForm({type, newsCategory, id}: props) { 
+  const { data: NewsInsight, isLoading: NewsInsightLoading } =
+    useGetAdminNewsInsightByIdQuery(id);
   return (
-    <div>
-      {NewsInsightLoading ? (
-        <PageLoader />
-      ) : (
-        <NewsForm type={"Edit"} newsCategory={[]} />
-      )}
-    </div>
+    <>
+    {NewsInsightLoading ? (
+      <div className="h-[100vh] w-full flex justify-center items-center">
+        <p className="loader"></p>
+      </div>
+    ) : (
+      <>
+        {NewsInsight && (
+          <NewsForm
+            type={type}
+            ExistingDetails={NewsInsight}
+            newsCategory={newsCategory}
+          />
+        )}
+      </>
+    )}
+  </>
   );
 }

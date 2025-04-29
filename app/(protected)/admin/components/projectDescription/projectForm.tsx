@@ -23,11 +23,11 @@ import { useRouter } from "next/navigation";
 import { uploadToMinIO } from "@/lib/helper";
 import { useAdminAddUpdateUpcommingProjectMutation } from "@/store/api/Admin/adminUpcommingProject";
 import { paths } from "@/lib/paths";
-import { ApiResponse, UpcommingProject } from "@/lib/types";
+import { ApiResponse, UPCOMMINGPROJECT } from "@/lib/types";
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetail?: UpcommingProject;
+  ExistingDetail?: UPCOMMINGPROJECT;
 }
 
 const ProjectSchema = z.object({

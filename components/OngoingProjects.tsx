@@ -1,16 +1,79 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import PageLoader from "./PageLoader";
 import { useGetPublicUpcommingProjectQuery } from "@/store/api/Public/publicUpcommingProject";
 import { MINIOURL } from "@/lib/constants";
+import Link from "next/link";
+import { paths } from "@/lib/paths";
+import { useSearchParams } from "next/navigation";
+import { UPCOMMINGPROJECT } from "@/lib/types";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
 
 const OngoingProjects = () => {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProjects, setFilteredProjects] = useState<UPCOMMINGPROJECT[]>(
+    []
+  );
+  const [currentTab, setCurrentTab] = useState(tab || "All");
+
+  const pageSize = 3;
+  const [currentPage, setCurrentPage] = useState(1);
   const { data: Projects, isLoading: ProjectLoading } =
     useGetPublicUpcommingProjectQuery("");
 
+  useEffect(() => {
+    if (Projects && Projects.length > 0) {
+      filterProjects(Projects, currentTab);
+    }
+  }, [Projects, currentTab]);
+
+  useEffect(() => {
+    if (Projects && Projects.length) {
+      filterProjects(Projects, currentTab);
+    }
+  }, [searchTerm, currentTab]);
+
+  const filterProjects = (projects: UPCOMMINGPROJECT[], currentTab: string) => {
+    const filtered = projects.filter((project) => {
+      const matchesSearchTerm = project.title
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      return matchesSearchTerm;
+    });
+    setFilteredProjects(filtered);
+  };
+
+  const slicedProjects = filteredProjects.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
+  const totalPages = Math.ceil(filteredProjects.length / pageSize);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  if (ProjectLoading) {
+    return <PageLoader />;
+  }
   // const projects = [
   //   {
   //     id: 1,
@@ -40,50 +103,94 @@ const OngoingProjects = () => {
 
   return (
     <section className="py-16 bg-white">
-      {ProjectLoading ? (
-        <div>
-          <PageLoader />
-        </div>
-      ) : (
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-bold text-estates-primary text-center mb-12">
-            Ongoing & Upcoming Projects
-          </h2>
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-estates-primary text-center mb-12">
+          Ongoing & Upcoming Projects
+        </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Array.isArray(Projects) &&
-              Projects.map((project) => (
-                <div
-                  key={project._id}
-                  className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl"
-                >
-                  <div className="relative h-60 overflow-hidden">
-                    <img
-                      src={`${MINIOURL}${project.image}`}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
-                      {project.status}
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {Array.isArray(Projects) &&
+            Projects.map((project) => (
+              <div
+                key={project._id}
+                className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl"
+              >
+                <div className="relative h-60 overflow-hidden">
+                  <img
+                    src={`${MINIOURL}${project.image}`}
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
+                    {project.status}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold text-estates-secondary mb-3">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-600 mb-6 line-clamp-4">
-                      {project.description}
-                    </p>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-estates-secondary mb-3">
+                    {project.title}
+                  </h3>
+                  <p className="text-gray-600 mb-6 line-clamp-4">
+                    {project.description}
+                  </p>
+                  {/* <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
+                      Learn More
+                      <ArrowRight size={16} />
+                    </Button> */}
+                  <Link href={`${paths.public.ongoingprojects}/${project.slug}`}>
                     <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
                       Learn More
                       <ArrowRight size={16} />
                     </Button>
-                  </div>
+                  </Link>
                 </div>
-              ))}
-          </div>
+              </div>
+            ))}
         </div>
-      )}
+      </div>
+      {filteredProjects.length > pageSize && totalPages > 1 && (
+          <Pagination className="cursor-pointer my-10">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={handlePreviousPage}
+                  className={
+                    currentPage > 1 ? "cursor-pointer" : "cursor-not-allowed"
+                  }
+                />
+              </PaginationItem>
+
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem key={index}>
+                  <PaginationLink
+                    className={`rounded-full text-white ${
+                      currentPage === index + 1
+                        ? "bg-blue-500"
+                        : "border text-black"
+                    }`}
+                    onClick={() => handlePageClick(index + 1)}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+
+              <PaginationItem>
+                <PaginationEllipsis />
+              </PaginationItem>
+
+              <PaginationItem>
+                <PaginationNext
+                  onClick={handleNextPage}
+                  className={
+                    currentPage < totalPages
+                      ? "cursor-pointer"
+                      : "cursor-not-allowed"
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
     </section>
   );
 };

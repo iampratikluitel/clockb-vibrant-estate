@@ -1,4 +1,4 @@
-import { NewsInsight } from "@/lib/types";
+import { NEWSINSIGHT } from "@/lib/types";
 import { baseQuery } from "@/store/global";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -9,54 +9,27 @@ export const publicNewsInsightsApi = createApi({
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
     //all NewsInsights
-    getPublicNewsInsights: builder.query<NewsInsight[], string>({
-      query: () => `public/newsInsights`,
+    getPublicNewsInsights: builder.query<NEWSINSIGHT[], string>({
+      query: () => `public/newsInsight`,
       providesTags: ["Public NewsInsights"],
     }),
 
     //popular NewsInsights
-    getPublicPopularNewsInsights: builder.query<NewsInsight[], string>({
-      query: () => `public/newsInsights/popular`,
+    getPublicPopularNewsInsights: builder.query<NEWSINSIGHT[], string>({
+      query: () => `public/newsInsight/popular`,
       providesTags: ["Public NewsInsights"],
     }),
 
     // NewsInsight by by slug
-    getPublicNewsInsightBySlug: builder.query<NewsInsight, string>({
-      query: (slug) => `public/newsInsights/byslug?slug=${slug}`,
+    getPublicNewsInsightBySlug: builder.query<NEWSINSIGHT, string>({
+      query: (slug) => `public/newsInsight/byslug?slug=${slug}`,
       providesTags: ["Public NewsInsights"],
     }),
 
     // NewsInsights by by category
-    getPublicNewsInsightsByCategory: builder.query<NewsInsight[], string>({
-      query: (slug) => `public/newsInsights/bycategory?slug=${slug}`,
+    getPublicNewsInsightsByCategory: builder.query<NEWSINSIGHT[], string>({
+      query: (slug) => `public/newsInsight/bycategory?slug=${slug}`,
       providesTags: ["Public NewsInsights"],
-    }),
-
-    //NewsInsight Enquiry
-    PublicNewsInsightEnquiry: builder.mutation<{ message: string }, any>({
-      query: ({ ...body }) => ({
-        url: `public/newsInsights/enquiry`,
-        method: "POST",
-        body: body,
-      }),
-    }),
-
-    //NewsInsight Enrollement
-    PublicNewsInsightEnrollment: builder.mutation<{ message: string }, any>({
-      query: ({ ...body }) => ({
-        url: `public/newsInsights/enrollment`,
-        method: "POST",
-        body: body,
-      }),
-    }),
-
-    //Download NewsInsight
-    PublicNewsInsightDownload: builder.mutation<{ message: string }, any>({
-      query: ({ ...body }) => ({
-        url: `public/newsInsights/download`,
-        method: "POST",
-        body: body,
-      }),
     }),
   }),
 });
@@ -66,7 +39,4 @@ export const {
   useGetPublicNewsInsightsByCategoryQuery,
   useGetPublicNewsInsightsQuery,
   useGetPublicPopularNewsInsightsQuery,
-  usePublicNewsInsightEnquiryMutation,
-  usePublicNewsInsightDownloadMutation,
-  usePublicNewsInsightEnrollmentMutation,
 } = publicNewsInsightsApi;

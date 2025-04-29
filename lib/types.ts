@@ -85,46 +85,28 @@ export interface Contact {
   message: string;
 }
 
-export interface LandingPage {
-  card1title: string,
-    card1description: string,
-    card1Date: string,
-  
-    card2title: string,
-    card2description: string,
-    card2Date: string,
-  
-    card3title: string,
-    card3description: string,
-    card3Date: string,
-  
-    card4title: string,
-    card4description: string,
-    card4Date: string,
-  
-    card5title: string,
-    card5description: string,
-    card5Date: string,
-}
-
-export interface NewsInsight{
+export interface NEWSINSIGHT {
   _id: string;
   title: string;
   image: string;
-  bannerImage: string
+  bannerImage: string;
   slug: string;
   overview: string;
   categoryId?: string;
+  category: {
+    name: string;
+  };
   addedDate: Date;
   status: boolean;
 }
 
-export interface NEWSINSIGHTCATEGORY{
-  name: string,
-  slug: string,
+export interface NEWSINSIGHTCATEGORY {
+  name: string;
+  slug: string;
 }
 
-export interface UpcommingProject{
+export interface UPCOMMINGPROJECT {
+  slug: string;
   _id: string;
   title: string;
   description: string;
@@ -132,6 +114,28 @@ export interface UpcommingProject{
   overview: string;
   addedDate: Date;
   status: boolean;
+}
+
+export interface PROJECTJOURNEY {
+  card1title: string;
+  card1description: string;
+  card1Date: Date;
+
+  card2title: string;
+  card2description: string;
+  card2Date: Date;
+
+  card3title: string;
+  card3description: string;
+  card3Date: Date;
+
+  card4title: string;
+  card4description: string;
+  card4Date: Date;
+
+  card5title: string;
+  card5description: string;
+  card5Date: Date;
 }
 
 export interface ApiResponse {

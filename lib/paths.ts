@@ -14,6 +14,9 @@ export const paths = {
     resetpassword: "/resetpassword",
     login: "/login",
 
+    ongoingprojects: "/ongoingproject",
+    newsinsight: "/newsinsight",
+
     about: "/about",
     contact: "/contact",
     faqs: "/faqs",
@@ -44,9 +47,9 @@ export const paths = {
     addfaq: `${ROOTS.admin}/faqs/add`,
     editfaq: `${ROOTS.admin}/faqs/edit`,
 
-    news: `${ROOTS.admin}/news`,
-    addNews: `${ROOTS.admin}/news/add`,
-    editNews: `${ROOTS.admin}/news/edit`,
+    newsinsight: `${ROOTS.admin}/newsinsight`,
+    addNews: `${ROOTS.admin}/newsinsight/add`,
+    editNews: `${ROOTS.admin}/newsinsight/edit`,
 
     configuration: `${ROOTS.admin}/configuration`,
     landingpage: `${ROOTS.admin}/configuration/landingpage`,

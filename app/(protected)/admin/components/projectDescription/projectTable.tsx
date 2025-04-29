@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { UpcommingProject } from "@/lib/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -60,6 +59,7 @@ import { paths } from "@/lib/paths";
 import AlertDialogBox from "../AlertDialogBox";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
+import { UPCOMMINGPROJECT } from "@/lib/types";
 
 export default function ProjectTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -111,8 +111,8 @@ export default function ProjectTable() {
     }
   };
 
-  const data: UpcommingProject[] = ProjectData || [];
-  const columns: ColumnDef<UpcommingProject>[] = [
+  const data: UPCOMMINGPROJECT[] = ProjectData || [];
+  const columns: ColumnDef<UPCOMMINGPROJECT>[] = [
     {
       id: "_id",
       header: ({ table }) => (

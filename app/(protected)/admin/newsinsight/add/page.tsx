@@ -10,24 +10,26 @@ import {
 import { paths } from "@/lib/paths";
 import AddNewsForm from "../../components/NewsInsightComponents/newAddForm";
 import NewsInsightCategory from "@/model/NewsInsights/NewsInsightCategory";
+import { connectDb } from "@/lib/mongodb";
 
 const AddNews = async () => {
-  const categories = await NewsInsightCategory.find({ status: true}).lean();
+  await connectDb();
+  const categories = await NewsInsightCategory.find({ status: true }).lean();
   const plainCategories = categories.map((category: any) => ({
     ...category,
     _id: category._id.toString(),
-  }))
+  }));
 
   return (
     <div className="px-5 py-10">
       <Breadcrumb className="">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.news}>Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href={paths.admin.newsinsight}>Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.news}>News</BreadcrumbLink>
+            <BreadcrumbLink href={paths.admin.newsinsight}>News</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

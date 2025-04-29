@@ -69,7 +69,7 @@ const DashboardSidebar = () => {
     },
     { 
       name: "News & Insights", 
-      path: "/admin/news", 
+      path: "/admin/newsinsight", 
       icon: Newspaper 
     },
     { 
