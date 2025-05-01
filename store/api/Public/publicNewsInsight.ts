@@ -1,4 +1,4 @@
-import { NEWSINSIGHT } from "@/lib/types";
+import { NEWSINSIGHT, NEWSINSIGHTCATEGORY } from "@/lib/types";
 import { baseQuery } from "@/store/global";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -31,6 +31,11 @@ export const publicNewsInsightsApi = createApi({
       query: (slug) => `public/newsInsight/bycategory?slug=${slug}`,
       providesTags: ["Public NewsInsights"],
     }),
+
+    getPublicNewsInsightsCategory: builder.query<NEWSINSIGHTCATEGORY[], string>({
+      query: () => `public/newsInsight/category`,
+      providesTags: ["Public NewsInsights"],
+    })
   }),
 });
 
@@ -39,4 +44,5 @@ export const {
   useGetPublicNewsInsightsByCategoryQuery,
   useGetPublicNewsInsightsQuery,
   useGetPublicPopularNewsInsightsQuery,
+  useGetPublicNewsInsightsCategoryQuery
 } = publicNewsInsightsApi;

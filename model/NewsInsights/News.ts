@@ -3,6 +3,7 @@ import { model, Model, models, Schema } from "mongoose";
 const newsSchema = new Schema({
   slug: String,
   title: String,
+  author: String,
   description: String,
   image: String,
   bannerImage: String,

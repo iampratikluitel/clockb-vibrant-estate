@@ -58,11 +58,6 @@ const DashboardSidebar = () => {
       icon: Users,
     },
     { 
-      name: "Blog", 
-      path: "/admin/blog", 
-      icon: BookOpen 
-    },
-    { 
       name: "FAQs", 
       path: "/admin/faqs", 
       icon: HelpCircle 

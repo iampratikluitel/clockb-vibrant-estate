@@ -1,6 +1,6 @@
 "use client";
 
-import { ApiResponse, NewsInsight } from "@/lib/types";
+import { ApiResponse, NEWSINSIGHT } from "@/lib/types";
 import { useAdminAddUpdateNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -35,10 +35,11 @@ import { toast } from "sonner";
 import { deleteNewsCategory } from "@/action/news-category";
 import { uploadToMinIO } from "@/lib/helper";
 import { paths } from "@/lib/paths";
+import { Textarea } from "@/components/ui/textarea";
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetails?: NewsInsight;
+  ExistingDetails?: NEWSINSIGHT;
   newsCategory: any[];
 }
 
@@ -52,6 +53,8 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
     resolver: zodResolver(NewsSchema),
     defaultValues: {
       title: ExistingDetails?.title ?? "",
+      description: ExistingDetails?.description ?? "",
+      author: ExistingDetails?.author ?? "",
       image: ExistingDetails?.image
         ? `${MINIOURL}${ExistingDetails?.image}`
         : null,
@@ -206,6 +209,34 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="author"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Author</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter the author name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>News Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Enter Short Description" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
               <div className="relative flex items-center justify-start">
                 <FormField
                   control={form.control}

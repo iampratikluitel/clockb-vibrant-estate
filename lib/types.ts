@@ -37,28 +37,6 @@ export interface FAQTYPE {
   addedDate: Date;
 }
 
-export interface BlogsCategoryType {
-  _id?: string;
-  name: string;
-  slug?: string;
-  status?: boolean;
-  blogsCount?: number;
-}
-
-export interface BLOGS {
-  _id: string;
-  title: string;
-  slug: string;
-  author: string;
-  tags: string[];
-  description: string;
-  image: string;
-  categoryId: string;
-  category?: string;
-  postedDate: Date;
-  status: boolean;
-}
-
 export interface FOOTER {
   _id: string;
   logo: string;
@@ -89,6 +67,8 @@ export interface NEWSINSIGHT {
   _id: string;
   title: string;
   image: string;
+  description: string;
+  author: string;
   bannerImage: string;
   slug: string;
   overview: string;
@@ -101,8 +81,11 @@ export interface NEWSINSIGHT {
 }
 
 export interface NEWSINSIGHTCATEGORY {
+  _id: string;
   name: string;
   slug: string;
+  status?: boolean;
+  newsCount?: number;
 }
 
 export interface UPCOMMINGPROJECT {

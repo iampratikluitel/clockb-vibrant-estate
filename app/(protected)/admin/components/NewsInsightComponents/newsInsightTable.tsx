@@ -45,7 +45,6 @@ import {
   ChevronDownIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
-import router from "next/router";
 import AlertDialogBox from "../AlertDialogBox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -122,6 +121,13 @@ const NewsTable = () => {
           />
           <div className="capitalize">{row.getValue("title")}</div>
         </div>
+      ),
+    },
+    {
+      accessorKey: "author",
+      header: "Author",
+      cell: ({ row }) => (
+        <div>{row.getValue("author")}</div>
       ),
     },
     {

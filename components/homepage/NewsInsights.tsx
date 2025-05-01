@@ -57,7 +57,7 @@ const NewsInsights = () => {
                     {category.overview}
                   </p>
                   <Link
-                    href={`${paths.public.newsinsight}/${category.slug}`}
+                    href={`${paths.public.newsInsight}/${category.slug}`}
                     className="text-estates-primary p-0 h-auto inline-flex items-center"
                   >
                     Read more
@@ -70,7 +70,7 @@ const NewsInsights = () => {
         </div>
         <div className="text-center mt-10">
           <Link
-            href={paths.public.newsinsight}
+            href={paths.public.newsInsight}
             className="inline-flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white px-6 py-2 rounded-md"
           >
             View More Articles

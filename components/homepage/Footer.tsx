@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link"; // Import Next.js Link
+import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
@@ -62,21 +62,9 @@ const Footer = () => {
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Investor Relations
                 </Link>
-              </li>
+              </li>              
               <li>
-                <Link href="/blog" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
-                  <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link href="/faqs" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
-                  <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
-                  FAQs
-                </Link>
-              </li>
-              <li>
-                <Link href="/newsinsight" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/newsInsights" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   News & Insights
                 </Link>
@@ -94,6 +82,12 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-6">More Links</h3>
             <ul className="space-y-3">
+              <li>
+                <Link href="/faqs" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                  <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
+                  FAQs
+                </Link>
+              </li>
               <li>
                 <Link href="/terms" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>

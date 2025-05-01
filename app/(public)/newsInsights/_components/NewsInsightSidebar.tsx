@@ -1,23 +1,35 @@
-"use client"
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { blogs } from '@/data/blogs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Calendar } from 'lucide-react';
+import React from "react";
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "lucide-react";
+import { useParams } from "next/navigation";
+import {
+  useGetPublicNewsInsightBySlugQuery,
+  useGetPublicNewsInsightsCategoryQuery,
+  useGetPublicNewsInsightsQuery,
+} from "@/store/api/Public/publicNewsInsight";
+import { MINIOURL } from "@/lib/constants";
+import { paths } from "@/lib/paths";
 
-const BlogSidebar = () => {
-  // Get categories from blogs
-  const categories = [...new Set(blogs.map(blog => blog.category))];
-  
-  // Get recent posts (last 5)
-  const recentPosts = [...blogs].sort((a, b) => {
-    const dateA = new Date(a.date.split(' ').slice(1).join(' '));
-    const dateB = new Date(b.date.split(' ').slice(1).join(' '));
-    return dateB.getTime() - dateA.getTime();
-  }).slice(0, 5);
+const NewsInsightsSidebar = () => {
+  const { slug } = useParams();
+ 
+  const { data: NewsInsight } = useGetPublicNewsInsightsQuery("");
+  const { data: NewsInsightBySlug } = useGetPublicNewsInsightBySlugQuery(
+    slug as string
+  );
+
+  const { data: NewsInsightCategories} = useGetPublicNewsInsightsCategoryQuery("")
+
+  const recentPosts = NewsInsight
+    ? NewsInsight.filter(
+        (newsinsight) => newsinsight._id !== NewsInsightBySlug?._id
+      ).slice(0, 5)
+    : [];
 
   return (
     <div className="space-y-8">
@@ -33,7 +45,7 @@ const BlogSidebar = () => {
               placeholder="Search articles..."
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
-            <Button 
+            <Button
               className="absolute right-0 top-0 h-full px-3 py-2 rounded-l-none"
               variant="outline"
             >
@@ -50,14 +62,14 @@ const BlogSidebar = () => {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {categories.map((category, index) => (
+            {NewsInsightCategories && NewsInsightCategories.length > 0 && NewsInsightCategories.slice(0,5).map((category, index) => (
               <li key={index}>
-                <Link 
-                  href={`/blog?category=${category}`} 
+                <Link
+                  href={`${paths.public.newsInsight}/${category.slug}`}
                   className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
-                  {category}
+                  {category.name}
                 </Link>
                 <Separator className="mt-2" />
               </li>
@@ -74,16 +86,16 @@ const BlogSidebar = () => {
         <CardContent>
           <div className="space-y-4">
             {recentPosts.map((post) => (
-              <div key={post.id} className="flex gap-3">
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
+              <div key={post._id} className="flex gap-3">
+                <img
+                  src={`${MINIOURL}${post.image}`}
+                  alt={post.title}
                   className="w-16 h-16 object-cover rounded"
                 />
                 <div>
                   <h4 className="font-medium line-clamp-2 text-sm">
-                    <Link 
-                      href={`/blog-post`} 
+                    <Link
+                      href={`${paths.public.newsInsight}/${post.slug}`}
                       className="hover:text-primary transition-colors"
                     >
                       {post.title}
@@ -91,7 +103,14 @@ const BlogSidebar = () => {
                   </h4>
                   <div className="flex items-center mt-1 text-xs text-muted-foreground">
                     <Calendar className="h-3 w-3 mr-1" />
-                    {post.date}
+                    {new Date(post?.addedDate || "").toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}{" "}
                   </div>
                 </div>
               </div>
@@ -101,7 +120,7 @@ const BlogSidebar = () => {
       </Card>
 
       {/* Subscribe */}
-      <Card className="bg-primary/5 border-primary/20">
+      {/* <Card className="bg-primary/5 border-primary/20">
         <CardHeader>
           <CardTitle className="text-primary">Subscribe</CardTitle>
         </CardHeader>
@@ -116,9 +135,9 @@ const BlogSidebar = () => {
           />
           <Button className="w-full">Subscribe</Button>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 };
 
-export default BlogSidebar;
+export default NewsInsightsSidebar;

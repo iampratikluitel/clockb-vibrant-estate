@@ -14,16 +14,16 @@ export const paths = {
     resetpassword: "/resetpassword",
     login: "/login",
 
-    ongoingprojects: "/ongoingproject",
-    newsinsight: "/newsinsight",
-
     about: "/about",
     contact: "/contact",
     faqs: "/faqs",
+    ongoingprojects: "/ongoingproject",
     investorelations: "/investorelations",
     projectdescription: "/projectdescription",
+    newsInsight: "/newsInsights",
     resources: "/resources",
   },
+
   admin: {
     dashboard: `${ROOTS.admin}`,
 
@@ -38,10 +38,6 @@ export const paths = {
     testimonial: `${ROOTS.admin}/testimonial`,
     addTestimonial: `${ROOTS.admin}/testimonial/add`,
     editTestimonial:  `${ROOTS.admin}/testimonial/edit`,
-
-    blog: `${ROOTS.admin}/blog`,
-    addblog: `${ROOTS.admin}/add`,
-    editblog: `${ROOTS.admin}/edit`,
 
     faqs: `${ROOTS.admin}/faqs`,
     addfaq: `${ROOTS.admin}/faqs/add`,

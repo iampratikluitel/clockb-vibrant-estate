@@ -2,35 +2,35 @@ import { DOMAIN, MINIOURL } from "@/lib/constants";
 import { connectDb } from "@/lib/mongodb";
 import { NEWSINSIGHT } from "@/lib/types";
 import NewsInsight from "@/model/NewsInsights/News";
-import NewsInsightDetailComponents from "../_components/NewsInsightDetailComponents";
+import NewsInsightsPost from "../_components/NewsInsightPost";
 
 export async function generateMetadata({ params }: any) {
   await connectDb();
-  const newsInsight = (await NewsInsight.findOne({
+  const newsinsight = (await NewsInsight.findOne({
     status: true,
     slug: params.slug,
   }).lean()) as NEWSINSIGHT;
-  const descriptionWithoutHtml = newsInsight?.overview.replace(/<[^>]*>/g, "");
+  const descriptionWithoutHtml = newsinsight?.overview.replace(/<[^>]*>/g, "");
 
   return {
-    title: `Projectestate | ${newsInsight?.title}`,
+    title: `Projectestate | ${newsinsight?.title}`,
     description: descriptionWithoutHtml,
     openGraph: {
       type: "website",
-      url: `${DOMAIN}newsinsight/${newsInsight?.slug}`,
-      title: `Projectestate | ${newsInsight?.title}`,
+      url: `${DOMAIN}courses/${newsinsight?.slug}`,
+      title: `Projectestate | ${newsinsight?.title}`,
       description: descriptionWithoutHtml,
       images: [
         {
-          url: `${MINIOURL}projectestatelogo.png`,
+          url: `${MINIOURL}projectestate.png`,
         },
       ],
     },
   };
 }
 
-const NewsDetailPage = () => {
-  return <NewsInsightDetailComponents />;
+const NewsInsightDetailPage = () => {
+  return <NewsInsightsPost />;
 };
 
-export default NewsDetailPage;
+export default NewsInsightDetailPage;
