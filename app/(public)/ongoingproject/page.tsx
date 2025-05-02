@@ -20,6 +20,7 @@ import {
   PaginationNext,
 } from "@/components/pagination";
 import Header from "@/components/homepage/Header";
+import Footer from "@/components/homepage/Footer";
 
 const Projects = () => {
   const searchParams = useSearchParams();
@@ -208,6 +209,7 @@ const Projects = () => {
           </Pagination>
         )}
       </section>
+      <Footer />
     </div>
   );
 };

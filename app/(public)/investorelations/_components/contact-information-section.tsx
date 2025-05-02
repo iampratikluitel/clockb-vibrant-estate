@@ -92,7 +92,7 @@ export default function ContactInformationSection() {
                 <Button
                   variant="cta"
                   onClick={() =>
-                    (window.location.href = "/project-description")
+                    (window.location.href = "/projectdescription")
                   }
                 >
                   View Project Details
