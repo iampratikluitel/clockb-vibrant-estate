@@ -1,4 +1,4 @@
-import { NewsInsight, NEWSINSIGHTCATEGORY } from "@/lib/types";
+import { NEWSINSIGHT, NEWSINSIGHTCATEGORY } from "@/lib/types";
 import { baseQuery } from "@/store/global";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
@@ -13,13 +13,13 @@ export const adminNewsInsightsApi = createApi({
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
     //Get All NewsInsights
-    getAllAdminNewsInsights: builder.query<NewsInsight[], string>({
+    getAllAdminNewsInsights: builder.query<NEWSINSIGHT[], string>({
       query: () => `admin/newsInsight`,
       providesTags: ["Admin NewsInsights"],
     }),
 
     // NewsInsight by Id
-    getAdminNewsInsightById: builder.query<NewsInsight, string>({
+    getAdminNewsInsightById: builder.query<NEWSINSIGHT, string>({
       query: (id) => `admin/newsInsight/byid?id=${id}`,
       providesTags: ["Admin NewsInsights"],
     }),

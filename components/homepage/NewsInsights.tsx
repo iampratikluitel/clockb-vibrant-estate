@@ -10,6 +10,7 @@ import { paths } from "@/lib/paths";
 const NewsInsights = () => {
   const { data: NewsInsights = [], isLoading } =
     useGetPublicNewsInsightsQuery("");
+
   const displayedCategories = NewsInsights?.slice(0, 4);
 
   return (
@@ -17,7 +18,7 @@ const NewsInsights = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            News & Updates
+            News & Insight
           </h2>
           <div className="w-20 h-1 bg-estates-primary mx-auto"></div>
           <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
@@ -44,7 +45,7 @@ const NewsInsights = () => {
                 <div className="p-5">
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-xs font-medium text-estates-primary bg-blue-50 px-2 py-1 rounded">
-                      {category.category.name}
+                      {category.category}
                     </span>
                     <span className="text-xs text-gray-500">
                       {new Date(category.addedDate).toLocaleDateString()}
@@ -73,7 +74,7 @@ const NewsInsights = () => {
             href={paths.public.newsInsight}
             className="inline-flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white px-6 py-2 rounded-md"
           >
-            View More Articles
+            View More Insight
             <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
         </div>

@@ -1,105 +1,19 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import PageLoader from "../PageLoader";
-import { useGetPublicUpcommingProjectQuery } from "@/store/api/Public/publicUpcommingProject";
 import { MINIOURL } from "@/lib/constants";
 import Link from "next/link";
 import { paths } from "@/lib/paths";
-import { useSearchParams } from "next/navigation";
-import { UPCOMMINGPROJECT } from "@/lib/types";
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "../ui/pagination";
+import { useGetPublicProjectQuery } from "@/store/api/Public/publicProject";
 
 const OngoingProjects = () => {
-  const searchParams = useSearchParams();
-  const tab = searchParams.get("tab");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProjects, setFilteredProjects] = useState<UPCOMMINGPROJECT[]>(
-    []
-  );
-  const [currentTab, setCurrentTab] = useState(tab || "All");
-
-  const pageSize = 3;
-  const [currentPage, setCurrentPage] = useState(1);
   const { data: Projects, isLoading: ProjectLoading } =
-    useGetPublicUpcommingProjectQuery("");
+    useGetPublicProjectQuery("");
 
-  useEffect(() => {
-    if (Projects && Projects.length > 0) {
-      filterProjects(Projects, currentTab);
-    }
-  }, [Projects, currentTab]);
-
-  useEffect(() => {
-    if (Projects && Projects.length) {
-      filterProjects(Projects, currentTab);
-    }
-  }, [searchTerm, currentTab]);
-
-  const filterProjects = (projects: UPCOMMINGPROJECT[], currentTab: string) => {
-    const filtered = projects.filter((project) => {
-      const matchesSearchTerm = project.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      return matchesSearchTerm;
-    });
-    setFilteredProjects(filtered);
-  };
-
-  const slicedProjects = filteredProjects.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  const totalPages = Math.ceil(filteredProjects.length / pageSize);
-
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-  };
-
-  const handlePageClick = (pageNumber: number) => {
-    setCurrentPage(pageNumber);
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  if (ProjectLoading) {
-    return <PageLoader />;
-  }
-  // const projects = [
-  //   {
-  //     id: 1,
-  //     title: "Saukhel Real Estate Project – I",
-  //     description:
-  //       "Phase I of the Saukhel Real Estate Project focused on land acquisition, infrastructure development, and high-value appreciation. Spanning 50 ropanis, this phase introduced essential infrastructure. Investors in Phase I experienced significant returns, with many choosing to either exit with high gains or continue their journey into Phase II.",
-  //     image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?auto=format&fit=crop&q=80",
-  //     status: "completed",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Saukhel Real Estate Project – II",
-  //     description:
-  //       "With the success of Phase I, Phase II is now underway, bringing enhanced investment opportunities and further expansion of the development. This phase continues to focus on urban growth, infrastructure enhancement, and increased land valuation, ensuring a lucrative and secure investment for both new and existing investors. Join us in shaping the future of Saukhel!",
-  //     image: "https://images.unsplash.com/photo-1496307653780-42ee777d4833?auto=format&fit=crop&q=80",
-  //     status: "ongoing",
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Saukhel Real Estate Project – III",
-  //     description:
-  //       "Phase III marks the culmination of the Saukhel Real Estate Project, transforming the area into a fully developed residential and commercial hub. This phase will introduce modern housing projects, essential amenities, and commercial spaces, creating a self-sustained community. Strategic partnerships will drive infrastructure enhancements, while investors will have structured exit opportunities, ensuring maximum returns.",
-  //     image: "https://images.unsplash.com/photo-1433832597046-4f10e10ac764?auto=format&fit=crop&q=80",
-  //     status: "upcoming",
-  //   },
-  // ];
+  const displayedProjects = Projects?.slice(0, 3) || [];
 
   return (
     <section className="py-16 bg-white">
@@ -108,9 +22,11 @@ const OngoingProjects = () => {
           Ongoing & Upcoming Projects
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {Array.isArray(Projects) &&
-            Projects.map((project) => (
+        {ProjectLoading ? (
+          <PageLoader />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {displayedProjects.map((project) => (
               <div
                 key={project._id}
                 className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl"
@@ -122,7 +38,7 @@ const OngoingProjects = () => {
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                   <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
-                    {project.status}
+                    {project.category}
                   </div>
                 </div>
                 <div className="p-6">
@@ -132,11 +48,9 @@ const OngoingProjects = () => {
                   <p className="text-gray-600 mb-6 line-clamp-4">
                     {project.description}
                   </p>
-                  {/* <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
-                      Learn More
-                      <ArrowRight size={16} />
-                    </Button> */}
-                  <Link href={`${paths.public.ongoingprojects}/${project.slug}`}>
+                  <Link
+                    href={`${paths.public.ongoingprojects}/${project.slug}`}
+                  >
                     <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
                       Learn More
                       <ArrowRight size={16} />
@@ -145,52 +59,18 @@ const OngoingProjects = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        <div className="flex justify-end mt-8">
+          <Link
+            href={paths.public.ongoingprojects}
+            className="inline-flex items-center gap-2 text-estates-primary font-semibold border border-estates-primary px-2 py-1 rounded-full transition-all duration-300 hover:bg-estates-primary hover:text-white"
+          >
+            View More
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
-      {filteredProjects.length > pageSize && totalPages > 1 && (
-          <Pagination className="cursor-pointer my-10">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={handlePreviousPage}
-                  className={
-                    currentPage > 1 ? "cursor-pointer" : "cursor-not-allowed"
-                  }
-                />
-              </PaginationItem>
-
-              {[...Array(totalPages)].map((_, index) => (
-                <PaginationItem key={index}>
-                  <PaginationLink
-                    className={`rounded-full text-white ${
-                      currentPage === index + 1
-                        ? "bg-blue-500"
-                        : "border text-black"
-                    }`}
-                    onClick={() => handlePageClick(index + 1)}
-                  >
-                    {index + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={handleNextPage}
-                  className={
-                    currentPage < totalPages
-                      ? "cursor-pointer"
-                      : "cursor-not-allowed"
-                  }
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        )}
     </section>
   );
 };

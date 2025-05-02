@@ -7,8 +7,10 @@ import TeamMemberView from "./_components/team-member";
 import DownloadAboutBrochure from "./_components/download-brochure-aboutpage";
 import PlanningPartner from "./_components/planning-partner";
 import InvestmentCircle from "./_components/investment-circle";
+import { useGetPublicAboutMainSectionQuery } from "@/store/api/Public/publicAbout";
 
 const About = () => {
+  const {data: HeroSection, isLoading} = useGetPublicAboutMainSectionQuery() 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -19,11 +21,10 @@ const About = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-estates-primary mb-4">
-                About Project Estates
+                {HeroSection?.title}
               </h1>
               <p className="text-lg text-gray-700 mb-8">
-                Learn about the team and partners behind our visionary real
-                estate development project
+                {HeroSection?.description}
               </p>
             </div>
           </div>

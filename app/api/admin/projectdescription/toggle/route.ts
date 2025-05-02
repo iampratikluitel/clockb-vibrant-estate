@@ -1,6 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { connectDb } from "@/lib/mongodb";
-import UpcommingProject from "@/model/project-description/project-description";
+import UpcommingProject from "@/model/Projects/ProjectDescription";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {

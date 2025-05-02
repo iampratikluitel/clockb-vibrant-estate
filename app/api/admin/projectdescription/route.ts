@@ -3,7 +3,8 @@ import { BUCKET_NAME } from "@/lib/constants";
 import { convertToSlug } from "@/lib/helper";
 import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
-import UpcommingProject from "@/model/project-description/project-description";
+import ProjectCategory from "@/model/Projects/ProjectCategory";
+import UpcommingProject from "@/model/Projects/ProjectDescription";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -76,14 +77,28 @@ export const POST = async (request: NextRequest) => {
 };
 
 export const GET = async () => {
-  console.log("Running GET request: Get all Placement Offers");
+  console.log("Running GET request: Get all NewsInsights");
 
   try {
     await connectDb();
-    const docs = await UpcommingProject.find().sort({
-      submittedDate: -1,
+
+    const Projects = await UpcommingProject.find().sort({
+      addedDate: -1,
     });
-    return NextResponse.json(docs, { status: 201 });
+
+    const categoryIds = Projects.map((Project) => Project.categoryId);
+    const categories = await ProjectCategory.find({ _id: { $in: categoryIds } });
+    const categoryMap = categories.reduce((acc, category) => {
+      acc[category._id] = category.name;
+      return acc;
+    }, {});
+
+    const ProjectsWithCategoryNames = Projects.map((Project) => ({
+      ...Project.toObject(),
+      category: categoryMap[Project.categoryId] || "",
+    }));
+
+    return NextResponse.json(ProjectsWithCategoryNames, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(

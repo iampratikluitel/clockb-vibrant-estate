@@ -1,14 +1,14 @@
 import { connectDb } from "@/lib/mongodb";
-import InvestorMainModel from "@/model/investor-relation/investor-main";
+import PrivacyPolicy from "@/model/configuration/PrivacyPolicy";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-  console.log("Running GET request: Get Footer");
+  console.log("Running GET request: Get Privacy Policy");
   try {
     await connectDb();
-    const data = await InvestorMainModel.findOne();
+    const data = await PrivacyPolicy.findOne();
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.log(error);

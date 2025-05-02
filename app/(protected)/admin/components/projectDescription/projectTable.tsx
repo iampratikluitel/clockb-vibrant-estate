@@ -24,16 +24,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-
 import { convertToHumanReadable } from "@/lib/helper";
 import { Switch } from "@/components/ui/switch";
-import { useAdminToggleNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
-import {
-  useAdminDeleteProjectMutation,
-  useAdminToggleUpcommingProjectMutation,
-  useDeleteMultipleUpcommingProjectAdminMutation,
-  useGetAllAdminUpcommingProjectQuery,
-} from "@/store/api/Admin/adminUpcommingProject";
 import {
   Dialog,
   DialogContent,
@@ -50,7 +42,7 @@ import {
   DropdownMenuCheckboxItem,
 } from "@radix-ui/react-dropdown-menu";
 import { ChevronDownIcon } from "lucide-react";
-import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
 import {
   DropdownMenuItem,
   DropdownMenuSeparator,
@@ -59,7 +51,13 @@ import { paths } from "@/lib/paths";
 import AlertDialogBox from "../AlertDialogBox";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
-import { UPCOMMINGPROJECT } from "@/lib/types";
+import {
+  useAdminDeleteProjectMutation,
+  useAdminToggleProjectMutation,
+  useDeleteMultipleProjectAdminMutation,
+  useGetAllAdminProjectQuery,
+} from "@/store/api/Admin/adminProject";
+import { PROJECTDESCRIPTION } from "@/lib/types";
 
 export default function ProjectTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -70,12 +68,12 @@ export default function ProjectTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [rowSelection, setRowSelection] = React.useState({});
-  const [Toggle] = useAdminToggleUpcommingProjectMutation()
+  const [Toggle] = useAdminToggleProjectMutation();
   const { data: ProjectData, isLoading: ProjectDataLoading } =
-    useGetAllAdminUpcommingProjectQuery();
+    useGetAllAdminProjectQuery();
 
   const [deleteById] = useAdminDeleteProjectMutation();
-  const [deleteMultiple] = useDeleteMultipleUpcommingProjectAdminMutation();
+  const [deleteMultiple] = useDeleteMultipleProjectAdminMutation();
 
   const confirmDelete = async (itemId: String) => {
     toast.promise(deleteById(itemId).unwrap(), {
@@ -111,8 +109,8 @@ export default function ProjectTable() {
     }
   };
 
-  const data: UPCOMMINGPROJECT[] = ProjectData || [];
-  const columns: ColumnDef<UPCOMMINGPROJECT>[] = [
+  const data: PROJECTDESCRIPTION[] = ProjectData || [];
+  const columns: ColumnDef<PROJECTDESCRIPTION>[] = [
     {
       id: "_id",
       header: ({ table }) => (
@@ -139,6 +137,32 @@ export default function ProjectTable() {
       accessorKey: "title",
       header: "Title",
       cell: ({ row }) => <div>{row.getValue("title")}</div>,
+    },
+    {
+      accessorKey: "category",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const category = row.getValue("category");
+        return (
+          <div className="capitalize">
+            {category && typeof category === "object" && "name" in category
+              ? (category as { name: string }).name
+              : typeof category === "string"
+              ? category
+              : "Uncategorized"}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "addedDate",

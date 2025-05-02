@@ -11,7 +11,7 @@ interface PrivacyPolicy {
 }
 
 interface PageProps {
-  ConfigData: PrivacyPolicy;
+  ConfigData?: PrivacyPolicy;
 }
 
 const FormSchema = z.object({

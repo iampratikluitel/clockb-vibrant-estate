@@ -4,19 +4,13 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const publicNewsInsightsApi = createApi({
   reducerPath: "publicNewsInsightsApi",
-  tagTypes: ["Public NewsInsights", "Public Career Prospects","Public Offers"],
+  tagTypes: ["Public NewsInsights"],
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
     //all NewsInsights
     getPublicNewsInsights: builder.query<NEWSINSIGHT[], string>({
       query: () => `public/newsInsight`,
-      providesTags: ["Public NewsInsights"],
-    }),
-
-    //popular NewsInsights
-    getPublicPopularNewsInsights: builder.query<NEWSINSIGHT[], string>({
-      query: () => `public/newsInsight/popular`,
       providesTags: ["Public NewsInsights"],
     }),
 
@@ -43,6 +37,5 @@ export const {
   useGetPublicNewsInsightBySlugQuery,
   useGetPublicNewsInsightsByCategoryQuery,
   useGetPublicNewsInsightsQuery,
-  useGetPublicPopularNewsInsightsQuery,
   useGetPublicNewsInsightsCategoryQuery
 } = publicNewsInsightsApi;

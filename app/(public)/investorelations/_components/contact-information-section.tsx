@@ -1,6 +1,7 @@
 import { Calendar, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function ContactInformationSection() {
   const handleScheduleVisit = () => {
@@ -17,6 +18,7 @@ export default function ContactInformationSection() {
                 Get In Touch
               </h2>
               <div className="space-y-6">
+                <Link href="/contact">
                 <ContactItem
                   icon={<Calendar className="h-6 w-6 text-estates-primary" />}
                   text="Schedule a Site Visit"
@@ -30,6 +32,7 @@ export default function ContactInformationSection() {
                     </Button>
                   }
                 />
+                </Link>
                 <ContactItem
                   icon={<Phone className="h-6 w-6 text-estates-primary" />}
                   text="Call Us: 01-4526267/8"

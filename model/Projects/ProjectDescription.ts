@@ -4,6 +4,11 @@ const projectSchema = new Schema({
   slug: String,
   title: String,
   description: String,
+  categoryId: {
+    type: Schema.Types.ObjectId,
+    ref: "NewsInsightCategoryy",
+    required: [true, "News Category is required"],
+  },
   image: String,
   date: String,
   overview: String,

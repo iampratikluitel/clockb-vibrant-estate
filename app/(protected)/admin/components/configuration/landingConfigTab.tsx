@@ -19,14 +19,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAdminAddUpdateLandingPageConfigMutation } from "@/store/api/Admin/adminConfiguration";
 import FormSchema from "./landingConfigSchema";
-import { LandingPage } from "@/lib/types";
+import { PROJECTJOURNEY } from "@/lib/types";
 import LandingConfigSchema from "./landingConfigSchema";
 import { z } from "zod";
 import { paths } from "@/lib/paths";
 import { useRouter } from "next/navigation";
 
 interface Props {
-  ExistingDetail: LandingPage;
+  ExistingDetail: PROJECTJOURNEY;
 }
 
 export default function LandingConfiguration({ ExistingDetail }: Props) {
@@ -89,9 +89,9 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
   const renderCardFields = (cardNumber: number) => {
     const prefix = `card${cardNumber}` as const;
 
-    const titleKey = `${prefix}title` as keyof LandingPage;
-    const descriptionKey = `${prefix}description` as keyof LandingPage;
-    const dateKey = `${prefix}Date` as keyof LandingPage;
+    const titleKey = `${prefix}title` as keyof PROJECTJOURNEY;
+    const descriptionKey = `${prefix}description` as keyof PROJECTJOURNEY;
+    const dateKey = `${prefix}Date` as keyof PROJECTJOURNEY;
 
     return (
       <Card className="w-full">

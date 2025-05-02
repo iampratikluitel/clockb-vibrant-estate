@@ -1,24 +1,35 @@
-import PageLoader from '@/components/PageLoader';
-import { useGetAdminProjectByIdQuery } from '@/store/api/Admin/adminUpcommingProject'
-import React from 'react'
-import AddProjectForm from './projectForm';
+"use client"
+import PageLoader from "@/components/PageLoader";
+import { useGetAdminProjectByIdQuery } from "@/store/api/Admin/adminProject";
+import React from "react";
+import AddProjectForm from "./projectForm";
 
 interface props {
-    type: "Add" | "Edit",
+  type: "Add" | "Edit";
+  projectCategory: any[];
+  id: string;
 }
 
-export default function BeforeUpcommingForm({type}: props) {
-    const {data: UpcommingProject, isLoading: UpcommingProjectLoading} = useGetAdminProjectByIdQuery('id');
+export default function BeforeUpcommingForm({
+  type,
+  projectCategory,
+  id,
+}: props) {
+  const { data: Project, isLoading: ProjectLoading } =
+    useGetAdminProjectByIdQuery(id);
   return (
     <div>
-        {UpcommingProjectLoading ? (
-            <div>
-                <PageLoader />
-            </div>
-        ) : (
-            <AddProjectForm type={type} ExistingDetail={UpcommingProject} />
-        )}
-
+      {ProjectLoading ? (
+        <div>
+          <PageLoader />
+        </div>
+      ) : (
+        <AddProjectForm
+          type={type}
+          ExistingDetail={Project}
+          projectCategory={projectCategory}
+        />
+      )}
     </div>
-  )
+  );
 }

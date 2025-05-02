@@ -21,13 +21,25 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { uploadToMinIO } from "@/lib/helper";
-import { useAdminAddUpdateUpcommingProjectMutation } from "@/store/api/Admin/adminUpcommingProject";
 import { paths } from "@/lib/paths";
-import { ApiResponse, UPCOMMINGPROJECT } from "@/lib/types";
+import { ApiResponse, PROJECTDESCRIPTION } from "@/lib/types";
+import { useAdminAddUpdateProjectMutation } from "@/store/api/Admin/adminProject";
+import { deleteProjectCategory } from "@/action/project-category";
+import AddProjectCategory from "./ProjectCategory";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TrashIcon, Plus } from "lucide-react";
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetail?: UPCOMMINGPROJECT;
+  ExistingDetail?: PROJECTDESCRIPTION;
+  projectCategory: any[];
 }
 
 const ProjectSchema = z.object({
@@ -40,13 +52,21 @@ const ProjectSchema = z.object({
   overview: z.string().min(10, {
     message: "Overview must be at least 10 characters.",
   }),
+  categoryId: z.string().min(2, {
+    message: "CategoryId is required.",
+  }),
 });
 
-export default function AddProjectForm({ type, ExistingDetail }: props) {
+export default function AddProjectForm({
+  type,
+  ExistingDetail,
+  projectCategory,
+}: props) {
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
-  const [AdminUpcommingProject] = useAdminAddUpdateUpcommingProjectMutation();
+  const [AdminUpcommingProject] = useAdminAddUpdateProjectMutation();
 
   const form = useForm<z.infer<typeof ProjectSchema>>({
     resolver: zodResolver(ProjectSchema),
@@ -60,6 +80,7 @@ export default function AddProjectForm({ type, ExistingDetail }: props) {
         ? `${MINIOURL}${ExistingDetail.image}`
         : null,
       overview: ExistingDetail?.overview ?? "",
+      categoryId: ExistingDetail?.categoryId ?? "",
     },
   });
 
@@ -139,8 +160,31 @@ export default function AddProjectForm({ type, ExistingDetail }: props) {
     }
   };
 
+  const handleCategoryDelete = async (id: string) => {
+    toast.promise(
+      deleteProjectCategory(
+        id,
+        type == "Add"
+          ? "/admin/projectdescription/add"
+          : `admin/projectdescription/edit?id=${ExistingDetail?._id}`
+      ),
+      {
+        loading: "Deleting...",
+        success: <b>Deleted</b>,
+        error: <b>Error while deleting</b>,
+      }
+    );
+  };
+
   return (
     <>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="">
+          <DialogHeader className="">
+            <AddProjectCategory type={type} setIsOpen={setIsOpen} />
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
       <div className="w-full max-w mx-auto p-6 bg-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-6">{type} Projects</h1>
         <Form {...form}>
@@ -180,6 +224,70 @@ export default function AddProjectForm({ type, ExistingDetail }: props) {
                 />
               </div>
 
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <div className="flex items-center gap-2">
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {projectCategory?.length > 0 ? (
+                            projectCategory.map((element) => (
+                              <SelectItem key={element._id} value={element._id}>
+                                {element.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="no-options" disabled>
+                              No categories available
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsOpen(true)}
+                      >
+                        <Plus />
+                      </Button>
+                    </div>
+
+                    {field.value && (
+                      <div className="mt-2">
+                        {projectCategory.map((cat) =>
+                          cat._id === field.value ? (
+                            <div
+                              key={cat._id}
+                              className="flex items-center gap-2 text-sm text-gray-700"
+                            >
+                              <span>{cat.name}</span>
+                              <TrashIcon
+                                className="w-4 h-4 text-red-500 hover:text-red-700 cursor-pointer"
+                                onClick={() => handleCategoryDelete(cat._id)}
+                              />
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Right Column */}
               <div className="space-y-4">
                 <FormField
@@ -204,7 +312,7 @@ export default function AddProjectForm({ type, ExistingDetail }: props) {
               name="overview"
               render={() => (
                 <FormItem>
-                  <FormLabel>News Overview</FormLabel>
+                  <FormLabel>Project Overview</FormLabel>
                   <ReactQuillEditor name="overview" />
                 </FormItem>
               )}

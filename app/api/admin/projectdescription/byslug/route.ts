@@ -1,11 +1,12 @@
+
 import { connectDb } from "@/lib/mongodb";
-import UpcommingProject from "@/model/project-description/project-description";
+import UpcommingProject from "@/model/Projects/ProjectDescription";
 import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
 export const GET = async (request: NextRequest) => {
-  console.log("Running GET request: Get upcommingprojects by slug");
+  console.log("Running GET request: Get NewsInsight by slug");
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get("slug");
 

@@ -1,8 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, FacebookIcon } from "lucide-react";
+import { useGetPublicConfigFooterQuery } from "@/store/api/Public/publicConfiguration";
+import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 
 const Footer = () => {
+  const {data: ConfigData, isLoading: Loading} = useGetPublicConfigFooterQuery("")
   return (
     <footer className="bg-[#1A1F2C] text-white pt-16 pb-6">
       <div className="container mx-auhref px-4">
@@ -14,30 +17,25 @@ const Footer = () => {
               Premium real estate investment opportunities with exceptional returns and long-term growth potential across strategic locations.
             </p>
             <div className="flex space-x-4">
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-estates-primary/10 hover:bg-estates-primary/20 p-2 rounded-full transition-colors"
-              >
-                <Linkedin className="h-5 w-5 text-[#0EA5E9]" />
-              </a>
-              <a 
-                href="https://facebook.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-estates-primary/10 hover:bg-estates-primary/20 p-2 rounded-full transition-colors"
-              >
-                <Facebook className="h-5 w-5 text-[#0EA5E9]" />
-              </a>
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="bg-estates-primary/10 hover:bg-estates-primary/20 p-2 rounded-full transition-colors"
-              >
-                <Instagram className="h-5 w-5 text-[#0EA5E9]" />
-              </a>
+            {ConfigData?.socialHandles.facebook && (
+                  <Link href={ConfigData?.socialHandles.facebook}>
+                    <FacebookIcon className="text-sm" />
+                  </Link>
+                )}
+
+                {ConfigData?.socialHandles.twitter && (
+                  <Link href={ConfigData.socialHandles.twitter}>
+                    <InstagramLogoIcon />
+                  </Link>
+                )}
+
+                
+                {ConfigData?.socialHandles.linkedin && (
+                  <Link href={ConfigData.socialHandles.linkedin}>
+                    <LinkedInLogoIcon />
+                  </Link>
+                )}
+
             </div>
           </div>
           
@@ -89,21 +87,15 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/conditionsofuse" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Terms & Conditions
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
+                <Link href="/privacypolicy" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
                   Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/career" className="text-[#9F9EA1] hover:text-white transition-colors flex items-center">
-                  <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>
-                  Careers
                 </Link>
               </li>
               <li>
@@ -122,20 +114,20 @@ const Footer = () => {
               <li className="flex items-start">
                 <MapPin className="h-5 w-5 text-[#0EA5E9] mt-1 mr-3 flex-shrink-0" />
                 <span className="text-[#9F9EA1]">
-                  Kathmandu, Nepal
+                  {ConfigData?.address}
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
                 <div className="text-[#9F9EA1]">
-                  <div>+977-9851079636</div>
+                  <div>{ConfigData?.phone}</div>
                   <div>+977-9843260542</div>
                 </div>
               </li>
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
-                <a href="mailhref:Info@projestates.com" className="text-[#9F9EA1] hover:text-white transition-colors">
-                  Info@projestates.com
+                <a href={ConfigData?.email} className="text-[#9F9EA1] hover:text-white transition-colors">
+                  {ConfigData?.email}
                 </a>
               </li>
             </ul>

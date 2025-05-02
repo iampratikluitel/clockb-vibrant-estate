@@ -5,8 +5,22 @@ import { Partner, Member } from "@/lib/types";
 export const adminAboutApi = createApi({
   reducerPath: "adminAboutApi",
   baseQuery: baseQuery,
-  tagTypes: ["Admin Team Member", "Admin Partner", "Admin Investment Circle"],
+  tagTypes: ["Admin Main", "Admin Team Member", "Admin Partner", "Admin Investment Circle"],
   endpoints: (builder) => ({
+    getAllAdminAboutHero: builder.query<any, string>({
+      query: () => `admin/about/main-section`,
+      providesTags: ["Admin Main"],
+    }),
+
+    adminAddUpdateAboutHero: builder.mutation<{ message: string }, any>({
+      query: (body) => ({
+        url: `admin/about/main-section`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Admin Main"],
+    }),
+
     getAllAdminTeamMember: builder.query<Member[], string>({
       query: () => `admin/about/teamMember`,
       providesTags: ["Admin Partner"],
@@ -97,11 +111,15 @@ export const adminAboutApi = createApi({
 });
 
 export const {
+  useGetAllAdminAboutHeroQuery,
+  useAdminAddUpdateAboutHeroMutation,
+
   useGetAllAdminTeamMemberQuery,
   useGetAdminTeamMemberByIdQuery,
   useAdminAddUpdateTeamMemberMutation,
   useAdminDeleteTeamMemberMutation,
   useDeleteMultipleTeamMemberAdminMutation,
+
   useGetAllAdminPartnerQuery,
   useGetAdminPartnerByIdQuery,
   useAdminAddUpdatePartnerMutation,

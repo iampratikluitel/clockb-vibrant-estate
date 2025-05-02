@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "@/store/global";
-import { FOOTER } from "@/lib/types";
+import { CONDITIONSOFUSE, FOOTER, PRIVACYPOLICY } from "@/lib/types";
 
 export const adminConfigurationApi = createApi({
   reducerPath: "adminConfigurationApi",
@@ -8,6 +8,8 @@ export const adminConfigurationApi = createApi({
     "Admin Landing Config",
     "Admin Download Brochure Config",
     "Admin Footer Config",
+    "Admin Condition of Use Config",
+    "Admin PrivacyPolicy Config",
   ],
   baseQuery: baseQuery,
   endpoints: (builder) => ({
@@ -62,6 +64,35 @@ export const adminConfigurationApi = createApi({
       }),
       invalidatesTags: ["Admin Footer Config"],
     }),
+
+    getAdminConfigConditionsOfUse: builder.query<CONDITIONSOFUSE, string>({
+      query: () => `admin/configuration/conditionsofuse`,
+      providesTags: ["Admin Condition of Use Config"],
+    }),
+
+    AdminAddUpdateConditionsOfUse: builder.mutation<{ message: string }, any>({
+      query: ({ ...body }) => ({
+        url: `admin/configuration/conditionsofuse`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["Admin Condition of Use Config"],
+    }),
+
+    //Privacy Policy
+    getAdminConfigPrivacyPolicy: builder.query<PRIVACYPOLICY, string>({
+      query: () => `admin/configuration/privacypolicy`,
+      providesTags: ["Admin PrivacyPolicy Config"],
+    }),
+
+    AdminAddUpdatePrivacyPolicy: builder.mutation<{ message: string }, any>({
+      query: ({ ...body }) => ({
+        url: `admin/configuration/privacypolicy`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["Admin PrivacyPolicy Config"],
+    }),
   }),
 });
 
@@ -76,4 +107,9 @@ export const {
   useAdminAddUpdateFooterConfigMutation,
   useGetAdminConfigFooterQuery,
 
+  useGetAdminConfigConditionsOfUseQuery,
+  useAdminAddUpdateConditionsOfUseMutation,
+
+  useAdminAddUpdatePrivacyPolicyMutation,
+  useGetAdminConfigPrivacyPolicyQuery,
 } = adminConfigurationApi;

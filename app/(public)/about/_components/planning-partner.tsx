@@ -48,7 +48,7 @@ export default function PlanningPartner() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-estates-primary mb-4">
-              Engineering & Planning Partner
+              Project Partners
             </h2>
           </div>
 

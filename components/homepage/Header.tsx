@@ -62,9 +62,9 @@ const Header = () => {
         <div className="hidden md:flex items-center space-x-10">
           <NavLink href="/" isActive={pathname === "/"}>Home</NavLink>
           <NavLink href="/about" isActive={pathname === "/about"}>About</NavLink>
-          <NavLink href="/project-description" isActive={pathname === "/project-description"}>Project Description</NavLink>
+          <NavLink href="/projectdescription" isActive={pathname === "/project-description"}>Project Description</NavLink>
           {/* <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink> */}
-          <NavLink href="/investor-relations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
+          <NavLink href="/investorelations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
           <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
         </div>
 

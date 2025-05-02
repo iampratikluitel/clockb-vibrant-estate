@@ -25,7 +25,7 @@ export default function InvestmentTeamSection() {
             />
             <TeamCard
               icon={<Building className="h-10 w-10 text-estates-primary" />}
-              title="Engineering & Planning Partner"
+              title="Project Partners"
               description="A leading urban planning and infrastructure firm."
             />
             <TeamCard

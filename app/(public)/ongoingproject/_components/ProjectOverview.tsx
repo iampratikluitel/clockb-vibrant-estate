@@ -1,10 +1,10 @@
-import { UPCOMMINGPROJECT } from "@/lib/types";
+import { PROJECTDESCRIPTION } from "@/lib/types";
 import { Poppins } from "next/font/google";
 
 const inter = Poppins({ subsets: ["latin"], weight: ["700", "300"] });
 
 interface props {
-  ProjectBySlug: UPCOMMINGPROJECT | undefined;
+  ProjectBySlug: PROJECTDESCRIPTION | undefined;
 }
 
 const ProjectOverview = ({ ProjectBySlug }: props) => {

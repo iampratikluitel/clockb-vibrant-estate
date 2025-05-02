@@ -2,7 +2,7 @@ import { currentUser } from "@/lib/auth";
 import { BUCKET_NAME } from "@/lib/constants";
 import minioClient from "@/lib/minioClient";
 import { connectDb } from "@/lib/mongodb";
-import UpcommingProject from "@/model/project-description/project-description";
+import UpcommingProject from "@/model/Projects/ProjectDescription";
 import { NextRequest, NextResponse } from "next/server";
 
 export const DELETE = async (request: NextRequest) => {
