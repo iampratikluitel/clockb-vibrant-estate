@@ -241,11 +241,25 @@ export default function AddProjectForm({
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {projectCategory?.length > 0 ? (
-                            projectCategory.map((element) => (
-                              <SelectItem key={element._id} value={element._id}>
-                                {element.name}
-                              </SelectItem>
+                          {projectCategory && projectCategory.length > 0 ? (
+                            projectCategory.map((element, index) => (
+                              <div
+                                key={index}
+                                className="flex gap-x-2 items-center"
+                              >
+                                <SelectItem key={index} value={element._id}>
+                                  <div className="flex items-center justify-between space-x-2">
+                                    <p>{element.name}</p>
+                                  </div>
+                                </SelectItem>
+                                <TrashIcon
+                                  className="text-red-500 hover:text-red-800 cursor-pointer duration-300"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleCategoryDelete(element._id);
+                                  }}
+                                />
+                              </div>
                             ))
                           ) : (
                             <SelectItem value="no-options" disabled>
