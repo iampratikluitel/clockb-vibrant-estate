@@ -24,23 +24,20 @@ export const POST = async (request: NextRequest) => {
           Data.slug = slug;
           const existingSlug = await NewsInsight.findOne({ slug });
           if (existingSlug) {
-            // Slug already exists, generate a unique slug
             let uniqueSlug = slug;
             let counter = 1;
-            // Keep incrementing a counter and adding it to the slug until a unique one is found
             while (await NewsInsight.findOne({ slug: uniqueSlug })) {
               uniqueSlug = `${slug}-${counter}`;
               counter++;
             }
-            // Now, uniqueSlug contains a slug that is not in use
             Data.slug = uniqueSlug;
           }
         }
 
-        //check if image has been changed or not if yes delete previous one
         if (existingDoc.image && existingDoc.image != Data.image) {
           await minioClient.removeObject(BUCKET_NAME, existingDoc.image);
-        }
+        }       
+
         if (existingDoc.bannerImage && existingDoc.bannerImage != Data.bannerImage) {
           await minioClient.removeObject(BUCKET_NAME, existingDoc.bannerImage);
         }
@@ -53,15 +50,12 @@ export const POST = async (request: NextRequest) => {
           Data.slug = slug;
           const existingSlug = await NewsInsight.findOne({ slug });
           if (existingSlug) {
-            // Slug already exists, generate a unique slug
             let uniqueSlug = slug;
             let counter = 1;
-            // Keep incrementing a counter and adding it to the slug until a unique one is found
             while (await NewsInsight.findOne({ slug: uniqueSlug })) {
               uniqueSlug = `${slug}-${counter}`;
               counter++;
             }
-            // Now, uniqueSlug contains a slug that is not in use
             Data.slug = uniqueSlug;
           }
         }
@@ -91,12 +85,10 @@ export const GET = async () => {
   try {
     await connectDb();
 
-    // Get all NewsInsights
     const NewsInsights = await NewsInsight.find().sort({
       addedDate: -1,
     });
 
-    // Retrieve categories and map them by their IDs
     const categoryIds = NewsInsights.map((NewsInsight) => NewsInsight.categoryId);
     const categories = await NewsInsightCategory.find({ _id: { $in: categoryIds } });
     const categoryMap = categories.reduce((acc, category) => {
@@ -104,7 +96,6 @@ export const GET = async () => {
       return acc;
     }, {});
 
-    // Add category name to each blog
     const NewsInsightsWithCategoryNames = NewsInsights.map((NewsInsight) => ({
       ...NewsInsight.toObject(),
       category: categoryMap[NewsInsight.categoryId] || "",

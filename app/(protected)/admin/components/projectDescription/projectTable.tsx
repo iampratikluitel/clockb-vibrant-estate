@@ -1,7 +1,6 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { UpcommingProject } from "@/lib/types";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,7 +13,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -25,92 +24,145 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "sonner";
-
 import { convertToHumanReadable } from "@/lib/helper";
 import { Switch } from "@/components/ui/switch";
-import { useAdminToggleNewsInsightMutation } from "@/store/api/Admin/adminNewsInsight";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+} from "@radix-ui/react-dropdown-menu";
+import { ChevronDownIcon } from "lucide-react";
+import { CaretSortIcon, DotsHorizontalIcon } from "@radix-ui/react-icons";
+import {
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { paths } from "@/lib/paths";
+import AlertDialogBox from "../AlertDialogBox";
+import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  useAdminDeleteProjectMutation,
+  useAdminToggleProjectMutation,
+  useDeleteMultipleProjectAdminMutation,
+  useGetAllAdminProjectQuery,
+} from "@/store/api/Admin/adminProject";
+import { PROJECTDESCRIPTION } from "@/lib/types";
 
 export default function ProjectTable() {
-  const [data, setData] = React.useState<UpcommingProject[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const router = useRouter();
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [showConfirmation, setShowConfirmation] = React.useState(false);
   const [rowSelection, setRowSelection] = React.useState({});
-  const [Toggle] = useAdminToggleNewsInsightMutation();
+  const [Toggle] = useAdminToggleProjectMutation();
+  const { data: ProjectData, isLoading: ProjectDataLoading } =
+    useGetAllAdminProjectQuery();
 
-  // const [deleteById] = useAdminDeletePartnerMutation();
-  // const [deleteMultiple] = useDeleteMultipleUpcommingProjectAdminMutation();
+  const [deleteById] = useAdminDeleteProjectMutation();
+  const [deleteMultiple] = useDeleteMultipleProjectAdminMutation();
 
-  useEffect(() => {
-    const fetchMember = async () => {
-      try {
-        console.log("Fetching team members...");
-        const res = await fetch("/api/admin/project-description");
+  const confirmDelete = async (itemId: String) => {
+    toast.promise(deleteById(itemId).unwrap(), {
+      loading: "Deleting...",
+      success: <b>Deleted</b>,
+      error: <b>Error while deleting</b>,
+    });
+  };
 
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
-        }
-
-        const result = await res.json();
-        console.log("Fetched data:", result);
-
-        // If result is an object instead of an array, wrap it in an array
-        setData(Array.isArray(result) ? result : [result]);
-      } catch (error) {
-        console.error("Error fetching members:", error);
+  const handleMultipleDelete = async (ids: string[]) => {
+    toast.promise(
+      deleteMultiple({
+        ids: ids,
+      }),
+      {
+        loading: "Deleting...",
+        success: <b> Deleted</b>,
+        error: <b>Error while deleting</b>,
       }
-    };
+    );
+  };
 
-    fetchMember();
-  }, []);
-
-  // const confirmDelete = async (itemId: String) => {
-  //   toast.promise(deleteById(itemId).unwrap(), {
-  //     loading: "Deleting...",
-  //     success: <b>Deleted</b>,
-  //     error: <b>Error while deleting</b>,
-  //   });
-  // };
-
-  // const handleMultipleDelete = async (ids: string[]) => {
-  //   toast.promise(
-  //     deleteMultiple({
-  //       ids: ids,
-  //     }),
-  //     {
-  //       loading: "Deleting...",
-  //       success: <b> Deleted</b>,
-  //       error: <b>Error while deleting</b>,
-  //     }
-  //   );
-  // };
-
-  const handleToggle = async (itemId: string) => {
+  const handleToggle = async (itemId: String) => {
     try {
-      const response = await Toggle(itemId).unwrap(); 
+      const response = await Toggle(itemId).unwrap();
       if (response) {
-        toast.success(response.message);
+        toast.success(`${response.message}`);
       } else {
-        toast.error("Couldn't Toggle");
+        toast.error(`Couldn't Toggle`);
       }
     } catch (error) {
-      console.log(error)
-      toast.error("Error Toggling");
+      toast.error(`Error Toggling`);
     }
   };
 
-  const columns: ColumnDef<UpcommingProject>[] = [
+  const data: PROJECTDESCRIPTION[] = ProjectData || [];
+  const columns: ColumnDef<PROJECTDESCRIPTION>[] = [
+    {
+      id: "_id",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: "title",
-      header: "title",
+      header: "Title",
       cell: ({ row }) => <div>{row.getValue("title")}</div>,
     },
     {
       accessorKey: "category",
-      header: "Category",
-      cell: ({ row }) => <div>{row.getValue("category")}</div>,
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category
+            <CaretSortIcon className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
+      cell: ({ row }) => {
+        const category = row.getValue("category");
+        return (
+          <div className="capitalize">
+            {category && typeof category === "object" && "name" in category
+              ? (category as { name: string }).name
+              : typeof category === "string"
+              ? category
+              : "Uncategorized"}
+          </div>
+        );
+      },
     },
     {
       accessorKey: "addedDate",
@@ -122,12 +174,51 @@ export default function ProjectTable() {
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <Switch
-          checked={row.getValue("status")}
-          onCheckedChange={() => handleToggle(row.original._id)}
-        />
-      ),
+      cell: ({ row }) => {
+        const faqrow = row.original;
+        return (
+          <Switch
+            checked={row.getValue("status")}
+            onCheckedChange={() => handleToggle(faqrow._id)}
+          />
+        );
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const faqrow = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <DotsHorizontalIcon className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() =>
+                  router.push(
+                    `${paths.admin.projectdescription}?id=${faqrow._id}`
+                  )
+                }
+              >
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+
+              <AlertDialogBox
+                onCancel={() => setShowConfirmation(false)}
+                onConfirm={() => confirmDelete(faqrow._id)}
+                text={"Delete"}
+              ></AlertDialogBox>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
   ];
 
@@ -150,15 +241,97 @@ export default function ProjectTable() {
     },
   });
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
+
+  const openDeleteModal = (ids: string[]) => {
+    setSelectedRowIds(ids);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedRowIds([]);
+    setRowSelection({});
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter member..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           className="max-w-sm"
         />
+
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <Button
+            onClick={() =>
+              openDeleteModal(
+                table
+                  .getFilteredSelectedRowModel()
+                  .rows.map((row) => row.original._id ?? "")
+              )
+            }
+            variant={"destructive"}
+            className="ml-2"
+          >
+            Delete
+          </Button>
+        )}
+
+        <Dialog open={isDeleteModalOpen} onOpenChange={closeDeleteModal}>
+          <DialogTrigger asChild></DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Are you sure?</DialogTitle>
+              <DialogDescription>
+                This will delete your data permanently.
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <Button onClick={closeDeleteModal}>Cancel</Button>
+              <Button
+                onClick={async () => {
+                  await handleMultipleDelete(selectedRowIds);
+                  closeDeleteModal();
+                }}
+                variant={"destructive"}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>

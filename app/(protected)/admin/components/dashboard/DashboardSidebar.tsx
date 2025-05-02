@@ -31,13 +31,25 @@ const DashboardSidebar = () => {
   const pathname = usePathname();
 
   const mainMenuItems = [
-    { name: "Dashboard", path: "/admin/dashboard", icon: Home },
-    { name: "About", path: "/admin/about", icon: Info },
-    { name: "Testimonial", path: "/admin/testimonial", icon: User},
-    
+    { 
+      name: "Dashboard", 
+      path: "/admin/dashboard", 
+      icon: Home 
+    },
+    { 
+      name: "About", 
+      path: "/admin/about", 
+      icon: Info 
+    },
+    { 
+      name: "Testimonial", 
+      path: "/admin/testimonial", 
+      icon: User 
+    },
+
     {
       name: "Project Description",
-      path: "/admin/project-description",
+      path: "/admin/projectdescription",
       icon: FileText,
     },
     {
@@ -45,22 +57,44 @@ const DashboardSidebar = () => {
       path: "/admin/investor-relations",
       icon: Users,
     },
-    { name: "Blog", path: "/admin/blog", icon: BookOpen },
-    { name: "FAQs", path: "/admin/faqs", icon: HelpCircle },
-    { name: "News & Insights", path: "/admin/news", icon: Newspaper },
-    { name: "Resources", path: "/admin/resources", icon: FolderOpen },
+    { 
+      name: "FAQs", 
+      path: "/admin/faqs", 
+      icon: HelpCircle 
+    },
+    { 
+      name: "News & Insights", 
+      path: "/admin/newsinsight", 
+      icon: Newspaper 
+    },
+    { 
+      name: "Resources", 
+      path: "/admin/resources", 
+      icon: FolderOpen 
+    },
   ];
 
   const moreLinks = [
     {
       name: "Terms & Conditions",
-      path: "/admin/termsAndCondition",
+      path: "/admin/conditionsofuse",
       icon: FileQuestion,
     },
-    { name: "Privacy Policy", path: "/admin/privacy-policy", icon: Shield },
-    { name: "Configuration", path: "/admin/configuration", icon: Settings },
-    { name: "Careers", path: "/admin/careers", icon: Briefcase },
-    { name: "Contact Us", path: "/admin/contact", icon: Mail },
+    { 
+      name: "Privacy Policy", 
+      path: "/admin/privacypolicy", 
+      icon: Shield 
+    },
+    { 
+      name: "Configuration", 
+      path: "/admin/configuration", 
+      icon: Settings 
+    },
+    { 
+      name: "Contact Us", 
+      path: "/admin/contact", 
+      icon: Mail 
+    },
   ];
 
   return (

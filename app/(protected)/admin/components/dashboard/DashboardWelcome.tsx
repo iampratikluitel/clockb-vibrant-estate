@@ -85,7 +85,7 @@ const DashboardWelcome = () => {
                     <p className="text-sm font-medium leading-none">
                       {
                         [
-                          "Blog post updated",
+                          "NewsInsight post updated",
                           "New investor added",
                           "FAQ added",
                           "Privacy policy updated",

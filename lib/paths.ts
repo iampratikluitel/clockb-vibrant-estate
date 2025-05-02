@@ -13,11 +13,22 @@ export const paths = {
     forgotpassword: "/forgotpassword",
     resetpassword: "/resetpassword",
     login: "/login",
+
+    about: "/about",
+    contact: "/contact",
+    faqs: "/faqs",
+    ongoingprojects: "/ongoingproject",
+    investorelations: "/investorelations",
+    projectdescription: "/projectdescription",
+    newsInsight: "/newsInsights",
+    resources: "/resources",
   },
+
   admin: {
     dashboard: `${ROOTS.admin}`,
 
     about: `${ROOTS.admin}`,
+
     addTeamMember: `${ROOTS.admin}/about/addMember`,
     editTeamMember: `${ROOTS.admin}/about/editMember`,
 
@@ -28,21 +39,27 @@ export const paths = {
     addTestimonial: `${ROOTS.admin}/testimonial/add`,
     editTestimonial:  `${ROOTS.admin}/testimonial/edit`,
 
-    Project: `${ROOTS.admin}/project-description`,
-    addProject: `${ROOTS.admin}/project-description/add`,
-    editProject: `${ROOTS.admin}/project-description/edit`, 
-
     faqs: `${ROOTS.admin}/faqs`,
     addfaq: `${ROOTS.admin}/faqs/add`,
     editfaq: `${ROOTS.admin}/faqs/edit`,
 
-    news: `${ROOTS.admin}/news`,
-    addNews: `${ROOTS.admin}/news/addNews`,
-    editNews: `${ROOTS.admin}/news/editNews`,
+    newsinsight: `${ROOTS.admin}/newsinsight`,
+    addNews: `${ROOTS.admin}/newsinsight/add`,
+    editNews: `${ROOTS.admin}/newsinsight/edit`,
 
     configuration: `${ROOTS.admin}/configuration`,
     landingpage: `${ROOTS.admin}/configuration/landingpage`,
     footer: `${ROOTS.admin}/configuration/footer`,
     brochure: `${ROOTS.admin}/configuration/brochure`,
+
+    investorelations: `${ROOTS.admin}/investorelations`,
+
+    privacypolicy: `${ROOTS.admin}/privacypolicy`,
+
+    projectdescription: `${ROOTS.admin}/projectdescription`,
+    addproject: `${ROOTS.admin}/projectdescription/add`,
+    editproject: `${ROOTS.admin}/projectdescription/edit`,
+
+    termsandcondition: `${ROOTS.admin}/termsandcondition`,
   },
 };

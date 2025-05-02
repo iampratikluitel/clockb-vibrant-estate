@@ -7,10 +7,7 @@ import { currentUser } from "@/lib/auth";
 
 export const POST = async (request: NextRequest) => {
   console.log("Running POST request: Admin Add/Update Footer Config");
-
   const user = await currentUser();
-  console.log("user", user);
-
   try {
     const data = await request.json();
     await connectDb();

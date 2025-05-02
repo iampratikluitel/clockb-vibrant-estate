@@ -21,13 +21,25 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { uploadToMinIO } from "@/lib/helper";
+import { paths } from "@/lib/paths";
+import { ApiResponse, PROJECTDESCRIPTION } from "@/lib/types";
+import { useAdminAddUpdateProjectMutation } from "@/store/api/Admin/adminProject";
+import { deleteProjectCategory } from "@/action/project-category";
+import AddProjectCategory from "./ProjectCategory";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TrashIcon, Plus } from "lucide-react";
 
-interface ProjectSchemaProps {
-  title: string;
-  description: string;
-  image: string;
-  addedDate: Date;
-  overview: string;
+interface props {
+  type: "Add" | "Edit";
+  ExistingDetail?: PROJECTDESCRIPTION;
+  projectCategory: any[];
 }
 
 const ProjectSchema = z.object({
@@ -40,16 +52,21 @@ const ProjectSchema = z.object({
   overview: z.string().min(10, {
     message: "Overview must be at least 10 characters.",
   }),
+  categoryId: z.string().min(2, {
+    message: "CategoryId is required.",
+  }),
 });
 
-interface Props {
-  type: "Add" | "Edit";
-  ExistingDetail?: ProjectSchemaProps;
-}
-
-export default function AddProjectForm({ type, ExistingDetail }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
+export default function AddProjectForm({
+  type,
+  ExistingDetail,
+  projectCategory,
+}: props) {
+  const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
+  const [AdminUpcommingProject] = useAdminAddUpdateProjectMutation();
 
   const form = useForm<z.infer<typeof ProjectSchema>>({
     resolver: zodResolver(ProjectSchema),
@@ -63,61 +80,111 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
         ? `${MINIOURL}${ExistingDetail.image}`
         : null,
       overview: ExistingDetail?.overview ?? "",
+      categoryId: ExistingDetail?.categoryId ?? "",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof ProjectSchema>) => {
-    console.log("data", data);
     try {
-      setIsLoading(true);
-
-      if (!data.image) {
-        toast.error("Please upload a project image.");
-        return;
-      }
-
-      let ImageUrl = null;
-      if (data.image !== `${MINIOURL}${ExistingDetail?.image}`) {
-        console.log("Uploading new image...");
-        ImageUrl = await uploadToMinIO(data.image, "projectImage");
-        console.log("Uploaded Image URL:", ImageUrl);
-        if (!ImageUrl) {
-          toast.error("Image upload failed. Please try again.");
+      if (type == "Add") {
+        setLoading(true);
+        if (!data.image) {
+          toast.error("Please select Image");
           return;
         }
-      }
 
-      const formData = {
-        ...data,
-        image: ImageUrl ?? ExistingDetail?.image,
-      };
+        let uploadedFileName;
+        if (data.image) {
+          uploadedFileName = await uploadToMinIO(data.image, "project");
+          if (uploadedFileName === "") {
+            toast.error("Image Upload Failed Please try again");
+            return;
+          }
+        }
 
-      const response = await fetch("/api/admin/project-description", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+        const formData = {
+          ...data,
+          image: uploadedFileName || "",
+        };
 
-      if (response.ok) {
-        const responseData = await response.json();
-        toast.success(`${responseData.message}`);
-        setIsLoading(false);
-        router.push("/admin/configuration");
-      } else {
-        toast.error(`Couldn't Update`);
-        setIsLoading(false);
+        const response = await AdminUpcommingProject({
+          ...formData,
+        }).unwrap();
+
+        if (response) {
+          const responseData = response as ApiResponse;
+          toast.success(responseData.message);
+          router.push(`${paths.admin.projectdescription}`);
+          setLoading(false);
+        } else {
+          toast.error("Could not Add");
+          setLoading(false);
+        }
+      } else if (type == "Edit") {
+        setLoading(true);
+        let ImageUrl = null;
+
+        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+          ImageUrl = await uploadToMinIO(data.image, "project");
+          if (ImageUrl === "") {
+            toast.error("Image Upload Failed Please try again");
+            return;
+          }
+        }
+
+        const formData = {
+          _id: ExistingDetail?._id,
+          ...data,
+          image: ImageUrl ?? ExistingDetail?.image,
+        };
+
+        const response = await AdminUpcommingProject({
+          ...formData,
+          _id: ExistingDetail?._id || "",
+          logo: formData.image || "",
+        }).unwrap();
+        if (response) {
+          toast.success(`${response.message}`);
+          setLoading(false);
+          router.push(`${paths.admin.projectdescription}`);
+        } else {
+          toast.error(`Couldn't Edit`);
+          setLoading(false);
+        }
       }
     } catch (error) {
-      console.log(error)
       toast.error(`Failed`);
-      setIsLoading(false);
+      setLoading(false);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
+  };
+
+  const handleCategoryDelete = async (id: string) => {
+    toast.promise(
+      deleteProjectCategory(
+        id,
+        type == "Add"
+          ? "/admin/projectdescription/add"
+          : `admin/projectdescription/edit?id=${ExistingDetail?._id}`
+      ),
+      {
+        loading: "Deleting...",
+        success: <b>Deleted</b>,
+        error: <b>Error while deleting</b>,
+      }
+    );
   };
 
   return (
     <>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="">
+          <DialogHeader className="">
+            <AddProjectCategory type={type} setIsOpen={setIsOpen} />
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
       <div className="w-full max-w mx-auto p-6 bg-white rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-6">{type} Projects</h1>
         <Form {...form}>
@@ -157,6 +224,84 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
                 />
               </div>
 
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <div className="flex items-center gap-2">
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {projectCategory && projectCategory.length > 0 ? (
+                            projectCategory.map((element, index) => (
+                              <div
+                                key={index}
+                                className="flex gap-x-2 items-center"
+                              >
+                                <SelectItem key={index} value={element._id}>
+                                  <div className="flex items-center justify-between space-x-2">
+                                    <p>{element.name}</p>
+                                  </div>
+                                </SelectItem>
+                                <TrashIcon
+                                  className="text-red-500 hover:text-red-800 cursor-pointer duration-300"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    handleCategoryDelete(element._id);
+                                  }}
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <SelectItem value="no-options" disabled>
+                              No categories available
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsOpen(true)}
+                      >
+                        <Plus />
+                      </Button>
+                    </div>
+
+                    {field.value && (
+                      <div className="mt-2">
+                        {projectCategory.map((cat) =>
+                          cat._id === field.value ? (
+                            <div
+                              key={cat._id}
+                              className="flex items-center gap-2 text-sm text-gray-700"
+                            >
+                              <span>{cat.name}</span>
+                              <TrashIcon
+                                className="w-4 h-4 text-red-500 hover:text-red-700 cursor-pointer"
+                                onClick={() => handleCategoryDelete(cat._id)}
+                              />
+                            </div>
+                          ) : null
+                        )}
+                      </div>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Right Column */}
               <div className="space-y-4">
                 <FormField
@@ -181,15 +326,15 @@ export default function AddProjectForm({ type, ExistingDetail }: Props) {
               name="overview"
               render={() => (
                 <FormItem>
-                  <FormLabel>News Overview</FormLabel>
+                  <FormLabel>Project Overview</FormLabel>
                   <ReactQuillEditor name="overview" />
                 </FormItem>
               )}
             />
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Submit"}
+              <Button type="submit" disabled={loading}>
+                {loading ? "Saving..." : "Submit"}
               </Button>
             </div>
           </form>

@@ -2,14 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import TeamMemberForm from "../../components/about/TeamMemberForm";
-import { useGetAdminMemberByIdQuery } from "@/store/api/Admin/adminTeamMember";
+import { useGetAdminTeamMemberByIdQuery } from "@/store/api/Admin/adminAboutPage";
 
 const Edit = () => {
   const search = useSearchParams();
   const _id = search.get("id") as string;
 
   const { data: ExistingDetail, isLoading: Loading } =
-    useGetAdminMemberByIdQuery(_id);
+    useGetAdminTeamMemberByIdQuery(_id);
 
   return (
     <>

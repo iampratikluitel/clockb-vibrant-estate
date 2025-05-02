@@ -11,7 +11,6 @@ export const publicFunctionsApi = createApi({
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
-    //Newsletter
     PublicSubscribeNewsLetter: builder.mutation<{ message: string }, any>({
       query: ({ ...body }) => ({
         url: `public/newsletter`,
@@ -19,23 +18,7 @@ export const publicFunctionsApi = createApi({
         body: body,
       }),
     }),
-    //Contact
-    PublicContact: builder.mutation<{ message: string }, any>({
-      query: ({ ...body }) => ({
-        url: `public/contact`,
-        method: "POST",
-        body: body,
-      }),
-    }),
-    //Trainer Enrollment
-    TrainerEnrollment: builder.mutation<{ message: string }, any>({
-      query: ({ ...body }) => ({
-        url: `public/enrolltrainer`,
-        method: "POST",
-        body: body,
-      }),
-    }),
-    //Forgot Password
+
     ForgotPassword: builder.mutation<{ message: string }, any>({
       query: ({ ...body }) => ({
         url: `auth/forgotpassword`,
@@ -43,7 +26,7 @@ export const publicFunctionsApi = createApi({
         body: body,
       }),
     }),
-    //Reset Password
+
     ResetPassword: builder.mutation<{ message: string }, any>({
       query: ({ ...body }) => ({
         url: `auth/resetpassword`,
@@ -56,10 +39,6 @@ export const publicFunctionsApi = createApi({
 
 export const {
   usePublicSubscribeNewsLetterMutation,
-  usePublicContactMutation,
-  useTrainerEnrollmentMutation,
-
-  //auth
   useForgotPasswordMutation,
   useResetPasswordMutation,
 } = publicFunctionsApi;

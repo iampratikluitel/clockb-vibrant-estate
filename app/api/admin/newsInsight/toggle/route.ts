@@ -19,8 +19,6 @@ export const POST = async (request: NextRequest) => {
           { status: 404 }
         );
       }
-
-      // Toggle status
       exisitingDoc.status = !exisitingDoc.status;
       await exisitingDoc.save();
 
