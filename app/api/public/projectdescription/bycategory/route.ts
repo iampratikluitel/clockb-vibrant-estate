@@ -41,7 +41,7 @@ export const GET = async (request: NextRequest) => {
 
       return NextResponse.json(ProjectsWithCategoryNames, { status: 200 });
     }else{
-      return NextResponse.json("No Projects Found", { status: 200 });
+      return NextResponse.json([], { status: 200 });
     }
   } catch (error) {
     console.log(error);

@@ -202,7 +202,7 @@ export default function ProjectTable() {
               <DropdownMenuItem
                 onClick={() =>
                   router.push(
-                    `${paths.admin.projectdescription}?id=${faqrow._id}`
+                    `${paths.admin.editproject}?id=${faqrow._id}`
                   )
                 }
               >
