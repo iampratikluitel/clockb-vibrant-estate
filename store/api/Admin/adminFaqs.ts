@@ -1,6 +1,6 @@
-import { FAQTYPE } from "@/lib/types";
+import { FAQ } from "@/lib/types";
 import { baseQuery } from "@/store/global";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 export const adminFaqApi = createApi({
   reducerPath: "adminFaqApi",
@@ -8,12 +8,12 @@ export const adminFaqApi = createApi({
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
-    getAllAdminFaqs: builder.query<FAQTYPE[], string>({
+    getAllAdminFaqs: builder.query<FAQ[], string>({
       query: () => `admin/FAQs`,
       providesTags: ["Admin Faqs"],
     }),
 
-    getAdminFaqsById: builder.query<FAQTYPE, string>({
+    getAdminFaqsById: builder.query<FAQ, string>({
       query: (faqId) => `admin/FAQs/byid?faqId=${faqId}`,
       providesTags: ["Admin Faqs"],
     }),
@@ -33,6 +33,14 @@ export const adminFaqApi = createApi({
       query: (faqId) => ({
         url: `admin/FAQs?faqId=${faqId}`,
         method: "DELETE",
+      }),
+      invalidatesTags: ["Admin Faqs"],
+    }),
+
+    AdminToggleFaq: builder.mutation<{ message: string }, any>({
+      query: (id) => ({
+        url: `admin/FAQs/toggle?id=${id}`,
+        method: "POST",
       }),
       invalidatesTags: ["Admin Faqs"],
     }),
@@ -57,5 +65,6 @@ export const {
   useGetAllAdminFaqsQuery,
   useGetAdminFaqsByIdQuery,
   useAdminDeleteFaqsMutation,
+  useAdminToggleFaqMutation,
   useAdminDeleteMultipleFaqsMutation,
 } = adminFaqApi;

@@ -30,12 +30,6 @@ export interface Brochure {
   name: string;
   description: string;
 }
-export interface FAQTYPE {
-  _id: string;
-  answer: string;
-  question: string;
-  addedDate: Date;
-}
 
 export interface FOOTER {
   _id: string;
@@ -62,6 +56,24 @@ export interface Contact {
   subject: string;
   message: string;
 }
+
+export interface FAQ {
+  _id: string;
+  question: string;
+  answer: string;
+  category: 
+  {
+    name: string;
+  }
+  categoryId: string;
+}
+
+export interface FAQCATEGORY {
+  _id: string;
+  name: string;
+  faqCount?: number;
+}
+
 
 export interface NEWSINSIGHT {
   _id: string;

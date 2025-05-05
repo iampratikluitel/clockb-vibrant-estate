@@ -14,6 +14,7 @@ import { adminNewsInsightsApi } from "./api/Admin/adminNewsInsight";
 import { publicNewsInsightsApi } from "./api/Public/publicNewsInsight";
 import { adminProjectApi } from "./api/Admin/adminProject";
 import { publicProjectApi } from "./api/Public/publicProject";
+import { publicFaqsApi } from "./api/Public/publicFaq";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     [publicTestimonailsApi.reducerPath]: publicTestimonailsApi.reducer,
     [publicNewsInsightsApi.reducerPath]: publicNewsInsightsApi.reducer,
     [publicProjectApi.reducerPath]: publicProjectApi.reducer,
+    [publicFaqsApi.reducerPath]: publicFaqsApi.reducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
@@ -48,6 +50,7 @@ export const store = configureStore({
     publicTestimonailsApi.middleware,
     publicNewsInsightsApi.middleware,
     publicProjectApi.middleware,
+    publicFaqsApi.middleware,
   ),
 });
 

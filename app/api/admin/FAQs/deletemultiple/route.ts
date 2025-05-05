@@ -1,6 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { connectDb } from "@/lib/mongodb";
-import FAQs from "@/model/FAQs";
+import { FAQs } from "@/model/FAQs";
 import { NextRequest, NextResponse } from "next/server";
 
 export const DELETE = async (request: NextRequest) => {
