@@ -59,7 +59,7 @@ export const DELETE = async (request: NextRequest) => {
     const { searchParams } = new URL(request.url);
     const _id = searchParams.get("id");
 
-    if (user) {
+    if (user) {4
     const exisitingDoc = await TermsAndConditions.findOne({ _id });
     if (!exisitingDoc) {
     return NextResponse.json({ message: "No Testimonial Found" }, { status: 404 });

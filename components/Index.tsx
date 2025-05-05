@@ -1,13 +1,14 @@
 "use client"
-import Footer from "./Footer";
-import Header from "./Header";
-import Hero from "./Hero";
-import InvestmentBenefits from "./InvestmentBenefits";
-import KeyHighlights from "./KeyHighlights";
-import NewsInsights from "./NewsInsights";
-import OngoingProjects from "./OngoingProjects";
-import ProjectTimeline from "./ProjectTimeline";
-import Testimonials from "./Testimonials";
+
+import Footer from "./homepage/Footer";
+import Header from "./homepage/Header";
+import Hero from "./homepage/Hero";
+import InvestmentBenefits from "./homepage/InvestmentBenefits";
+import KeyHighlights from "./homepage/KeyHighlights";
+import NewsInsights from "./homepage/NewsInsights";
+import OngoingProjects from "./homepage/OngoingProjects";
+import ProjectTimeline from "./homepage/ProjectTimeline";
+import Testimonials from "./homepage/Testimonials";
 
 const Index = () => {
   return (

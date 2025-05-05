@@ -55,11 +55,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  useAdminDeletePartnerMutation,
-  useDeleteMultiplePartnerAdminMutation,
-  useGetAllAdminPartnerQuery,
-} from "@/store/api/Admin/adminPartner";
+import { useAdminDeletePartnerMutation, useDeleteMultiplePartnerAdminMutation, useGetAllAdminPartnerQuery } from "@/store/api/Admin/adminAboutPage";
+
 
 const PartnerTable = () => {
   const router = useRouter();

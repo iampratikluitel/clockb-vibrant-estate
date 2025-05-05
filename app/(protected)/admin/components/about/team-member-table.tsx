@@ -55,11 +55,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  useAdminDeleteMemberMutation,
-  useDeleteMultipleMemberAdminMutation,
-  useGetAllAdminMemberQuery,
-} from "@/store/api/Admin/adminTeamMember";
+import { useAdminDeleteTeamMemberMutation, useDeleteMultipleTeamMemberAdminMutation, useGetAllAdminTeamMemberQuery} from "@/store/api/Admin/adminAboutPage";
 
 const TeamMemberTable = () => {
   const router = useRouter();
@@ -72,10 +68,10 @@ const TeamMemberTable = () => {
   const [rowSelection, setRowSelection] = React.useState({});
   const [showConfirmation, setShowConfirmation] = React.useState(false);
 
-  const { data: Data, isLoading: Loading } = useGetAllAdminMemberQuery("");
+  const { data: Data, isLoading: Loading } = useGetAllAdminTeamMemberQuery("");
 
-  const [deleteById] = useAdminDeleteMemberMutation();
-  const [deleteMultiple] = useDeleteMultipleMemberAdminMutation();
+  const [deleteById] = useAdminDeleteTeamMemberMutation();
+  const [deleteMultiple] = useDeleteMultipleTeamMemberAdminMutation();
 
   const confirmDelete = async (itemId: string) => {
     toast.promise(deleteById(itemId).unwrap(), {

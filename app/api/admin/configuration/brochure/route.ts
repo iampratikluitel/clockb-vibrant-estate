@@ -9,21 +9,26 @@ export const POST = async (request: NextRequest) => {
   console.log("Running POST request: BROCHURE");
 
   const user = await currentUser();
-  console.log("user", user)
+  console.log("user", user);
   try {
     const data = await request.json();
     await connectDb();
 
     let responseMessage = "Added";
-    if(user) {
+    if (user) {
       if (data?._id) {
         const existingConfig = await Brochure.findById(data._id);
         if (existingConfig) {
-          // ✅ Check if the brochure is changed and delete old file
-          if (existingConfig.brochure && existingConfig.brochure !== data.brochure) {
-            await minioClient.removeObject(BUCKET_NAME, existingConfig.brochure);
+          if (
+            existingConfig.brochure &&
+            existingConfig.brochure !== data.brochure
+          ) {
+            await minioClient.removeObject(
+              BUCKET_NAME,
+              existingConfig.brochure
+            );
           }
-  
+
           await Brochure.findByIdAndUpdate(data._id, data, { new: true });
           responseMessage = "Updated";
         } else {
@@ -34,12 +39,13 @@ export const POST = async (request: NextRequest) => {
       }
     }
 
-
     return NextResponse.json({ message: responseMessage }, { status: 200 });
   } catch (error) {
-    console.error("Error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
 };
 
@@ -50,8 +56,46 @@ export const GET = async () => {
     const data = await Brochure.findOne();
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.error("Error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 500 }
+    );
+  }
+};
+
+export const DELETE = async (request: NextRequest) => {
+  console.log("Running Delete request");
+  const user = await currentUser();
+  const { searchParams } = new URL(request.url);
+  const _id = searchParams.get("id");
+  try {
+    await connectDb();
+    if (user) {
+      const existingConfig = await Brochure.findOne({ _id });
+      if (!existingConfig) {
+        return NextResponse.json(
+          { message: "No Brochure Found" },
+          { status: 404 }
+        );
+      }
+
+      await Brochure.deleteOne({ _id });
+      if (existingConfig.brochure != null) {
+        await minioClient.removeObject(BUCKET_NAME, existingConfig.brochure);
+      }
+      return NextResponse.json(
+        { message: "Brochure Deleted" },
+        { status: 201 }
+      );
+    } else {
+      return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
+    }
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 404 }
+    );
   }
 };
