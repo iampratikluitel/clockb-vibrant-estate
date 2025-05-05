@@ -25,6 +25,7 @@ import {
   Send, 
   ArrowRight, 
   Phone as PhoneIcon,
+  Eye,
 
 
   Upload
@@ -82,6 +83,21 @@ interface InvestmentDoc {
   description: string;
   buttonText: string;
   fileUrl?: string;
+  actionType: 'download' | 'view';
+  date: string;
+  type: string;
+  size: string;
+}
+
+interface LegalDocument {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+  size: string;
+  description: string;
+  fileUrl: string;
+  actionType: 'download' | 'view';
 }
 
 const Resources = () => {
@@ -101,17 +117,7 @@ const Resources = () => {
     category: string;
     fileUrl: string;
   }[]>([]);
-  const [legalDocuments, setLegalDocuments] = useState<{
-    id: string;
-    title: string;
-    date: string;
-    type: string;
-    size: string;
-    status: string;
-    category: string;
-    description: string;
-    fileUrl?: string;
-  }[]>([]);
+  const [legalDocuments, setLegalDocuments] = useState<LegalDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [guides, setGuides] = useState<{
@@ -130,6 +136,10 @@ const Resources = () => {
     description: string;
     fileUrl: string;
   } | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<LegalDocument | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDocumentDialogOpen, setIsDocumentDialogOpen] = useState(false);
+  const [selectedDoc, setSelectedDoc] = useState<LegalDocument | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -284,12 +294,29 @@ const Resources = () => {
     }
   };
 
-  const handleDownload = (fileUrl?: string) => {
-    if (!fileUrl) {
-      toast.error('No file available for download');
-      return;
+  const handleDownload = async (doc: LegalDocument | InvestmentDoc) => {
+    try {
+      const response = await fetch(`/api/download?fileUrl=${encodeURIComponent(doc.fileUrl || '')}`, {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = doc.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      toast.error('Failed to download file');
     }
-    window.open(`/api/resources/download?filename=${encodeURIComponent(fileUrl)}`, '_blank');
   };
 
   const getIconComponent = (icon: string) => {
@@ -303,6 +330,17 @@ const Resources = () => {
       default:
         return <FileText className="h-6 w-6 text-estates-primary" />;
     }
+  };
+
+  const handleDocumentAction = async (doc: LegalDocument) => {
+    setSelectedDoc(doc);
+    setIsDocumentDialogOpen(true);
+  };
+
+  // Add this helper function near other utility functions
+  const isImageFile = (filename: string) => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => filename.toLowerCase().endsWith(ext));
   };
 
   return (
@@ -352,7 +390,7 @@ const Resources = () => {
                   title={doc.title}
                   description={doc.description}
                   buttonText={doc.buttonText}
-                  onClick={() => handleDownload(doc.fileUrl)}
+                  onClick={() => handleDownload(doc)}
                 />
               ))}
             </div>
@@ -419,14 +457,25 @@ const Resources = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {legalDocuments.map((doc) => (
-                <ResourceCard
-                  key={doc.id}
-                  icon={DOCUMENT_TYPES.find(type => type.value === doc.type)?.icon || <FileText className="h-6 w-6 text-estates-primary" />}
-                  title={doc.title}
-                  description={doc.description || `${doc.type} - ${doc.date}`}
-                  buttonText="View Document"
-                  onClick={() => handleDownload(doc.fileUrl)}
-                />
+                <div key={doc.id} className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center">
+                      <div className="bg-estates-primary/10 p-3 rounded-lg mr-3">
+                        <FileText className="h-6 w-6 text-estates-primary" />
+                      </div>
+                      <h3 className="font-bold text-lg">{doc.title}</h3>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm mb-5">{doc.description}</p>
+                  <Button 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
+                    onClick={() => handleDocumentAction(doc)}
+                  >
+                    <Eye className="w-4 h-4" />
+                    View Document/Download Document
+                  </Button>
+                </div>
               ))}
             </div>
           </section>
@@ -619,6 +668,93 @@ const Resources = () => {
       </main>
       
       <Footer />
+
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-4xl h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>{selectedDocument?.title}</DialogTitle>
+          </DialogHeader>
+          {selectedDocument && (
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src={`/api/view?fileUrl=${encodeURIComponent(selectedDocument.fileUrl)}`}
+                className="w-full h-full border-0"
+                title={selectedDocument.title}
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDocumentDialogOpen} onOpenChange={setIsDocumentDialogOpen}>
+        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+          <DialogHeader className="flex-none">
+            <DialogTitle>{selectedDoc?.title}</DialogTitle>
+          </DialogHeader>
+          {selectedDoc && (
+            <div className="flex flex-col flex-1 min-h-0">
+              <div className="flex-1 overflow-auto">
+                {selectedDoc.fileUrl?.toLowerCase().endsWith('.pdf') ? (
+                  <object
+                    data={`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`}
+                    type="application/pdf"
+                    className="w-full h-full"
+                  >
+                    <div className="flex flex-col items-center justify-center h-full">
+                      <p className="text-gray-500 mb-4">Unable to display PDF directly</p>
+                      <Button
+                        variant="outline"
+                        onClick={() => window.open(`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`, '_blank')}
+                        className="flex items-center gap-2"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Open PDF in New Tab
+                      </Button>
+                    </div>
+                  </object>
+                ) : isImageFile(selectedDoc.fileUrl || '') ? (
+                  <div className="relative w-full h-full">
+                    <img
+                      src={`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`}
+                      alt={selectedDoc.title}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <p className="text-gray-500 mb-4">Preview not available for this file type</p>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleDownload(selectedDoc)}
+                      className="flex items-center gap-2"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download to View
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => handleDownload(selectedDoc)}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Document
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDocumentDialogOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

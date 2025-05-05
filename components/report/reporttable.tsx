@@ -10,6 +10,12 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ReportData {
   id: string;
@@ -27,6 +33,8 @@ interface ReportTableProps {
 
 const ReportTable = ({ data }: ReportTableProps) => {
   const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
+  const [selectedDoc, setSelectedDoc] = useState<ReportData | null>(null);
+  const [isDocumentDialogOpen, setIsDocumentDialogOpen] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -52,100 +60,173 @@ const ReportTable = ({ data }: ReportTableProps) => {
     return <FileText className="h-4 w-4" />;
   };
 
-  const handleAction = async (fileUrl: string, action: 'view' | 'download') => {
+  const isImageFile = (filename: string) => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => filename.toLowerCase().endsWith(ext));
+  };
+
+  const handleAction = async (report: ReportData, action: 'view' | 'download') => {
     try {
-      if (!fileUrl) {
+      if (!report.fileUrl) {
         toast.error('No file available for this report');
         return;
       }
 
-      setLoading(prev => ({ ...prev, [fileUrl]: true }));
-      
-      const response = await fetch(`/api/resources/download?filename=${encodeURIComponent(fileUrl)}`);
-      if (!response.ok) {
-        throw new Error('Failed to get file URL');
-      }
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      setLoading(prev => ({ ...prev, [report.fileUrl]: true }));
       
       if (action === 'view') {
-        window.open(url, '_blank');
+        setSelectedDoc(report);
+        setIsDocumentDialogOpen(true);
       } else {
+        const response = await fetch(`/api/resources/download?filename=${encodeURIComponent(report.fileUrl)}`);
+        if (!response.ok) {
+          throw new Error('Failed to get file URL');
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = fileUrl.split('/').pop() || 'document';
+        link.download = report.fileUrl.split('/').pop() || 'document';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
       }
     } catch (error) {
       console.error('Error handling file action:', error);
       toast.error('Failed to process file action');
     } finally {
-      setLoading(prev => ({ ...prev, [fileUrl]: false }));
+      setLoading(prev => ({ ...prev, [report.fileUrl]: false }));
     }
   };
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-estates-gray-100">
-            <TableHead className="w-[40%]">Report Name</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>File Type</TableHead>
-            <TableHead>Size</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((report) => (
-            <TableRow key={report.id} className="hover:bg-estates-gray-100/50">
-              <TableCell className="font-medium">
-                <div className="flex items-center gap-2">
-                  {getFileIcon()}
-                  {report.title}
-                </div>
-              </TableCell>
-              <TableCell>{report.date}</TableCell>
-              <TableCell>{report.type}</TableCell>
-              <TableCell>{report.size}</TableCell>
-              <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}>
-                  {report.status}
-                </span>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-8 px-2"
-                    onClick={() => handleAction(report.fileUrl, 'view')}
-                    disabled={loading[report.fileUrl]}
-                  >
-                    <Eye className="h-4 w-4" />
-                    <span className="sr-only">View</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="h-8 px-2"
-                    onClick={() => handleAction(report.fileUrl, 'download')}
-                    disabled={loading[report.fileUrl]}
-                  >
-                    <DownloadCloud className="h-4 w-4" />
-                    <span className="sr-only">Download</span>
-                  </Button>
-                </div>
-              </TableCell>
+    <>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-estates-gray-100">
+              <TableHead className="w-[40%]">Report Name</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {data.map((report) => (
+              <TableRow key={report.id} className="hover:bg-estates-gray-100/50">
+                <TableCell className="font-medium">
+                  <div className="flex items-center gap-2">
+                    {getFileIcon()}
+                    {report.title}
+                  </div>
+                </TableCell>
+                <TableCell>{report.date}</TableCell>
+                <TableCell>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(report.status)}`}>
+                    {report.status}
+                  </span>
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex justify-end gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-8 px-2"
+                      onClick={() => handleAction(report, 'view')}
+                      disabled={loading[report.fileUrl]}
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span className="sr-only">View</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="h-8 px-2"
+                      onClick={() => handleAction(report, 'download')}
+                      disabled={loading[report.fileUrl]}
+                    >
+                      <DownloadCloud className="h-4 w-4" />
+                      <span className="sr-only">Download</span>
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <Dialog open={isDocumentDialogOpen} onOpenChange={setIsDocumentDialogOpen}>
+        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+          <DialogHeader className="flex-none">
+            <DialogTitle>{selectedDoc?.title}</DialogTitle>
+          </DialogHeader>
+          {selectedDoc && (
+            <div className="flex flex-col flex-1 min-h-0">
+              <div className="flex-1 overflow-auto">
+                {selectedDoc.fileUrl?.toLowerCase().endsWith('.pdf') ? (
+                  <object
+                    data={`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`}
+                    type="application/pdf"
+                    className="w-full h-full"
+                  >
+                    <div className="flex flex-col items-center justify-center h-full">
+                      <p className="text-gray-500 mb-4">Unable to display PDF directly</p>
+                      <Button
+                        variant="outline"
+                        onClick={() => window.open(`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`, '_blank')}
+                        className="flex items-center gap-2"
+                      >
+                        <Eye className="w-4 h-4" />
+                        Open PDF in New Tab
+                      </Button>
+                    </div>
+                  </object>
+                ) : isImageFile(selectedDoc.fileUrl || '') ? (
+                  <div className="relative w-full h-full">
+                    <img
+                      src={`/api/view?fileUrl=${encodeURIComponent(selectedDoc.fileUrl)}`}
+                      alt={selectedDoc.title}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <p className="text-gray-500 mb-4">Preview not available for this file type</p>
+                    <Button
+                      variant="outline"
+                      onClick={() => handleAction(selectedDoc, 'download')}
+                      className="flex items-center gap-2"
+                    >
+                      <DownloadCloud className="w-4 h-4" />
+                      Download to View
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => handleAction(selectedDoc, 'download')}
+                  className="flex items-center gap-2"
+                >
+                  <DownloadCloud className="w-4 h-4" />
+                  Download Document
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsDocumentDialogOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

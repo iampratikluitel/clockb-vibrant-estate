@@ -24,6 +24,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface LegalDocument {
   id: string;
@@ -31,10 +38,10 @@ interface LegalDocument {
   date: string;
   type: string;
   size: string;
-
   description: string;
   fileUrl: string;
   createdAt: string;
+  actionType: 'download' | 'view';
 }
 
 const STATUS_OPTIONS = [
@@ -57,10 +64,10 @@ export default function LegalDocumentsAdmin() {
     date: '',
     type: '',
     size: '',
-
     description: '',
     fileUrl: '',
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    actionType: 'download'
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -95,10 +102,10 @@ export default function LegalDocumentsAdmin() {
       date: '',
       type: '',
       size: '',
-
       description: '',
       fileUrl: '',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      actionType: 'download'
     });
     setIsDialogOpen(true);
   };
@@ -110,10 +117,10 @@ export default function LegalDocumentsAdmin() {
       date: document.date,
       type: document.type,
       size: document.size,
-
       description: document.description,
       fileUrl: document.fileUrl,
-      createdAt: document.createdAt
+      createdAt: document.createdAt,
+      actionType: document.actionType
     });
     setIsDialogOpen(true);
   };
@@ -223,7 +230,7 @@ export default function LegalDocumentsAdmin() {
         fileUrl: fileUrl,
         date: formData.date || new Date().toISOString(),
         size: formData.size,
-
+        actionType: formData.actionType
       };
 
       console.log('[handleSubmit] formData:', formData);
@@ -401,6 +408,21 @@ export default function LegalDocumentsAdmin() {
                     onChange={handleFileChange}
                     ref={fileInputRef}
                   />
+                </div>
+                <div>
+                  <Label htmlFor="actionType">Document Action</Label>
+                  <Select
+                    value={formData.actionType}
+                    onValueChange={(value) => setFormData({ ...formData, actionType: value as 'download' | 'view' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select action type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="download">Download</SelectItem>
+                      <SelectItem value="view">View</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
               <div className="mt-6 flex justify-end gap-2">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Pencil, Trash2, Download, FileText, ScrollText, File } from "lucide-react";
+import { Plus, Pencil, Trash2, Download, FileText, ScrollText, File, Eye } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,7 @@ interface InvestmentDoc {
   description: string;
   buttonText: string;
   fileUrl?: string;
+  actionType: 'download' | 'view';
 }
 
 export default function InvestmentDocsAdmin() {
@@ -39,7 +40,8 @@ export default function InvestmentDocsAdmin() {
   const [editingDoc, setEditingDoc] = useState<InvestmentDoc | null>(null);
   const [newDoc, setNewDoc] = useState<Partial<InvestmentDoc>>({
     icon: 'file-text',
-    buttonText: 'Download PDF'
+    buttonText: 'Download PDF',
+    actionType: 'download'
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -126,7 +128,8 @@ export default function InvestmentDocsAdmin() {
           title: newDoc.title,
           description: newDoc.description,
           buttonText: newDoc.buttonText,
-          fileUrl
+          fileUrl,
+          actionType: newDoc.actionType
         };
 
         const response = await fetch('/api/investment-docs', {
@@ -144,7 +147,7 @@ export default function InvestmentDocsAdmin() {
 
         const data = await response.json();
         setDocs(prev => [...prev, data]);
-        setNewDoc({ icon: 'file-text', buttonText: 'Download PDF' });
+        setNewDoc({ icon: 'file-text', buttonText: 'Download PDF', actionType: 'download' });
         setSelectedFile(null);
         setIsAddDialogOpen(false);
         toast.success('Document created successfully');
@@ -177,7 +180,8 @@ export default function InvestmentDocsAdmin() {
             title: editingDoc.title,
             description: editingDoc.description,
             buttonText: editingDoc.buttonText,
-            fileUrl
+            fileUrl,
+            actionType: editingDoc.actionType
           }),
         });
 
@@ -302,6 +306,21 @@ export default function InvestmentDocsAdmin() {
                 </div>
               </div>
               <div className="space-y-2">
+                <label>Document Action</label>
+                <Select
+                  value={newDoc.actionType}
+                  onValueChange={(value) => setNewDoc({ ...newDoc, actionType: value as 'download' | 'view' })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select action type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="download">Download</SelectItem>
+                    <SelectItem value="view">View</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <label>Button Text</label>
                 <Input
                   value={newDoc.buttonText || ''}
@@ -357,11 +376,19 @@ export default function InvestmentDocsAdmin() {
                 className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
                 onClick={() => {
                   if (doc.fileUrl) {
-                    window.open(`/api/resources/download?filename=${encodeURIComponent(doc.fileUrl)}`, '_blank');
+                    if (doc.actionType === 'download') {
+                      window.open(`/api/resources/download?filename=${encodeURIComponent(doc.fileUrl)}`, '_blank');
+                    } else {
+                      window.open(`/api/view?fileUrl=${encodeURIComponent(doc.fileUrl)}`, '_blank');
+                    }
                   }
                 }}
               >
-                <Download className="w-4 h-4" />
+                {doc.actionType === 'download' ? (
+                  <Download className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
                 {doc.buttonText}
               </Button>
             </div>
@@ -425,6 +452,21 @@ export default function InvestmentDocsAdmin() {
                       Current file: {editingDoc.fileUrl.split('/').pop()}
                     </p>
                   )}
+                </div>
+                <div className="space-y-2">
+                  <label>Document Action</label>
+                  <Select
+                    value={editingDoc.actionType}
+                    onValueChange={(value) => setEditingDoc({ ...editingDoc, actionType: value as 'download' | 'view' })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select action type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="download">Download</SelectItem>
+                      <SelectItem value="view">View</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <label>Button Text</label>
