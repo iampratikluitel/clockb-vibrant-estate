@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   FileText, 
   File, 
@@ -16,15 +16,45 @@ import {
   CalendarCheck,
   Download,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  Mail,
+  MapPin,
+  Facebook, 
+  Instagram, 
+  Linkedin, 
+  Send, 
+  ArrowRight, 
+  Phone as PhoneIcon,
+
+
+  Upload
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import  Link from "next/link";
-import { cn } from "@/lib/utils";
 import ReportTable from "@/app/(components)/report/reporttable";
+import { toast } from "sonner";
+import ResourceCard from '@/components/ResourceCard';
+
+
+
+import { useToast } from "@/hooks/use-toast";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface ResourceCardProps {
   icon: React.ReactNode;
@@ -33,29 +63,25 @@ interface ResourceCardProps {
   buttonText: string;
   onClick?: () => void;
   className?: string;
+  fileUrl?: string;
+  onUpload?: (file: File) => Promise<void>;
+  isUpload?: boolean;
 }
 
-const ResourceCard = ({ icon, title, description, buttonText, onClick, className }: ResourceCardProps) => (
-  <div className={cn("bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100", className)}>
-    <div className="flex items-start">
-      <div className="bg-estates-primary/10 p-3 rounded-lg mr-4">
-        {icon}
-      </div>
-      <div className="flex-1">
-        <h3 className="font-bold text-lg mb-2">{title}</h3>
-        <p className="text-gray-600 text-sm mb-4">{description}</p>
-        <Button 
-          variant="outline" 
-          className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
-          onClick={onClick}
-        >
-          {buttonText.includes("Download") ? <Download className="w-4 h-4" /> : <ExternalLink className="w-4 h-4" />}
-          {buttonText}
-        </Button>
-      </div>
-    </div>
-  </div>
-);
+const DOCUMENT_TYPES = [
+  { value: 'agreement', label: 'Agreement', icon: <ScrollText className="h-5 w-5" /> },
+  { value: 'report', label: 'Report', icon: <FileText className="h-5 w-5" /> },
+  { value: 'certificate', label: 'Certificate', icon: <File className="h-5 w-5" /> },
+];
+
+interface InvestmentDoc {
+  id: string;
+  icon: 'file-text' | 'scroll-text' | 'file';
+  title: string;
+  description: string;
+  buttonText: string;
+  fileUrl?: string;
+}
 
 const Resources = () => {
   const [nameInput, setNameInput] = useState("");
@@ -64,6 +90,140 @@ const Resources = () => {
   const [dateInput, setDateInput] = useState("");
   const [messageInput, setMessageInput] = useState("");
   const [selectedTab, setSelectedTab] = useState("quarterly");
+  const [reports, setReports] = useState<{
+    id: string;
+    title: string;
+    date: string;
+    type: string;
+    size: string;
+    status: string;
+    category: string;
+    fileUrl: string;
+  }[]>([]);
+  const [legalDocuments, setLegalDocuments] = useState<{
+    id: string;
+    title: string;
+    date: string;
+    type: string;
+    size: string;
+    status: string;
+    category: string;
+    description: string;
+    fileUrl?: string;
+  }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const [guides, setGuides] = useState<{
+    id: string;
+    icon: string;
+    title: string;
+    description: string;
+    buttonType: string;
+    buttonText: string;
+    fileUrl?: string;
+  }[]>([]);
+  const [loadingGuides, setLoadingGuides] = useState(true);
+  const [investmentDocs, setInvestmentDocs] = useState<InvestmentDoc[]>([]);
+  const [investorKit, setInvestorKit] = useState<{
+    title: string;
+    description: string;
+    fileUrl: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/resources');
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('API Error:', errorData);
+          throw new Error(errorData.error || 'Failed to fetch resources');
+        }
+        const data = await response.json();
+        console.log('Fetched resources:', data);
+        
+        // Separate reports and legal documents based on category
+        const reportsData = data.filter((item: any) => item.category !== 'legal');
+        const legalDocsData = data.filter((item: any) => item.category === 'legal');
+        
+        console.log('Reports data:', reportsData);
+        console.log('Legal documents data:', legalDocsData);
+        
+        setReports(reportsData);
+        setLegalDocuments(legalDocsData);
+      } catch (error) {
+        console.error('Error fetching resources:', error);
+        toast.error('Failed to load resources. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchGuides = async () => {
+      try {
+        const response = await fetch('/api/guides');
+        if (!response.ok) throw new Error('Failed to fetch guides');
+        const data = await response.json();
+        setGuides(data);
+      } catch (error) {
+        console.error('Error fetching guides:', error);
+        toast.error('Failed to load guides');
+      } finally {
+        setLoadingGuides(false);
+      }
+    };
+
+    fetchGuides();
+  }, []);
+
+  useEffect(() => {
+    const fetchInvestmentDocs = async () => {
+      try {
+        const response = await fetch('/api/investment-docs');
+        if (!response.ok) throw new Error('Failed to fetch investment documents');
+        const data = await response.json();
+        setInvestmentDocs(data);
+      } catch (error) {
+        console.error('Error fetching investment documents:', error);
+        toast.error('Failed to load investment documents');
+      }
+    };
+
+    fetchInvestmentDocs();
+  }, []);
+
+  useEffect(() => {
+    const fetchInvestorKit = async () => {
+      try {
+        const response = await fetch('/api/admin/configuration/investor-kit');
+        if (response.ok) {
+          const data = await response.json();
+          setInvestorKit(data);
+        }
+      } catch (error) {
+        console.error('Error fetching investor kit:', error);
+      }
+    };
+
+    fetchInvestorKit();
+  }, []);
+
+  // Filter reports based on selected tab
+  const filteredReports = reports.filter(report => {
+    switch (selectedTab) {
+      case 'quarterly':
+        return report.category === 'quarterly';
+      case 'construction':
+        return report.category === 'construction';
+      case 'land':
+        return report.category === 'land';
+      default:
+        return false;
+    }
+  });
 
   const handleSiteVisitSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,27 +247,62 @@ const Resources = () => {
     alert("Your site visit request has been submitted. We'll contact you shortly to confirm.");
   };
 
-  // Sample data for the reports
-  const quarterlyReportsData = [
-    { id: 1, title: "Q1 2025 Progress Report", date: "March 31, 2025", type: "PDF", size: "2.4 MB", status: "Completed" },
-    { id: 2, title: "Q4 2024 Progress Report", date: "December 31, 2024", type: "PDF", size: "3.1 MB", status: "Completed" },
-    { id: 3, title: "Q3 2024 Progress Report", date: "September 30, 2024", type: "PDF", size: "2.8 MB", status: "Completed" },
-    { id: 4, title: "Q2 2024 Progress Report", date: "June 30, 2024", type: "PDF", size: "2.6 MB", status: "Completed" },
-  ];
+  const handleFileUpload = async (file: File, category: string) => {
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('category', category);
+      formData.append('title', file.name);
+      formData.append('description', `Uploaded ${file.name}`);
 
-  const constructionReportsData = [
-    { id: 1, title: "Main Infrastructure Plan", date: "February 15, 2025", type: "PDF", size: "5.7 MB", status: "Approved" },
-    { id: 2, title: "Utility Layout", date: "January 20, 2025", type: "DWG", size: "8.3 MB", status: "In Review" },
-    { id: 3, title: "Landscape Design", date: "December 10, 2024", type: "PDF", size: "4.2 MB", status: "Approved" },
-    { id: 4, title: "Road Network Plan", date: "November 5, 2024", type: "PDF", size: "6.1 MB", status: "Approved" },
-  ];
+      const response = await fetch('/api/resources/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-  const landAllocationData = [
-    { id: 1, title: "Phase 1 Land Allocation", date: "April 5, 2025", type: "PDF", size: "3.4 MB", status: "Final" },
-    { id: 2, title: "Property Valuation Report", date: "March 15, 2025", type: "PDF", size: "2.9 MB", status: "Final" },
-    { id: 3, title: "ROI Projection - Land Exit", date: "February 28, 2025", type: "XLSX", size: "1.7 MB", status: "Updated" },
-    { id: 4, title: "Plot Distribution Map", date: "January 25, 2025", type: "PDF", size: "4.5 MB", status: "Draft" },
-  ];
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+      
+      // Update the appropriate state based on category
+      if (category === 'legal') {
+        setLegalDocuments(prev => [...prev, data]);
+      } else {
+        setReports(prev => [...prev, data]);
+      }
+
+      toast.success('File uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast.error('Failed to upload file');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleDownload = (fileUrl?: string) => {
+    if (!fileUrl) {
+      toast.error('No file available for download');
+      return;
+    }
+    window.open(`/api/resources/download?filename=${encodeURIComponent(fileUrl)}`, '_blank');
+  };
+
+  const getIconComponent = (icon: string) => {
+    switch (icon) {
+      case 'file-text':
+        return <FileText className="h-6 w-6 text-estates-primary" />;
+      case 'scroll-text':
+        return <ScrollText className="h-6 w-6 text-estates-primary" />;
+      case 'file':
+        return <File className="h-6 w-6 text-estates-primary" />;
+      default:
+        return <FileText className="h-6 w-6 text-estates-primary" />;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-estates-gray-100">
@@ -119,18 +314,21 @@ const Resources = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in">
-                Investor Resources
+                {investorKit?.title || 'Investor Resources'}
               </h1>
               <p className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                Access all the information, documents, and support you need as an investor in Project Estates
+                {investorKit?.description || 'Access all the information, documents, and support you need as an investor in Project Estates'}
               </p>
               <div className="flex justify-center animate-fade-in" style={{ animationDelay: "0.4s" }}>
-                <Button
-                  className="bg-white hover:bg-gray-100 text-estates-primary font-semibold px-6 py-6 rounded-lg shadow-lg flex items-center gap-2 transition-all hover:scale-105"
-                >
-                  <Download className="w-5 h-5" />
-                  Download Complete Investor Kit
-                </Button>
+                {investorKit?.fileUrl && (
+                  <Button
+                    className="bg-white hover:bg-gray-100 text-estates-primary font-semibold px-6 py-6 rounded-lg shadow-lg flex items-center gap-2 transition-all hover:scale-105"
+                    onClick={() => window.open(`/api/resources/download?filename=${encodeURIComponent(investorKit.fileUrl)}`, '_blank')}
+                  >
+                    <Download className="w-5 h-5" />
+                    Download Complete Investor Kit
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -146,26 +344,16 @@ const Resources = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <ResourceCard
-                icon={<FileText className="h-6 w-6 text-estates-primary" />}
-                title="Investment Brochure"
-                description="Overview of the project, benefits, and key highlights"
-                buttonText="Download PDF"
-              />
-
-              <ResourceCard
-                icon={<ScrollText className="h-6 w-6 text-estates-primary" />}
-                title="Terms & Conditions"
-                description="Detailed investment policies, exit options, and taxation"
-                buttonText="Download PDF"
-              />
-
-              <ResourceCard
-                icon={<File className="h-6 w-6 text-estates-primary" />}
-                title="Investor Agreement Sample"
-                description="A sample of the legal contract between investors and Investment Circle P. Ltd"
-                buttonText="Download PDF"
-              />
+              {investmentDocs.map((doc) => (
+                <ResourceCard
+                  key={doc.id}
+                  icon={getIconComponent(doc.icon)}
+                  title={doc.title}
+                  description={doc.description}
+                  buttonText={doc.buttonText}
+                  onClick={() => handleDownload(doc.fileUrl)}
+                />
+              ))}
             </div>
           </section>
 
@@ -175,6 +363,7 @@ const Resources = () => {
               <h2 className="text-3xl font-bold text-estates-secondary">Project Updates & Reports</h2>
               <p className="text-gray-600 mt-2">Stay informed about project progress</p>
             </div>
+            
             
             <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
               <div className="flex border-b">
@@ -202,24 +391,18 @@ const Resources = () => {
               </div>
               
               <div className="p-6">
-                {selectedTab === 'quarterly' && (
-                  <div>
-                    <p className="text-gray-600 mb-4">Updates on land development, infrastructure progress, and key milestones achieved each quarter.</p>
-                    <ReportTable data={quarterlyReportsData} />
+                {loading ? (
+                  <div className="flex justify-center items-center h-32">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-estates-primary"></div>
                   </div>
-                )}
-                
-                {selectedTab === 'construction' && (
+                ) : (
                   <div>
-                    <p className="text-gray-600 mb-4">Detailed engineering plans, zoning information, and site maps for the development.</p>
-                    <ReportTable data={constructionReportsData} />
-                  </div>
-                )}
-                
-                {selectedTab === 'land' && (
-                  <div>
-                    <p className="text-gray-600 mb-4">Reports and documentation for investors opting for land exit strategy.</p>
-                    <ReportTable data={landAllocationData} />
+                    <p className="text-gray-600 mb-4">
+                      {selectedTab === 'quarterly' && "Updates on land development, infrastructure progress, and key milestones achieved each quarter."}
+                      {selectedTab === 'construction' && "Detailed engineering plans, zoning information, and site maps for the development."}
+                      {selectedTab === 'land' && "Reports and documentation for investors opting for land exit strategy."}
+                    </p>
+                    <ReportTable data={filteredReports} />
                   </div>
                 )}
               </div>
@@ -234,26 +417,16 @@ const Resources = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <ResourceCard
-                icon={<Building className="h-6 w-6 text-estates-primary" />}
-                title="Government Approvals & Permits"
-                description="Copies of relevant land approvals, licenses, and environmental clearances"
-                buttonText="View Documents"
-              />
-
-              <ResourceCard
-                icon={<FileText className="h-6 w-6 text-estates-primary" />}
-                title="Taxation Guidelines"
-                description="Breakdown of applicable government taxes and deductions on investment returns"
-                buttonText="View Guidelines"
-              />
-
-              <ResourceCard
-                icon={<Lock className="h-6 w-6 text-estates-primary" />}
-                title="Investor Protection & Security"
-                description="Information on how investments are safeguarded"
-                buttonText="View Documents"
-              />
+              {legalDocuments.map((doc) => (
+                <ResourceCard
+                  key={doc.id}
+                  icon={DOCUMENT_TYPES.find(type => type.value === doc.type)?.icon || <FileText className="h-6 w-6 text-estates-primary" />}
+                  title={doc.title}
+                  description={doc.description || `${doc.type} - ${doc.date}`}
+                  buttonText="View Document"
+                  onClick={() => handleDownload(doc.fileUrl)}
+                />
+              ))}
             </div>
           </section>
 
@@ -265,49 +438,55 @@ const Resources = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100 flex flex-col">
-                <div className="flex items-center mb-4">
-                  <div className="bg-estates-primary/10 p-3 rounded-lg mr-3">
-                    <Book className="h-6 w-6 text-estates-primary" />
-                  </div>
-                  <h3 className="font-bold text-lg">Investor Guide</h3>
+              {loadingGuides ? (
+                <div className="col-span-3 flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-estates-primary"></div>
                 </div>
-                <p className="text-gray-600 text-sm mb-5 flex-grow">A step-by-step guide on how to invest, manage returns, and exit options</p>
-                <Button variant="outline" className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white">
-                  <Download className="w-4 h-4" />
-                  Download Guide
-                </Button>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100 flex flex-col">
-                <div className="flex items-center mb-4">
-                  <div className="bg-estates-primary/10 p-3 rounded-lg mr-3">
-                    <RefreshCw className="h-6 w-6 text-estates-primary" />
+              ) : (
+                guides.map((guide) => (
+                  <div key={guide.id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100 flex flex-col">
+                    <div className="flex items-center mb-4">
+                      <div className="bg-estates-primary/10 p-3 rounded-lg mr-3">
+                        {guide.icon === 'book' ? (
+                          <Book className="h-6 w-6 text-estates-primary" />
+                        ) : guide.icon === 'refresh' ? (
+                          <RefreshCw className="h-6 w-6 text-estates-primary" />
+                        ) : (
+                          <HelpCircle className="h-6 w-6 text-estates-primary" />
+                        )}
+                      </div>
+                      <h3 className="font-bold text-lg">{guide.title}</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-5 flex-grow">{guide.description}</p>
+                    {guide.buttonType === 'download' ? (
+                      <Button 
+                        variant="outline" 
+                        className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
+                        onClick={() => {
+                          if (guide.fileUrl) {
+                            window.open(`/api/resources/download?filename=${encodeURIComponent(guide.fileUrl)}`, '_blank');
+                          }
+                        }}
+                      >
+                        <Download className="w-4 h-4" />
+                        {guide.buttonText}
+                      </Button>
+                    ) : guide.buttonType === 'faq' ? (
+                      <Link href="/faqs" className="w-full">
+                        <Button variant="outline" className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white">
+                          <ExternalLink className="w-4 h-4" />
+                          {guide.buttonText}
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button variant="outline" className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white">
+                        <ExternalLink className="w-4 h-4" />
+                        {guide.buttonText}
+                      </Button>
+                    )}
                   </div>
-                  <h3 className="font-bold text-lg">Exit Process Explained</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-5 flex-grow">How land and cash exits work, including timelines and procedures</p>
-                <Button variant="outline" className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white">
-                  <ExternalLink className="w-4 h-4" />
-                  View Process
-                </Button>
-              </div>
-
-              <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow p-6 border border-gray-100 flex flex-col">
-                <div className="flex items-center mb-4">
-                  <div className="bg-estates-primary/10 p-3 rounded-lg mr-3">
-                    <HelpCircle className="h-6 w-6 text-estates-primary" />
-                  </div>
-                  <h3 className="font-bold text-lg">FAQs Section</h3>
-                </div>
-                <p className="text-gray-600 text-sm mb-5 flex-grow">Direct links to common questions investors ask</p>
-                <Link href="/faqs" className="w-full">
-                  <Button variant="outline" className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white">
-                    <ExternalLink className="w-4 h-4" />
-                    View FAQs
-                  </Button>
-                </Link>
-              </div>
+                ))
+              )}
             </div>
           </section>
 

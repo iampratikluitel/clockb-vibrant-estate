@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { DownloadCloud, Eye, FileText } from "lucide-react";
 import {
@@ -9,14 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface ReportData {
-  id: number;
+  id: string;
   title: string;
   date: string;
   type: string;
   size: string;
   status: string;
+  fileUrl: string;
 }
 
 interface ReportTableProps {
@@ -24,6 +26,8 @@ interface ReportTableProps {
 }
 
 const ReportTable = ({ data }: ReportTableProps) => {
+  const [loading, setLoading] = useState<{ [key: string]: boolean }>({});
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'completed':
@@ -46,6 +50,41 @@ const ReportTable = ({ data }: ReportTableProps) => {
 
   const getFileIcon = () => {
     return <FileText className="h-4 w-4" />;
+  };
+
+  const handleAction = async (fileUrl: string, action: 'view' | 'download') => {
+    try {
+      if (!fileUrl) {
+        toast.error('No file available for this report');
+        return;
+      }
+
+      setLoading(prev => ({ ...prev, [fileUrl]: true }));
+      
+      const response = await fetch(`/api/resources/download?filename=${encodeURIComponent(fileUrl)}`);
+      if (!response.ok) {
+        throw new Error('Failed to get file URL');
+      }
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      
+      if (action === 'view') {
+        window.open(url, '_blank');
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileUrl.split('/').pop() || 'document';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    } catch (error) {
+      console.error('Error handling file action:', error);
+      toast.error('Failed to process file action');
+    } finally {
+      setLoading(prev => ({ ...prev, [fileUrl]: false }));
+    }
   };
 
   return (
@@ -80,11 +119,23 @@ const ReportTable = ({ data }: ReportTableProps) => {
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  <Button variant="outline" size="sm" className="h-8 px-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-8 px-2"
+                    onClick={() => handleAction(report.fileUrl, 'view')}
+                    disabled={loading[report.fileUrl]}
+                  >
                     <Eye className="h-4 w-4" />
                     <span className="sr-only">View</span>
                   </Button>
-                  <Button variant="outline" size="sm" className="h-8 px-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-8 px-2"
+                    onClick={() => handleAction(report.fileUrl, 'download')}
+                    disabled={loading[report.fileUrl]}
+                  >
                     <DownloadCloud className="h-4 w-4" />
                     <span className="sr-only">Download</span>
                   </Button>
