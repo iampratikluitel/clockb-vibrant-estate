@@ -31,10 +31,13 @@ export const adminConfigurationApi = createApi({
 
     getAdminConfigurationBrochure: builder.query<any, string>({
       query: () => `admin/configuration/brochure`,
-      providesTags: ["Admin Download Brochure Config"]
+      providesTags: ["Admin Download Brochure Config"],
     }),
 
-    AdminAddUpdateConfigurationBrochure: builder.mutation<{ message: string }, any>({
+    AdminAddUpdateConfigurationBrochure: builder.mutation<
+      { message: string },
+      any
+    >({
       query: ({ ...body }) => ({
         url: `admin/configuration/brochure`,
         method: "POST",
@@ -43,14 +46,20 @@ export const adminConfigurationApi = createApi({
       invalidatesTags: ["Admin Download Brochure Config"],
     }),
 
-    AdminDeleteBrochure: builder.mutation<{ message: string }, any>({
+    AdminDeleteBrochure: builder.mutation<
+      {
+        success: any;
+        message: string;
+      },
+      any
+    >({
       query: (id) => ({
         url: `admin/configuration?id=${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Admin Download Brochure Config"]
+      invalidatesTags: ["Admin Download Brochure Config"],
     }),
-    
+
     getAdminConfigFooter: builder.query<FOOTER, string>({
       query: () => `admin/configuration/footer`,
       providesTags: ["Admin Footer Config"],
@@ -103,7 +112,7 @@ export const {
   useAdminAddUpdateConfigurationBrochureMutation,
   useGetAdminConfigurationBrochureQuery,
   useAdminDeleteBrochureMutation,
-  
+
   useAdminAddUpdateFooterConfigMutation,
   useGetAdminConfigFooterQuery,
 

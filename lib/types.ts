@@ -26,6 +26,7 @@ export interface TESTIMONIALS {
 }
 
 export interface Brochure {
+  _id: string;
   brochure?: string;
   name: string;
   description: string;
@@ -61,10 +62,9 @@ export interface FAQ {
   _id: string;
   question: string;
   answer: string;
-  category: 
-  {
+  category: {
     name: string;
-  }
+  };
   categoryId: string;
 }
 
@@ -73,7 +73,6 @@ export interface FAQCATEGORY {
   name: string;
   faqCount?: number;
 }
-
 
 export interface NEWSINSIGHT {
   _id: string;
