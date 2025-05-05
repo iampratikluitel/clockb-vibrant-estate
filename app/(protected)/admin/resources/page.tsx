@@ -10,15 +10,15 @@ import LegalDocumentsAdmin from "./components/LegalDocumentsAdmin";
 import FaqsGuidesAdmin from "./components/FaqsGuidesAdmin";
 import DocumentsAdmin from "./components/DocumentsAdmin";
 import InvestmentDocsAdmin from "./components/InvestmentDocsAdmin";
-import InvestorKitAdmin from './components/InvestorKitAdmin';
+import InvestorKitAdmin from "./components/InvestorKitAdmin";
 
 export default function AdminResourcesPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-8">Manage Resources</h1>
       
-      <Tabs defaultValue="investor-kit" className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+      <Tabs defaultValue="investor-kit" className="space-y-6">
+        <TabsList>
           <TabsTrigger value="investor-kit">Investor Kit</TabsTrigger>
           <TabsTrigger value="investment-docs">Investment Documents</TabsTrigger>
           <TabsTrigger value="project-updates">Project Updates</TabsTrigger>
@@ -53,4 +53,4 @@ export default function AdminResourcesPage() {
       </Tabs>
     </div>
   );
-}
+} 
