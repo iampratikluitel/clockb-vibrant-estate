@@ -216,7 +216,16 @@ model ProjectJourney {
 }
 
 model Report {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  date        DateTime @db.Date
+  type        String
+  size        String
+  status      String
+  category    String
+  fileUrl     String?
+  createdAt   DateTime @db.Date
+  updatedAt   DateTime @db.Date
 }
 
 model TeamMember {

@@ -100,12 +100,13 @@ export default function ProjectUpdatesAdmin() {
     setEditingReport(report);
     setFormData({
       title: report.title,
-      date: report.date,
+      date: new Date(report.date).toISOString().split('T')[0],
       type: report.type,
       size: report.size,
       status: report.status,
       category: report.category,
     });
+    setSelectedFile(null);
     setIsDialogOpen(true);
   };
 
@@ -184,9 +185,12 @@ export default function ProjectUpdatesAdmin() {
     e.preventDefault();
     try {
       let fileUrl = editingReport?.fileUrl;
+      let size = formData.size;
 
       if (selectedFile) {
         fileUrl = await uploadFile(selectedFile);
+        // Don't update size if we're not uploading a new file
+        size = `${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`;
       }
 
       const url = editingReport 
@@ -203,6 +207,7 @@ export default function ProjectUpdatesAdmin() {
         },
         body: JSON.stringify({
           ...formData,
+          size, // Use the preserved or new size
           category: selectedTab,
           fileUrl,
           createdAt: now,
@@ -419,6 +424,16 @@ export default function ProjectUpdatesAdmin() {
                     <SelectItem value="PPTX">PPTX</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <Label htmlFor="size">File Size</Label>
+                <Input
+                  id="size"
+                  value={formData.size}
+                  readOnly
+                  placeholder="File size will be calculated automatically"
+                  className="bg-gray-50"
+                />
               </div>
               <div>
                 <Label htmlFor="status">Status</Label>

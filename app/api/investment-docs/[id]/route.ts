@@ -13,7 +13,7 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { icon, title, description, buttonText, fileUrl } = body;
+    const { icon, title, description, buttonText, fileUrl, actionType } = body;
 
     if (!icon || !title || !description || !buttonText) {
       return NextResponse.json(
@@ -22,7 +22,7 @@ export async function PUT(
       );
     }
 
-    const doc = await prisma.InvestmentDocs.update({
+    const doc = await prisma.investmentDoc.update({
       where: {
         id: params.id
       },
@@ -56,7 +56,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await prisma.InvestmentDocs.delete({
+    await prisma.investmentDoc.delete({
       where: {
         id: params.id
       }
