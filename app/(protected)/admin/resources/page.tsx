@@ -11,6 +11,8 @@ import FaqsGuidesAdmin from "./components/FaqsGuidesAdmin";
 import DocumentsAdmin from "./components/DocumentsAdmin";
 import InvestmentDocsAdmin from "./components/InvestmentDocsAdmin";
 import InvestorKitAdmin from "./components/InvestorKitAdmin";
+import InvestorRelationsAdmin from "./components/InvestorRelationsAdmin";
+import SiteVisitsAdmin from "./components/SiteVisitsAdmin";
 
 export default function AdminResourcesPage() {
   return (
@@ -24,7 +26,9 @@ export default function AdminResourcesPage() {
           <TabsTrigger value="project-updates">Project Updates</TabsTrigger>
           <TabsTrigger value="legal-docs">Legal Documents</TabsTrigger>
           <TabsTrigger value="faqs">FAQs & Guides</TabsTrigger>
+          <TabsTrigger value="contact-details">Contact Details</TabsTrigger>
           <TabsTrigger value="documents">Documents</TabsTrigger>
+          <TabsTrigger value="site-visits">Site Visits</TabsTrigger>
         </TabsList>
         
         <TabsContent value="investor-kit">
@@ -47,8 +51,16 @@ export default function AdminResourcesPage() {
           <FaqsGuidesAdmin />
         </TabsContent>
         
+        <TabsContent value="contact-details">
+          <InvestorRelationsAdmin />
+        </TabsContent>
+        
         <TabsContent value="documents">
           <DocumentsAdmin />
+        </TabsContent>
+        
+        <TabsContent value="site-visits">
+          <SiteVisitsAdmin />
         </TabsContent>
       </Tabs>
     </div>

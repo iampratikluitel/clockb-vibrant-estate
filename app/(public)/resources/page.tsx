@@ -100,6 +100,26 @@ interface LegalDocument {
   actionType: 'download' | 'view';
 }
 
+interface ContactDetail {
+  id: string;
+  type: 'phone' | 'email';
+  value: string;
+}
+
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  registrationLink: string;
+}
+
+interface InvestorRelations {
+  id: string;
+  contactDetails: ContactDetail[];
+  events: Event[];
+}
+
 const Resources = () => {
   const [nameInput, setNameInput] = useState("");
   const [emailInput, setEmailInput] = useState("");
@@ -140,6 +160,7 @@ const Resources = () => {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDocumentDialogOpen, setIsDocumentDialogOpen] = useState(false);
   const [selectedDoc, setSelectedDoc] = useState<LegalDocument | null>(null);
+  const [investorRelations, setInvestorRelations] = useState<InvestorRelations | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -222,6 +243,22 @@ const Resources = () => {
     fetchInvestorKit();
   }, []);
 
+  useEffect(() => {
+    const fetchInvestorRelations = async () => {
+      try {
+        const response = await fetch('/api/investor-relations');
+        if (response.ok) {
+          const data = await response.json();
+          setInvestorRelations(data);
+        }
+      } catch (error) {
+        console.error('Error fetching investor relations:', error);
+      }
+    };
+
+    fetchInvestorRelations();
+  }, []);
+
   // Filter reports based on selected tab
   const filteredReports = reports.filter(report => {
     switch (selectedTab) {
@@ -236,26 +273,35 @@ const Resources = () => {
     }
   });
 
-  const handleSiteVisitSubmit = (e: React.FormEvent) => {
+  const handleSiteVisitSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would submit the form data to a backend
-    console.log("Site visit form submitted:", {
-      name: nameInput,
-      email: emailInput,
-      phone: phoneInput,
-      date: dateInput,
-      message: messageInput
-    });
-    
-    // Reset form
-    setNameInput("");
-    setEmailInput("");
-    setPhoneInput("");
-    setDateInput("");
-    setMessageInput("");
-    
-    // Show success message (in a real app, use a toast notification)
-    alert("Your site visit request has been submitted. We'll contact you shortly to confirm.");
+    try {
+      const response = await fetch('/api/site-visits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: nameInput,
+          email: emailInput,
+          phone: phoneInput,
+          preferredDate: dateInput,
+          message: messageInput,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to submit site visit request');
+
+      toast.success('Site visit request submitted successfully');
+      setNameInput('');
+      setEmailInput('');
+      setPhoneInput('');
+      setDateInput('');
+      setMessageInput('');
+    } catch (error) {
+      console.error('Error submitting site visit request:', error);
+      toast.error('Failed to submit site visit request');
+    }
   };
 
   const handleFileUpload = async (file: File, category: string) => {
@@ -559,9 +605,9 @@ const Resources = () => {
                     </div>
                     <div>
                       <h4 className="font-semibold text-lg">Contact Details</h4>
-                      <p className="text-gray-600 mt-1">+977-9851079636</p>
-                      <p className="text-gray-600">+977-9843260542</p>
-                      <p className="text-gray-600 mt-1">Info@projestates.com</p>
+                      {investorRelations?.contactDetails.map((contact) => (
+                        <p key={contact.id} className="text-gray-600 mt-1">{contact.value}</p>
+                      ))}
                     </div>
                   </div>
                   
@@ -572,20 +618,17 @@ const Resources = () => {
                     <div>
                       <h4 className="font-semibold text-lg">Upcoming Events</h4>
                       <div className="mt-2 space-y-3">
-                        <div className="bg-estates-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
-                          <p className="font-medium">Investor Webinar</p>
-                          <p className="text-sm text-gray-600">June 15, 2025 • 2:00 PM NPT</p>
-                          <Button variant="link" className="text-estates-primary p-0 mt-1 flex items-center gap-1 text-sm">
-                            Register Now <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <div className="bg-estates-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
-                          <p className="font-medium">Site Visit Day</p>
-                          <p className="text-sm text-gray-600">July 5, 2025 • 10:00 AM NPT</p>
-                          <Button variant="link" className="text-estates-primary p-0 mt-1 flex items-center gap-1 text-sm">
-                            Reserve Spot <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        {investorRelations?.events.map((event) => (
+                          <div key={event.id} className="bg-estates-gray-100 rounded-lg p-3 hover:shadow-md transition-shadow">
+                            <p className="font-medium">{event.title}</p>
+                            <p className="text-sm text-gray-600">{event.date} • {event.time} NPT</p>
+                            <Button variant="link" className="text-estates-primary p-0 mt-1 flex items-center gap-1 text-sm" asChild>
+                              <a href={event.registrationLink} target="_blank" rel="noopener noreferrer">
+                                Register Now <ChevronRight className="h-4 w-4" />
+                              </a>
+                            </Button>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
