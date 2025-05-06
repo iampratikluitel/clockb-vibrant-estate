@@ -129,6 +129,7 @@ export interface PROJECTCATEGORY {
 }
 
 export interface PROJECTJOURNEY {
+  _id: string;
   card1title: string;
   card1description: string;
   card1Date: string;

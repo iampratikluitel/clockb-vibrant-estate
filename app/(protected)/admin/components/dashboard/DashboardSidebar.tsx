@@ -52,11 +52,11 @@ const DashboardSidebar = () => {
       path: "/admin/projectdescription",
       icon: FileText,
     },
-    {
-      name: "Investor Relations",
-      path: "/admin/investor-relations",
-      icon: Users,
-    },
+    // {
+    //   name: "Investor Relations",
+    //   path: "/admin/investor-relations",
+    //   icon: Users,
+    // },
     { 
       name: "FAQs", 
       path: "/admin/faqs", 
