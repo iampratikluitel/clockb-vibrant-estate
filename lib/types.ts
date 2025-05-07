@@ -162,6 +162,12 @@ export interface PROJECTJOURNEY {
   card5Date: string;
 }
 
+export interface NEWSLETTER {
+  _id: string;
+  email: string;
+  subscribedDate: Date;
+}
+
 export interface DEVELOPMENTPHASE {
   _id: string;
   card1title: string;

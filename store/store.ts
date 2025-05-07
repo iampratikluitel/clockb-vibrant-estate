@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { adminConfigurationApi } from "./api/Admin/adminConfiguration";
-import { setupListeners } from "@reduxjs/toolkit/query"; 
-import { TypedUseSelectorHook, useSelector } from "react-redux"; 
+import { setupListeners } from "@reduxjs/toolkit/query";
+import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { publicConfigurationApi } from "./api/Public/publicConfiguration";
 import { publicFunctionsApi } from "./api/Public/publicFunctions";
 import { adminAboutApi } from "./api/Admin/adminAboutPage";
@@ -19,6 +19,7 @@ import { adminContactApi } from "./api/Admin/adminContact";
 import { publicContactApi } from "./api/Public/publicContact";
 import { adminDevelopementPhaseApi } from "./api/Admin/adminDevelopmentPhase";
 import { publicDevelopementPhaseApi } from "./api/Public/publicDevelopmentPhase";
+import { adminMiscsApi } from "./api/Admin/adminMisc";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +32,7 @@ export const store = configureStore({
     [adminProjectApi.reducerPath]: adminProjectApi.reducer,
     [adminDevelopementPhaseApi.reducerPath]: adminDevelopementPhaseApi.reducer,
     [adminContactApi.reducerPath]: adminContactApi.reducer,
+    [adminMiscsApi.reducerPath]: adminMiscsApi.reducer,
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
@@ -39,31 +41,34 @@ export const store = configureStore({
     [publicNewsInsightsApi.reducerPath]: publicNewsInsightsApi.reducer,
     [publicProjectApi.reducerPath]: publicProjectApi.reducer,
     [publicFaqsApi.reducerPath]: publicFaqsApi.reducer,
-    [publicDevelopementPhaseApi.reducerPath]: publicDevelopementPhaseApi.reducer,
+    [publicDevelopementPhaseApi.reducerPath]:
+      publicDevelopementPhaseApi.reducer,
     [publicContactApi.reducerPath]: publicContactApi.reducer,
   },
   devTools: true,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
-    adminConfigurationApi.middleware,
-    adminAboutApi.middleware,
-    adminFaqApi.middleware,
-    adminTestimonialsApi.middleware,
-    adminProjectApi.middleware,
-    adminTermsAndConditionsApi.middleware,
-    adminNewsInsightsApi.middleware,
-    adminContactApi.middleware,
-    adminDevelopementPhaseApi.middleware,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      adminConfigurationApi.middleware,
+      adminAboutApi.middleware,
+      adminFaqApi.middleware,
+      adminTestimonialsApi.middleware,
+      adminProjectApi.middleware,
+      adminTermsAndConditionsApi.middleware,
+      adminNewsInsightsApi.middleware,
+      adminContactApi.middleware,
+      adminDevelopementPhaseApi.middleware,
+      adminMiscsApi.middleware,
 
-    publicConfigurationApi.middleware,
-    publicFunctionsApi.middleware,
-    publicAboutApi.middleware,
-    publicTestimonailsApi.middleware,
-    publicNewsInsightsApi.middleware,
-    publicProjectApi.middleware,
-    publicFaqsApi.middleware,
-    publicContactApi.middleware,
-    publicDevelopementPhaseApi.middleware,
-  ),
+      publicConfigurationApi.middleware,
+      publicFunctionsApi.middleware,
+      publicAboutApi.middleware,
+      publicTestimonailsApi.middleware,
+      publicNewsInsightsApi.middleware,
+      publicProjectApi.middleware,
+      publicFaqsApi.middleware,
+      publicContactApi.middleware,
+      publicDevelopementPhaseApi.middleware
+    ),
 });
 
 setupListeners(store.dispatch);

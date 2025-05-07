@@ -21,6 +21,7 @@ import {
   Mail,
   Settings,
   User,
+  NewspaperIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -75,6 +76,11 @@ const DashboardSidebar = () => {
       name: "Resources", 
       path: "/admin/resources", 
       icon: FolderOpen 
+    },
+    { 
+      name: "NewsLetter", 
+      path: "/admin/newsletter", 
+      icon: NewspaperIcon
     },
   ];
 
