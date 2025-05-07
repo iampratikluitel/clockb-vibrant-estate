@@ -15,6 +15,10 @@ import { publicNewsInsightsApi } from "./api/Public/publicNewsInsight";
 import { adminProjectApi } from "./api/Admin/adminProject";
 import { publicProjectApi } from "./api/Public/publicProject";
 import { publicFaqsApi } from "./api/Public/publicFaq";
+import { adminContactApi } from "./api/Admin/adminContact";
+import { publicContactApi } from "./api/Public/publicContact";
+import { adminDevelopementPhaseApi } from "./api/Admin/adminDevelopmentPhase";
+import { publicDevelopementPhaseApi } from "./api/Public/publicDevelopmentPhase";
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +29,8 @@ export const store = configureStore({
     [adminTermsAndConditionsApi.reducerPath]: adminTermsAndConditionsApi.reducer,
     [adminNewsInsightsApi.reducerPath]: adminNewsInsightsApi.reducer,
     [adminProjectApi.reducerPath]: adminProjectApi.reducer,
+    [adminDevelopementPhaseApi.reducerPath]: adminDevelopementPhaseApi.reducer,
+    [adminContactApi.reducerPath]: adminContactApi.reducer,
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
@@ -33,6 +39,8 @@ export const store = configureStore({
     [publicNewsInsightsApi.reducerPath]: publicNewsInsightsApi.reducer,
     [publicProjectApi.reducerPath]: publicProjectApi.reducer,
     [publicFaqsApi.reducerPath]: publicFaqsApi.reducer,
+    [publicDevelopementPhaseApi.reducerPath]: publicDevelopementPhaseApi.reducer,
+    [publicContactApi.reducerPath]: publicContactApi.reducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
@@ -43,6 +51,8 @@ export const store = configureStore({
     adminProjectApi.middleware,
     adminTermsAndConditionsApi.middleware,
     adminNewsInsightsApi.middleware,
+    adminContactApi.middleware,
+    adminDevelopementPhaseApi.middleware,
 
     publicConfigurationApi.middleware,
     publicFunctionsApi.middleware,
@@ -51,6 +61,8 @@ export const store = configureStore({
     publicNewsInsightsApi.middleware,
     publicProjectApi.middleware,
     publicFaqsApi.middleware,
+    publicContactApi.middleware,
+    publicDevelopementPhaseApi.middleware,
   ),
 });
 

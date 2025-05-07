@@ -46,17 +46,21 @@ const DashboardSidebar = () => {
       path: "/admin/testimonial", 
       icon: User 
     },
-
     {
-      name: "Project Description",
+      name: "Upcomming Projects",
       path: "/admin/projectdescription",
       icon: FileText,
     },
-    // {
-    //   name: "Investor Relations",
-    //   path: "/admin/investor-relations",
-    //   icon: Users,
-    // },
+    {
+      name: "Development Phase",
+      path: "/admin/phases",
+      icon: FileText,
+    },
+    {
+      name: "Appointment",
+      path: "/admin/appointment",
+      icon: Users,
+    },
     { 
       name: "FAQs", 
       path: "/admin/faqs", 

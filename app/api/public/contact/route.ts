@@ -1,25 +1,42 @@
-import { NextResponse } from "next/server";
-import Contact from "@/model/contact";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDb } from "@/lib/mongodb";
+import Contact from "@/model/contact";
 
-export async function POST(request: Request) {
+export const dynamic = "force-dynamic";
+
+export const POST = async (request: NextRequest) => {
+  console.log("Running POST request: Public Contact");
   try {
-    await connectDb();
-    console.log("Contact api mongodb connected")
-    const body = await request.json();
-    console.log("Request Body:", body);
+    const data = await request.json();
+    if (!data.name || !data.email) {
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 }
+      );
+    }
 
-    const newContact = new Contact(body);
-    await newContact.save();
+    await connectDb();
+    const existingDoc = await Contact.findOne({ _id: data._id });
+    if (existingDoc) {
+      await existingDoc.updateOne(data);
+      return NextResponse.json(
+        { message: "Contact Updated", updatedContact: existingDoc },
+        { status: 200 }
+      );
+    }
+
+    const newDoc = new Contact({ ...data });
+    await newDoc.save();
+
     return NextResponse.json(
-      { success: true, data: newContact },
+      { message: "Thank You. We have received your Contact !!" },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating Contact:", error);
+    console.error("Error handling POST request:", error);
     return NextResponse.json(
-      { error: "Failed to create Contact", details: (error as Error).message },
+      { error: "Invalid request body or server error" },
       { status: 500 }
     );
   }
-}
+};

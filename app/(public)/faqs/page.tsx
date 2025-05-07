@@ -15,6 +15,8 @@ import {
   useGetPublicFaqCategoryQuery,
   useGetPublicFaqQuery,
 } from "@/store/api/Public/publicFaq";
+import Link from "next/link";
+import { paths } from "@/lib/paths";
 
 const Faqs = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -190,14 +192,14 @@ const Faqs = () => {
             inquiries you might have.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a
-              href="mailto:info@projestates.com"
+            <Link
+              href={paths.public.contact}
               className="inline-flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl"
             >
               Contact Support
-            </a>
+            </Link>
             <a
-              href="tel:+9779851079636"
+              href="tel:+9779851086249"
               className="inline-flex items-center bg-white border border-estates-primary text-estates-primary hover:bg-estates-primary/10 font-semibold px-6 py-3 rounded-lg transition-all duration-300"
             >
               Call Us
@@ -205,7 +207,6 @@ const Faqs = () => {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

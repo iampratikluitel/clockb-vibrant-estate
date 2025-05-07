@@ -31,7 +31,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Contact } from "@/lib/types";
+import { APPOINTMENT, Contact } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
@@ -44,11 +44,13 @@ import {
 import { convertToHumanReadable } from "@/lib/helper";
 import { toast } from "sonner";
 import {
+  useDeleteMultipleAppointmentAdminMutation,
   useDeleteMultipleContactAdminMutation,
+  useGetAllAdminAppointmentQuery,
   useGetAllAdminContactQuery,
 } from "@/store/api/Admin/adminContact";
 
-const ContactTable = () => {
+const AppointmentTable = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -56,8 +58,8 @@ const ContactTable = () => {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [deleteMultiple] = useDeleteMultipleContactAdminMutation();
-  const { data: Data, isLoading: Loading } = useGetAllAdminContactQuery("");
+  const [deleteMultiple] = useDeleteMultipleAppointmentAdminMutation();
+  const { data: Data, isLoading: Loading } = useGetAllAdminAppointmentQuery("");
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
@@ -76,8 +78,8 @@ const ContactTable = () => {
     );
   };
 
-  const data: Contact[] = Data ?? [];
-  const columns: ColumnDef<Contact>[] = [
+  const data: APPOINTMENT[] = Data ?? [];
+  const columns: ColumnDef<APPOINTMENT>[] = [
     {
       id: "_id",
       header: ({ table }) => (
@@ -111,9 +113,9 @@ const ContactTable = () => {
       cell: ({ row }) => <div>{row.getValue("email")}</div>,
     },
     {
-      accessorKey: "subject",
-      header: "Subject",
-      cell: ({ row }) => <div>{row.getValue("subject")}</div>,
+      accessorKey: "phone",
+      header: "Phone",
+      cell: ({ row }) => <div>{row.getValue("phone")}</div>,
     },
     {
       accessorKey: "date",
@@ -125,13 +127,22 @@ const ContactTable = () => {
       ),
     },
     {
-      accessorKey: "message",
-      header: "Message",
+      accessorKey: "time",
+      header: "time",
+      cell: ({ row }) => (
+        <div className="capitalize">
+          {convertToHumanReadable(row.getValue("time"))}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "note",
+      header: "note",
       cell: ({ row }) => (
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setViewedMessage(row.getValue("message"))}
+          onClick={() => setViewedMessage(row.getValue("note"))}
         >
           View
         </Button>
@@ -349,4 +360,4 @@ const ContactTable = () => {
   );
 };
 
-export default ContactTable;
+export default AppointmentTable;

@@ -56,6 +56,17 @@ export interface Contact {
   email: string;
   subject: string;
   message: string;
+  date: string;
+}
+
+export interface APPOINTMENT {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  date: string;
+  time: string;
+  note: string;
 }
 
 export interface FAQ {
@@ -149,6 +160,21 @@ export interface PROJECTJOURNEY {
   card5title: string;
   card5description: string;
   card5Date: string;
+}
+
+export interface DEVELOPMENTPHASE {
+  _id: string;
+  card1title: string;
+  card1description: string;
+  card1Date: string;
+
+  card2title: string;
+  card2description: string;
+  card2Date: string;
+
+  card3title: string;
+  card3description: string;
+  card3Date: string;
 }
 
 export interface ApiResponse {
