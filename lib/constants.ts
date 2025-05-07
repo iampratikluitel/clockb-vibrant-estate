@@ -1,4 +1,4 @@
-export const MINIOURL = "https://uploads.clockb.io/projectestate/"
+export const MINIOURL = "http://193.203.161.79:9001/"
 export const BUCKET_NAME = "projectestate";
 export const DOMAIN =
   process.env.NODE_ENV == "production"
