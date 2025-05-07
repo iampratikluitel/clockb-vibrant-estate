@@ -20,6 +20,18 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Project Estate",
   description: "Welcome to ProjectEstate",
+  openGraph: {
+    title: "Project Estate",
+    description: "Welcome to ProjectEstate",
+    images: [
+      {
+        url: "/logo/project-estate.png",
+        width: 120,
+        height: 630,
+        alt: "Project Estate Logo",
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({

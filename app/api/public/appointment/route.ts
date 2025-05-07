@@ -1,27 +1,42 @@
-import { NextResponse } from "next/server";
-import Appointment from "@/model/appoinment";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDb } from "@/lib/mongodb";
+import Appointment from "@/model/appoinment";
 
-export async function POST(request: Request) {
+export const dynamic = "force-dynamic";
+
+export const POST = async (request: NextRequest) => {
+  console.log("Running POST request: Public Appointment");
   try {
-    await connectDb();
-    const body = await request.json();
-    console.log("Request Body:", body);
+    const data = await request.json();
+    if (!data.name || !data.email) {
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 }
+      );
+    }
 
-    const newAppointment = new Appointment(body);
-    await newAppointment.save();
+    await connectDb();
+    const existingDoc = await Appointment.findOne({ _id: data._id });
+    if (existingDoc) {
+      await existingDoc.updateOne(data);
+      return NextResponse.json(
+        { message: "Appointment Updated", updatedAppointment: existingDoc },
+        { status: 200 }
+      );
+    }
+
+    const newDoc = new Appointment({ ...data });
+    await newDoc.save();
+
     return NextResponse.json(
-      { success: true, data: newAppointment },
+      { message: "Thank You. We have received your Appointment !!" },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error creating appointment:", error);
+    console.error("Error handling POST request:", error);
     return NextResponse.json(
-      {
-        error: "Failed to create appointment",
-        details: (error as Error).message,
-      },
+      { error: "Invalid request body or server error" },
       { status: 500 }
     );
   }
-}
+};

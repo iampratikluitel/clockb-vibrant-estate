@@ -197,12 +197,12 @@ const FooterForm = ({ ConfigData }: props) => {
                 name="socialHandles.twitter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Twitter Link</FormLabel>
+                    <FormLabel>Instagram Link</FormLabel>
                     <FormControl>
                       <Input
                         className=""
                         type="url"
-                        placeholder="Eg: https://www.x.com"
+                        placeholder="Eg: https://www.instagram.com"
                         {...field}
                       />
                     </FormControl>

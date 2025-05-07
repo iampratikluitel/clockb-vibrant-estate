@@ -77,7 +77,7 @@ const Contact = () => {
     setIsAppointmentSubmitting(true);
     
     try {
-      const response = await fetch(`/api/appointment`, {
+      const response = await fetch(`/api/public/appointment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

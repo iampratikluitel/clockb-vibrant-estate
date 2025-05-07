@@ -1,20 +1,14 @@
-import { MINIOURL } from '@/lib/constants';
-import { uploadToMinIO } from '@/lib/helper';
-import { Brochure } from '@/lib/types';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { MINIOURL } from "@/lib/constants";
+import { uploadToMinIO } from "@/lib/helper";
+import { Brochure } from "@/lib/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const FormSchema = z.object({
   brochure: z.any(),
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  description: z.string().min(2, {
-    message: "Description must be at least 2 characters.",
-  }),
 });
 
 interface Props {
@@ -23,115 +17,157 @@ interface Props {
 
 export default function BrochureConfigForm({ ConfigData }: Props) {
   const [file, setFile] = useState<File | null>(null);
+  const [existingId, setExistingId] = useState<string | undefined>(
+    ConfigData?._id
+  );
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      brochure: ConfigData?.brochure ? `${MINIOURL}${ConfigData?.brochure}` : null,
-      name: ConfigData?.name ?? "",
-      description: ConfigData?.description ?? "",
+      brochure: ConfigData?.brochure
+        ? `${MINIOURL}${ConfigData.brochure}`
+        : null,
     },
   });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files && event.target.files[0];
-    if (selectedFile && selectedFile.type === 'application/pdf') {
+    if (selectedFile && selectedFile.type === "application/pdf") {
       setFile(selectedFile);
     } else {
-      alert('Please select a valid PDF file');
+      toast.error("Please select a valid PDF file");
     }
   };
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const handleDelete = async () => {
+    if (!existingId) {
+      toast.error("No brochure to delete.");
+      return;
+    }
+
     try {
-      if (!file) {
-        toast.error("Please select a file");
+      setLoading(true);
+      const res = await fetch(
+        `/api/admin/configuration/brochure?id=${existingId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (res.ok) {
+        toast.success("Brochure deleted successfully");
+        setExistingId(undefined);
+        setFile(null);
+        form.reset();
+      } else {
+        toast.error("Failed to delete brochure");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error deleting brochure");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = async () => {
+    if (!file) {
+      toast.error("Please select a PDF file");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      let fileUrl = await uploadToMinIO(file, "BrochureConfig");
+
+      if (!fileUrl) {
+        toast.error("File upload failed. Please try again.");
         return;
       }
 
-      let fileUrl = null;
-
-      // If the brochure has changed, upload the new one
-      if (file.name !== ConfigData?.brochure?.split("/").pop()) {
-        fileUrl = await uploadToMinIO(file, "BrochureConfig");
-        if (!fileUrl) {
-          toast.error("File upload failed. Please try again.");
-          return;
-        }
-      } else {
-        fileUrl = ConfigData?.brochure;
-      }
-
-      // Prepare form data
-      const formData = {
+      const payload = {
         brochure: fileUrl,
-        name: data.name,
-        description: data.description,
+        _id: existingId,
       };
 
-      // Send request to the server
-      const response = await fetch('/api/admin/configuration/brochure', {
-        method: 'POST',
+      const res = await fetch("/api/admin/configuration/brochure", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
-      if (response.ok) {
-        toast.success('Brochure uploaded successfully!');
+      if (res.ok) {
+        const result = await res.json();
+        toast.success(
+          `Brochure ${existingId ? "updated" : "uploaded"} successfully`
+        );
+        setFile(null);
+        form.reset();
       } else {
-        toast.error('Failed to upload brochure');
+        toast.error("Failed to upload brochure");
       }
-    } catch (error) {
-      console.error('Error uploading brochure:', error);
-      toast.error('Error uploading brochure');
+    } catch (err) {
+      console.error(err);
+      toast.error("Error uploading brochure");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">Upload PDF File</h2>
-        
-        {/* Form Input for File */}
+        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
+          Upload PDF Brochure
+        </h2>
+
+        {/* File input */}
         <input
           type="file"
           accept="application/pdf"
           onChange={handleFileChange}
           className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg py-2 px-4 mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
-        
-        {file && (
+
+        {/* If brochure already exists, show download link */}
+        {ConfigData?.brochure && (
           <div className="mb-4">
-            <p className="text-gray-700 font-medium">Selected file: <span className="font-bold">{file.name}</span></p>
-            {/* Form Fields */}
-            <div className="mb-4">
-              <input
-                {...form.register("name")}
-                placeholder="Name"
-                className="w-full text-sm text-gray-700 border border-gray-300 rounded-lg py-2 px-4 mb-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-              <p className="text-sm text-red-500">{form.formState.errors.name?.message}</p>
-            </div>
-
-            <div className="mb-4">
-              <input
-                {...form.register("description")}
-                placeholder="Description"
-                className="w-full text-sm text-gray-700 border border-gray-300 rounded-lg py-2 px-4 mb-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              />
-              <p className="text-sm text-red-500">{form.formState.errors.description?.message}</p>
-            </div>
-
-            {/* Upload Button */}
-            <button
-              onClick={form.handleSubmit(onSubmit)}
-              className="w-full bg-blue-500 text-white py-2 rounded-lg mt-4 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            <a
+              href={`${MINIOURL}${ConfigData.brochure}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline text-sm"
             >
-              Upload
-            </button>
+              Download Current Brochure
+            </a>
           </div>
+        )}
+
+        {/* Upload button */}
+        <button
+          onClick={form.handleSubmit(onSubmit)}
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 rounded-lg mt-2 hover:bg-blue-600 disabled:opacity-50"
+        >
+          {loading
+            ? "Uploading..."
+            : existingId
+            ? "Update Brochure"
+            : "Upload Brochure"}
+        </button>
+
+        {/* Delete button */}
+        {existingId && (
+          <button
+            onClick={handleDelete}
+            disabled={loading}
+            className="w-full bg-red-500 text-white py-2 rounded-lg mt-4 hover:bg-red-600 disabled:opacity-50"
+          >
+            {loading ? "Deleting..." : "Delete Brochure"}
+          </button>
         )}
       </div>
     </div>

@@ -9,7 +9,6 @@ export const POST = async (request: NextRequest) => {
   console.log("Running POST request: BROCHURE");
 
   const user = await currentUser();
-  console.log("user", user);
   try {
     const data = await request.json();
     await connectDb();

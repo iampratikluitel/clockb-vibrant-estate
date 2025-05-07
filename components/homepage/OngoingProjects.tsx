@@ -37,7 +37,21 @@ const OngoingProjects = () => {
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
-                  <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
+                  {/* <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
+                    {project.category}
+                  </div> */}
+
+                  <div
+                    className={`absolute top-4 right-4 text-white text-sm font-medium py-1 px-3 rounded-full ${
+                      project.category === "completed"
+                        ? "bg-gray-700"
+                        : project.category === "upcomming"
+                        ? "bg-blue-700"
+                        : project.category === "ongoing"
+                        ? "bg-green-600"
+                        : "bg-gray-400"
+                    }`}
+                  >
                     {project.category}
                   </div>
                 </div>

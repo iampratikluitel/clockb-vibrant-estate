@@ -1,12 +1,17 @@
-import mongoose, { Schema } from "mongoose";
+import { model, Model, models, Schema } from "mongoose";
 
-const brochureSchema = new Schema({
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  brochure: { type: String, required: true }, 
-});
+const brochureSchema = new Schema(
+  {
+    brochure: { type: String, required: true },
+  },
+  { strict: false }
+);
 
-// Check if the model is already compiled and avoid recompiling
-const Brochure = mongoose.models.BrochureConfiguration || mongoose.model('BrochureConfiguration', brochureSchema);
+let Brochure: Model<any>;
+try {
+  Brochure = models.Brochure || model("Brochure", brochureSchema, "Brochure");
+} catch (error) {
+  Brochure = model("Brochure", brochureSchema, "Brochure");
+}
 
 export default Brochure;
