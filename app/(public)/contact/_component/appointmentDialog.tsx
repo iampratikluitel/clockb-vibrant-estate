@@ -22,12 +22,12 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover"; 
+} from "@/components/ui/popover";
 
 interface AppointmentDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-  }
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
 
 const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
   const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
@@ -71,7 +71,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       setAppointmentDate(undefined);
       setAppointmentTime("");
       setAppointmentNote("");
-      setIsAppointmentModalOpen(false);
+      onOpenChange(false);
     } catch (error) {
       console.error(error);
       toast("Error", {
@@ -84,10 +84,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onOpenChange={onOpenChange}
-      >
+      <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle className="text-2xl">
@@ -237,7 +234,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setIsAppointmentModalOpen(false)}
+                onClick={() => onOpenChange(false)}
               >
                 Cancel
               </Button>

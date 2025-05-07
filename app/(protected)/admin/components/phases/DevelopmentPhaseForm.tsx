@@ -25,7 +25,7 @@ import { useAdminAddUpdateDevelopementPhaseMutation } from "@/store/api/Admin/ad
 import DevelopmentPhaseSchema from "./DevelopmentSchema";
 
 interface Props {
-  ExistingDetail: DEVELOPMENTPHASE;
+  ExistingDetail?: DEVELOPMENTPHASE;
 }
 
 const formatDateForInput = (dateString: string | undefined): string => {

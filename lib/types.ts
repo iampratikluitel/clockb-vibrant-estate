@@ -50,6 +50,12 @@ export interface FOOTER {
   workingHours: string;
 }
 
+export interface NEWSLETTER {
+  _id: string;
+  email: string;
+  subscribedDate: Date;
+}
+
 export interface Contact {
   _id: string;
   name: string;
@@ -160,12 +166,6 @@ export interface PROJECTJOURNEY {
   card5title: string;
   card5description: string;
   card5Date: string;
-}
-
-export interface NEWSLETTER {
-  _id: string;
-  email: string;
-  subscribedDate: Date;
 }
 
 export interface DEVELOPMENTPHASE {

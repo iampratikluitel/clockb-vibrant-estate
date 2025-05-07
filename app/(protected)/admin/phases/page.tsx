@@ -16,7 +16,7 @@ const DevelopmentPhase = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <DevelopmentPhaseForm ExistingDetail={ConfigData} />
+        <DevelopmentPhaseForm ExistingDetail={ConfigData?.[0]} />
       )}
       </div>
   );

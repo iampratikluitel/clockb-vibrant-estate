@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/homepage/Header";
 import Footer from "@/components/homepage/Footer";
 import Link from "next/link";
+import PhaseWise from "./_components/PhaseWise";
 
 const ProjectDescription = () => {
   return (
@@ -42,7 +43,7 @@ const ProjectDescription = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="pt-28 pb-16 px-4 md:px-8 lg:px-16 bg-white">
+      <section className="pt-10 pb-16 px-4 md:px-8 lg:px-16 bg-white">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-estates-primary mb-4 animate-fade-in">
@@ -211,7 +212,7 @@ const ProjectDescription = () => {
       </section>
 
       {/* Phase-wise Development Breakdown */}
-      <section className="py-16 px-4 md:px-8 lg:px-16 bg-white">
+      {/* <section className="py-16 px-4 md:px-8 lg:px-16 bg-white">
         <div className="container mx-auto">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-estates-primary mb-4">
@@ -222,9 +223,7 @@ const ProjectDescription = () => {
               ensure sustainable growth and maximum value
             </p>
 
-            {/* Timeline */}
             <div className="relative pb-12">
-              {/* Timeline Line */}
               <div className="hidden md:block absolute left-0 right-0 top-1/2 h-1 bg-estates-gray-300 transform -translate-y-1/2"></div>
 
               <div className="grid md:grid-cols-3 gap-8">
@@ -263,7 +262,9 @@ const ProjectDescription = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+
+      <PhaseWise />
 
       {/* Investment Model & Benefits */}
       <section
@@ -536,85 +537,85 @@ const CoreValueCard = ({
 };
 
 // Timeline Phase Component
-const TimelinePhase = ({
-  phaseNumber,
-  period,
-  title,
-  description,
-  isActive = false,
-}: {
-  phaseNumber: string;
-  period: string;
-  title: string;
-  description: string;
-  isActive?: boolean;
-}) => {
-  return (
-    <div className={`relative ${isActive ? "z-10" : ""}`}>
-      {/* Timeline Point */}
-      <div className="hidden md:flex absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 items-center justify-center z-10">
-        <div
-          className={`
-          w-14 h-14 rounded-full flex items-center justify-center 
-          ${
-            isActive
-              ? "bg-estates-primary text-white shadow-lg"
-              : "bg-white border-2 border-estates-gray-300 text-estates-primary"
-          }
-        `}
-        >
-          <span className="text-xl font-bold">{phaseNumber}</span>
-        </div>
-      </div>
+// const TimelinePhase = ({
+//   phaseNumber,
+//   period,
+//   title,
+//   description,
+//   isActive = false,
+// }: {
+//   phaseNumber: string;
+//   period: string;
+//   title: string;
+//   description: string;
+//   isActive?: boolean;
+// }) => {
+//   return (
+//     <div className={`relative ${isActive ? "z-10" : ""}`}>
+//       {/* Timeline Point */}
+//       <div className="hidden md:flex absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 items-center justify-center z-10">
+//         <div
+//           className={`
+//           w-14 h-14 rounded-full flex items-center justify-center 
+//           ${
+//             isActive
+//               ? "bg-estates-primary text-white shadow-lg"
+//               : "bg-white border-2 border-estates-gray-300 text-estates-primary"
+//           }
+//         `}
+//         >
+//           <span className="text-xl font-bold">{phaseNumber}</span>
+//         </div>
+//       </div>
 
-      {/* Phase Card */}
-      <div
-        className={`
-        p-6 rounded-lg border-2 transition-all duration-300
-        ${
-          isActive
-            ? "bg-white border-estates-primary shadow-xl"
-            : "bg-estates-gray-100 border-estates-gray-300 hover:shadow-md"
-        }
-      `}
-      >
-        {/* Mobile Phase Number */}
-        <div className="md:hidden flex items-center gap-2 mb-3">
-          <div
-            className={`
-            w-8 h-8 rounded-full flex items-center justify-center 
-            ${
-              isActive
-                ? "bg-estates-primary text-white"
-                : "bg-white border border-estates-gray-300 text-estates-primary"
-            }
-          `}
-          >
-            <span className="text-sm font-bold">{phaseNumber}</span>
-          </div>
-          <span className="text-estates-primary font-semibold">
-            Phase {phaseNumber}
-          </span>
-        </div>
+//       {/* Phase Card */}
+//       <div
+//         className={`
+//         p-6 rounded-lg border-2 transition-all duration-300
+//         ${
+//           isActive
+//             ? "bg-white border-estates-primary shadow-xl"
+//             : "bg-estates-gray-100 border-estates-gray-300 hover:shadow-md"
+//         }
+//       `}
+//       >
+//         {/* Mobile Phase Number */}
+//         <div className="md:hidden flex items-center gap-2 mb-3">
+//           <div
+//             className={`
+//             w-8 h-8 rounded-full flex items-center justify-center 
+//             ${
+//               isActive
+//                 ? "bg-estates-primary text-white"
+//                 : "bg-white border border-estates-gray-300 text-estates-primary"
+//             }
+//           `}
+//           >
+//             <span className="text-sm font-bold">{phaseNumber}</span>
+//           </div>
+//           <span className="text-estates-primary font-semibold">
+//             Phase {phaseNumber}
+//           </span>
+//         </div>
 
-        <div className="flex items-center gap-2 mb-3 text-estates-primary font-semibold">
-          <Calendar className="w-4 h-4" />
-          <span>{period}</span>
-        </div>
+//         <div className="flex items-center gap-2 mb-3 text-estates-primary font-semibold">
+//           <Calendar className="w-4 h-4" />
+//           <span>{period}</span>
+//         </div>
 
-        <h3
-          className={`text-xl font-bold mb-3 ${
-            isActive ? "text-estates-primary" : "text-estates-secondary"
-          }`}
-        >
-          {title}
-        </h3>
+//         <h3
+//           className={`text-xl font-bold mb-3 ${
+//             isActive ? "text-estates-primary" : "text-estates-secondary"
+//           }`}
+//         >
+//           {title}
+//         </h3>
 
-        <p className="text-gray-600">{description}</p>
-      </div>
-    </div>
-  );
-};
+//         <p className="text-gray-600">{description}</p>
+//       </div>
+//     </div>
+//   );
+// };
 
 // Infrastructure Item Component
 const InfrastructureItem = ({

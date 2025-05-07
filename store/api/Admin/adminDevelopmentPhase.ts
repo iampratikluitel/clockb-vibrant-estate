@@ -1,12 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQuery } from "@/store/global";
+import { DEVELOPMENTPHASE } from "@/lib/types";
 
 export const adminDevelopementPhaseApi = createApi({
   reducerPath: "adminDevelopmentPhaseApi",
   tagTypes: ["Admin Development Phase"],
   baseQuery: baseQuery,
   endpoints: (builder) => ({
-    getAdminDevelopmentPhase: builder.query<any, string>({
+    getAdminDevelopmentPhase: builder.query<DEVELOPMENTPHASE[], string>({
       query: () => `admin/phases`,
       providesTags: ["Admin Development Phase"],
     }),
