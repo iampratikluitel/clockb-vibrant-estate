@@ -26,8 +26,12 @@ import Header from "@/components/homepage/Header";
 import Footer from "@/components/homepage/Footer";
 import Link from "next/link";
 import PhaseWise from "./_components/PhaseWise";
+import { useState } from "react";
+import AppointmentDialog from "../contact/_component/appointmentDialog";
 
 const ProjectDescription = () => {
+  const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-estates-gray-100">
       <Header />
@@ -499,7 +503,7 @@ const ProjectDescription = () => {
             </div> */}
 
             <div className="text-center">
-              <Button variant="cta" onClick={() => window.open("#", "_blank")}>
+              <Button variant="cta" onClick={() => setIsAppointmentOpen(true)}>
                 Schedule a Site Visit
                 <MapPin className="ml-2 w-5 h-5" />
               </Button>
@@ -509,6 +513,10 @@ const ProjectDescription = () => {
       </section>
 
       <Footer />
+      <AppointmentDialog
+        open={isAppointmentOpen}
+        onOpenChange={setIsAppointmentOpen}
+      />
     </div>
   );
 };
@@ -556,7 +564,7 @@ const CoreValueCard = ({
 //       <div className="hidden md:flex absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 items-center justify-center z-10">
 //         <div
 //           className={`
-//           w-14 h-14 rounded-full flex items-center justify-center 
+//           w-14 h-14 rounded-full flex items-center justify-center
 //           ${
 //             isActive
 //               ? "bg-estates-primary text-white shadow-lg"
@@ -583,7 +591,7 @@ const CoreValueCard = ({
 //         <div className="md:hidden flex items-center gap-2 mb-3">
 //           <div
 //             className={`
-//             w-8 h-8 rounded-full flex items-center justify-center 
+//             w-8 h-8 rounded-full flex items-center justify-center
 //             ${
 //               isActive
 //                 ? "bg-estates-primary text-white"

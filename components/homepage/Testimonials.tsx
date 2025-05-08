@@ -46,7 +46,7 @@ const Testimonials = () => {
                     
                     <div className="flex flex-col items-center">
                       <Avatar className="w-16 h-16 border-2 border-blue-600 mb-4">
-                        <AvatarImage src={`${MINIOURL}/${testimonial.image}`} alt={testimonial.name} />
+                        <AvatarImage src={`/api/resources/download?filename=${encodeURIComponent(testimonial.image)}`} alt={testimonial.name} />
                         <AvatarFallback className="bg-blue-600 text-white">
                           {testimonial.name?.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>

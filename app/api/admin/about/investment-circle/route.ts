@@ -12,30 +12,37 @@ export async function POST(request: Request) {
     await connectDb();
     const data = await request.json();
 
-    if (user) {
-      let responseMessage = "Added";
-      if (data?._id) {
-        const existingConfig = await InvestmentCircle.findById(data._id);
-        if (existingConfig) {
-          if (existingConfig.image && existingConfig.image !== data.image) {
-            await minioClient.removeObject(BUCKET_NAME, existingConfig.image);
-          }
-          await InvestmentCircle.findByIdAndUpdate(data._id, data, { new: true });
-          responseMessage = "Updated";
-        } else {
-          await new InvestmentCircle(data).save();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    let responseMessage = "Added";
+
+    if (data?._id) {
+      const existingConfig = await InvestmentCircle.findById(data._id);
+      if (existingConfig) {
+        if (existingConfig.image && existingConfig.image !== data.image) {
+          await minioClient.removeObject(BUCKET_NAME, existingConfig.image);
         }
+
+        await InvestmentCircle.findByIdAndUpdate(data._id, data, { new: true });
+        responseMessage = "Updated";
       } else {
         await new InvestmentCircle(data).save();
       }
-      return NextResponse.json({ message: responseMessage }, { status: 200 });
+    } else {
+      await new InvestmentCircle(data).save();
     }
+
+    return NextResponse.json({ message: responseMessage }, { status: 200 });
+
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
+
 
 export const GET = async () => {
   console.log("Running GET request: Get Footer");

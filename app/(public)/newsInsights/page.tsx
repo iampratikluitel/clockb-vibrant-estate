@@ -153,7 +153,7 @@ const NewsInsight = () => {
                   <div className="flex flex-col md:flex-row">
                     <div className="md:w-1/3 h-[200px] md:h-auto">
                       <img 
-                        src={`${MINIOURL}${newsinsight.image}`} 
+                        src={`/api/resources/download?filename=${encodeURIComponent(newsinsight.image)}`} 
                         alt={newsinsight.title} 
                         className="w-full h-full object-cover"
                       />

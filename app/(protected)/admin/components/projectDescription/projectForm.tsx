@@ -77,7 +77,7 @@ export default function AddProjectForm({
         ? new Date(ExistingDetail.addedDate)
         : undefined,
       image: ExistingDetail?.image
-        ? `${MINIOURL}${ExistingDetail.image}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail.image)}`
         : null,
       overview: ExistingDetail?.overview ?? "",
       categoryId: ExistingDetail?.categoryId ?? "",
@@ -124,7 +124,7 @@ export default function AddProjectForm({
         setLoading(true);
         let ImageUrl = null;
 
-        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+        if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.image, "project");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");

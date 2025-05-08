@@ -119,7 +119,7 @@ const TeamMemberView = () => {
                       role={member.role}
                       description={member.description}
                       icon={member.icon || User}
-                      image={member.image ? `${MINIOURL}/${member.image}` : "/placeholder.jpg"}
+                      image={member.image ? `/api/resources/download?filename=${encodeURIComponent(member.image)}` : "/placeholder.jpg"}
                     />
                   ))}
                 </div>
@@ -138,7 +138,7 @@ const TeamMemberView = () => {
               </button>
             </div>
           ) : (
-            <p className="text-center text-gray-500">No team members found.</p>
+            <p className="text-center text-gray-500"></p>
           )}
         </div>
       </div>

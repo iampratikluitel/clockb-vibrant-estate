@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-
 import {
   CaretSortIcon,
   ChevronDownIcon,
@@ -19,7 +18,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -45,7 +43,6 @@ import { toast } from "sonner";
 import { Member } from "@/lib/types";
 import { convertToHumanReadable } from "@/lib/helper";
 import AlertDialogBox from "../AlertDialogBox";
-import { MINIOURL } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
@@ -55,7 +52,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useAdminDeleteTeamMemberMutation, useDeleteMultipleTeamMemberAdminMutation, useGetAllAdminTeamMemberQuery} from "@/store/api/Admin/adminAboutPage";
+import {
+  useAdminDeleteTeamMemberMutation,
+  useDeleteMultipleTeamMemberAdminMutation,
+  useGetAllAdminTeamMemberQuery,
+} from "@/store/api/Admin/adminAboutPage";
 
 const TeamMemberTable = () => {
   const router = useRouter();
@@ -133,7 +134,9 @@ const TeamMemberTable = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-4">
           <img
-            src={`${MINIOURL}${row.original.image}`}
+            src={`/api/resources/download?filename=${encodeURIComponent(
+              row.original.image
+            )}`}
             alt=""
             className="rounded-full h-12 w-12 object-cover"
           />

@@ -1,6 +1,5 @@
 "use client";
 
-import { MINIOURL } from "@/lib/constants";
 import { Partner } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -54,25 +53,29 @@ export default function PlanningPartner() {
 
           {currentPartners.map((partner) => (
             <div
-              key={partner._id || partner.name} // key prop
+              key={partner?._id || partner?.name} // key prop
               className="bg-white rounded-xl shadow-md p-8 text-center"
             >
               <div className="flex justify-center mb-6">
-                <div className="bg-estates-primary/10 rounded-full p-0">
-                  <Image
-                    src={`${MINIOURL}/${partner.logo}`}
-                    alt={partner.name}
-                    width={96}
-                    height={96}
-                    className="h-24 w-24 object-cover rounded-full"
-                  />
-                </div>
+                {partner?.logo && (
+                  <div className="bg-estates-primary/10 rounded-full p-0">
+                    <Image
+                      src={`/api/resources/download?filename=${encodeURIComponent(
+                        partner.logo
+                      )}`}
+                      alt={partner.name}
+                      width={96}
+                      height={96}
+                    />
+                  </div>
+                )}
               </div>
               <h3 className="text-2xl font-bold text-estates-secondary mb-4">
-                {partner.name || "Innovate Urban Solutions"}
+                {partner?.name || "Managed by Investment Circle"}
               </h3>
               <p className="text-gray-600 max-w-3xl mx-auto">
-                {partner.description}
+                {partner?.description ||
+                  "The entire project is backed and managed by a structured Investment Circle, ensuring financial security, risk mitigation, and project success through expert governance."}
               </p>
             </div>
           ))}

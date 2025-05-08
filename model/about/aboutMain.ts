@@ -11,7 +11,7 @@ const AboutSchema = new Schema(
 let AboutModel: Model<any>;
 try {
   AboutModel =
-    models.AboutModel || model("AboutModle", AboutSchema, "AboutModel");
+    models.AboutModel || model("AboutModel", AboutSchema, "AboutModel");
 } catch (error) {
   AboutModel = model("AboutModel", AboutSchema, "AboutModel");
 }

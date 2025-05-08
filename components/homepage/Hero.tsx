@@ -5,11 +5,11 @@ import Link from "next/link";
 
 const handleDownloadBrochure = async () => {
   try {
-    const fetchData = await fetch("/api/public/configuration/brochure");
-    const data = await fetchData.json();
+    const res = await fetch("/api/public/configuration/brochure");
+    const data = await res.json();
 
     if (data?.brochureUrl) {
-      const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+      const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
       window.open(fileUrl, "_blank");
     } else {
       console.error("Brochure URL not found.");
@@ -18,6 +18,7 @@ const handleDownloadBrochure = async () => {
     console.error("Error fetching brochure:", error);
   }
 };
+
 
 const Hero = () => {
   return (
@@ -34,7 +35,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 mt-10 md:mt-0">
         <div className="max-w-3xl animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Transforming Real Estate into Value-Driven Investments

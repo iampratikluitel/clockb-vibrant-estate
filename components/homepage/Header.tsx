@@ -26,7 +26,7 @@ const Header = () => {
       const data = await fetchData.json();
 
       if (data?.brochureUrl) {
-        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
         // Open the file in a new tab
         window.open(fileUrl, "_blank");
       } else {

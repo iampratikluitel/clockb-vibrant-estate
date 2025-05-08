@@ -45,7 +45,6 @@ import { toast } from "sonner";
 import { Partner } from "@/lib/types";
 import { convertToHumanReadable } from "@/lib/helper";
 import AlertDialogBox from "../AlertDialogBox";
-import { MINIOURL } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
@@ -134,7 +133,7 @@ const PartnerTable = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-4">
           <img
-            src={`${MINIOURL}${row.original.logo}`}
+            src={`/api/resources/download?filename=${encodeURIComponent(row.original.logo)}`}
             alt=""
             className="rounded-full h-12 w-12 object-cover"
           />

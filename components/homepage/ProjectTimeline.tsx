@@ -297,7 +297,7 @@ const TimelineItem = ({
       >
         <div className="flex items-center gap-2 mb-3 text-estates-primary font-semibold">
           <Calendar className="size-4" />
-          <span>
+          {/* <span>
             {(() => {
               try {
                 return format(new Date(milestone.period), "MMM yyyy");
@@ -306,7 +306,9 @@ const TimelineItem = ({
                 return "Date Unknown";
               }
             })()}
-          </span>
+          </span> */}
+          <span>{milestone.period}</span>
+
         </div>
         <h3
           className={cn(
@@ -369,7 +371,7 @@ const MobileTimelineItem = ({
       </h3>
       <div className="flex items-center gap-2 mb-3 text-estates-primary font-medium text-sm">
         <Calendar className="size-3.5" />
-        <span>
+        {/* <span>
           {(() => {
             try {
               return format(new Date(milestone.period), "MMM yyyy");
@@ -378,7 +380,9 @@ const MobileTimelineItem = ({
               return "Date Unknown";
             }
           })()}
-        </span>
+        </span> */}
+        <span>{milestone.period}</span>
+
       </div>
       <p className="text-slate-600 text-sm leading-relaxed">
         {milestone.description}

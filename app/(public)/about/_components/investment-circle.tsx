@@ -1,4 +1,5 @@
-import { MINIOURL } from "@/lib/constants";
+"use client";
+
 import React, { useEffect, useState } from "react";
 
 interface Investment {
@@ -33,7 +34,7 @@ export default function InvestmentCircle() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10">
               <h2 className="text-3xl font-bold text-estates-primary mb-4">
-                {investmentCircle?.name || "Managed by Investment Circle"}
+                {investmentCircle?.name}
               </h2>
             </div>
 
@@ -44,7 +45,13 @@ export default function InvestmentCircle() {
                     <div className="absolute inset-0 bg-estates-primary/10 rounded-full transform -rotate-6"></div>
                     <div className="relative bg-estates-primary/20 rounded-full">
                       <img
-                        src={investmentCircle ? `${MINIOURL}/${investmentCircle.logo}` : ""}
+                        src={
+                          investmentCircle
+                            ? `/api/resources/download?filename=${encodeURIComponent(
+                                investmentCircle.logo
+                              )}`
+                            : ""
+                        }
                         alt=""
                         className="h-24 w-24 object-cover rounded-full"
                       />
@@ -54,26 +61,24 @@ export default function InvestmentCircle() {
                 </div>
                 <div className="md:w-2/3">
                   <p className="text-lg text-gray-700 mb-6">
-                    The entire project is backed and managed by a structured
-                    Investment Circle, ensuring financial security, risk
-                    mitigation, and project success through expert governance.
+                    {investmentCircle?.description}
                   </p>
 
                   {/* Dynamically generated points */}
-                {investmentCircle?.points && (
-                  <ul className="space-y-3">
-                    {investmentCircle.points.map((point, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="flex-shrink-0 mr-2 mt-1">
-                          <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">
-                            <span className="text-white text-xs">✓</span>
+                  {investmentCircle?.points && (
+                    <ul className="space-y-3">
+                      {investmentCircle?.points.map((point, index) => (
+                        <li key={index} className="flex items-start">
+                          <div className="flex-shrink-0 mr-2 mt-1">
+                            <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">
+                              <span className="text-white text-xs">✓</span>
+                            </div>
                           </div>
-                        </div>
-                        <span className="text-gray-700">{point}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                          <span className="text-gray-700">{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>

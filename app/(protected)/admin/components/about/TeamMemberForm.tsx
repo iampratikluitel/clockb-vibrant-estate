@@ -53,7 +53,7 @@ export default function TeamMemberForm({ type, ExistingDetail }: props) {
       description: ExistingDetail?.description ?? "",
       role: ExistingDetail?.role ?? "",
       image: ExistingDetail?.image
-        ? `${MINIOURL}${ExistingDetail?.image}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image)}`
         : null,
     },
   });
@@ -95,7 +95,7 @@ export default function TeamMemberForm({ type, ExistingDetail }: props) {
         setLoading(true);
         let ImageUrl = null;
 
-        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+        if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.image, "teamMember");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");

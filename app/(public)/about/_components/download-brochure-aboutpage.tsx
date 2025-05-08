@@ -12,7 +12,7 @@ export default function DownloadAboutBrochure() {
       if (data?.brochureUrl) {
         setBrochureUrl(data.brochureUrl);
 
-        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
         window.open(fileUrl, "_blank");
       } else {
         console.error("Brochure URL not found.");

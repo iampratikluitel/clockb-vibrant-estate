@@ -9,9 +9,16 @@ import Link from "next/link";
 import { paths } from "@/lib/paths";
 import { useGetPublicProjectQuery } from "@/store/api/Public/publicProject";
 
+// Category color mapping with index signature
+const categoryColorMap: { [key: string]: string } = {
+  completed: "bg-gray-700",
+  ongoing: "bg-green-600",
+  upcoming: "bg-blue-700", // fixing the typo here (was "upcomming")
+  default: "bg-gray-400",
+};
+
 const OngoingProjects = () => {
-  const { data: Projects, isLoading: ProjectLoading } =
-    useGetPublicProjectQuery("");
+  const { data: Projects, isLoading: ProjectLoading } = useGetPublicProjectQuery("");
 
   const displayedProjects = Projects?.slice(0, 3) || [];
 
@@ -33,23 +40,14 @@ const OngoingProjects = () => {
               >
                 <div className="relative h-60 overflow-hidden">
                   <img
-                    src={`${MINIOURL}${project.image}`}
+                    src={`/api/resources/download?filename=${encodeURIComponent(project.image)}`}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
-                  {/* <div className="absolute top-4 right-4 bg-estates-primary text-white text-sm font-medium py-1 px-3 rounded-full">
-                    {project.category}
-                  </div> */}
-
                   <div
                     className={`absolute top-4 right-4 text-white text-sm font-medium py-1 px-3 rounded-full ${
-                      project.category === "completed"
-                        ? "bg-gray-700"
-                        : project.category === "upcomming"
-                        ? "bg-blue-700"
-                        : project.category === "ongoing"
-                        ? "bg-green-600"
-                        : "bg-gray-400"
+                      categoryColorMap[project.category.toLowerCase()] ||
+                      categoryColorMap.default
                     }`}
                   >
                     {project.category}
