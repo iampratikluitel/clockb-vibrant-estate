@@ -1,5 +1,5 @@
 import { connectDb } from "@/lib/mongodb";
-import FAQs from "@/model/FAQs";
+import { FAQs } from "@/model/FAQs";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async(request: NextRequest)=>{

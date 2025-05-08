@@ -1,29 +1,27 @@
-import mongoose from "mongoose";
+import mongoose, { Model, models } from "mongoose";
+import { model } from "mongoose";
 
 const contactSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    subject: {
-      type: String,
-      required: true,
-    },
-    message: {
-      type: String,
-      required: false,
+    name: String,
+    email: String,
+    subject: String,
+    message: String,
+    Date: {
+      type: Date,
+      default: Date.now(),
     },
   },
   {
-    timestamps: true,
+    strict: false,
   }
 );
 
-const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
+let Contact: Model<any>;
+try{
+  Contact = models.Contact || model("Contact", contactSchema, "Contact")
+} catch (error) {
+  Contact = model("Contact", contactSchema, "Contact")
+}
 
 export default Contact;

@@ -1,6 +1,6 @@
 import { currentUser } from "@/lib/auth";
 import { connectDb } from "@/lib/mongodb";
-import FAQs from "@/model/FAQs";
+import { FAQs, FAQsCategory } from "@/model/FAQs";
 import { NextResponse, NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json({ message: "New FAQ Added" }, { status: 201 });
       }
     } else {
-      return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
+      return NextResponse.json("Forbidden", { status: 403 });
     }
   } catch (error) {
     console.log(error);
@@ -40,39 +40,50 @@ export const GET = async () => {
 
   try {
     await connectDb();
-    const allFAQs = await FAQs.find().sort({
-      addedDate: -1,
+
+    const faqs = await FAQs.find().sort({ addedDate: -1 }).populate({
+      path: "categoryId",
+      select: "name",
+      model: FAQsCategory,
     });
-    return NextResponse.json(allFAQs, { status: 201 });
+
+    const faqsWithCategory = faqs.map((faq) => ({
+      ...faq.toObject(),
+      category: {
+        name: faq.categoryId?.name || "",
+      },
+      categoryId: faq.categoryId?._id?.toString() || "",
+    }));
+
+    return NextResponse.json(faqsWithCategory, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { error: "Invalid request body" },
+      { error: "Failed to fetch FAQs" },
       { status: 400 }
     );
   }
 };
 
 export const DELETE = async (request: NextRequest) => {
-  console.log("Running DELETE request: Admin DELETE FAQ by id");
+  console.log("Running DELETE request: Admin DELETE FAQs by id");
   const user = await currentUser();
 
   try {
     await connectDb();
     const { searchParams } = new URL(request.url);
-    const _id = searchParams.get("faqId");
+    const _id = searchParams.get("id");
 
     if (user) {
-      const exisitingFAQ = await FAQs.findOne({ _id });
-      if (!exisitingFAQ) {
-        return NextResponse.json({ message: "No FAQ Found" }, { status: 404 });
+      const exisitingDoc = await FAQs.findOne({ _id });
+      if (!exisitingDoc) {
+        return NextResponse.json({ message: "No FAQs Found" }, { status: 404 });
       }
 
       await FAQs.deleteOne({ _id });
-      console.log("FAQ Deleted");
-      return NextResponse.json({ message: "FAQ Deleted" }, { status: 201 });
+      return NextResponse.json({ message: "FAQs Deleted" }, { status: 201 });
     } else {
-      return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
+      return NextResponse.json("Forbidden", { status: 403 });
     }
   } catch (error) {
     console.log(error);

@@ -2,17 +2,22 @@ import { connectDb } from "@/lib/mongodb";
 import Contact from "@/model/contact";
 import { NextResponse } from "next/server";
 
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 export const GET = async () => {
-  console.log("Running GET request: Get Brochure");
+  console.log("Running GET request: Public Get all contact");
+
   try {
     await connectDb();
-    const data = await Contact.find();
-    return NextResponse.json(data, { status: 200 });
+    const contact = await Contact.find().sort({
+      addedDate: 1,
+    });
+    return NextResponse.json(contact, { status: 201 });
   } catch (error) {
-    console.error("Error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.log(error);
+    return NextResponse.json(
+      { error: "Invalid request body" },
+      { status: 400 }
+    );
   }
 };

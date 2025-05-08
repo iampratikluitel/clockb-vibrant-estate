@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { Calendar, User } from "lucide-react";
@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { MINIOURL } from "@/lib/constants";
 import { useGetPublicProjectBySlugQuery } from "@/store/api/Public/publicProject";
 import ProjectOverview from "./ProjectOverview";
+import ProjectDescriptionSidebar from "./ProjectDestcriptionSidebar";
 
 const NewsInsightsPost = () => {
   const { slug } = useParams();
@@ -32,7 +33,9 @@ const NewsInsightsPost = () => {
             <div className="flex flex-wrap items-center gap-4 text-white/80">
               <span className="flex items-center">
                 <Calendar className="mr-2 h-4 w-4" />
-                {projectbySlug?.addedDate ? new Date(projectbySlug.addedDate).toLocaleDateString() : "Date not available"}
+                {projectbySlug?.addedDate
+                  ? new Date(projectbySlug.addedDate).toLocaleDateString()
+                  : "Date not available"}
               </span>
             </div>
           </div>
@@ -44,6 +47,10 @@ const NewsInsightsPost = () => {
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-2/3">
             <ProjectOverview ProjectBySlug={projectbySlug} />
+          </div>
+
+          <div className="md:w-1/3">
+            <ProjectDescriptionSidebar />
           </div>
         </div>
       </div>

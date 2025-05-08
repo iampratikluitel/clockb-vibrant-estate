@@ -1,37 +1,27 @@
-import mongoose from "mongoose";
+import mongoose, { model, Model, models } from "mongoose";
 
 const appointmentSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
+    name: String,
+    email: String,
+    phone: String,
     date: {
       type: Date,
-      required: true,
+      default: Date.now(),
     },
-    time: {
-      type: String,
-      required: true,
-    },
-    note: {
-      type: String,
-      required: false,
-    },
+    time: String,
+    note: String,
   },
   {
-    timestamps: true,
+    strict: false,
   }
 );
 
-const Appointment = mongoose.model("Appointment", appointmentSchema);
+let Appointment: Model<any>;
+try {
+  Appointment = models.Appointment || model("Appointment", appointmentSchema, "Appointment");
+} catch (error) {
+  Appointment = model("Appointment", appointmentSchema, "Appointment");
+}
 
 export default Appointment;

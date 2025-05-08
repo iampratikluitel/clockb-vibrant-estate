@@ -1,27 +1,50 @@
 import { Schema, model, models, Model } from "mongoose";
 
-const faqsSchema = new Schema(
+const faqsCategorySchema = new Schema(
   {
-    question: String,
-    answer: String,
-    category: {
+    name: {
       type: String,
-      enum: ["General", "Investment & Returns", "Land & Location", "Exit Options & Taxation", "Project Development"],
-      required: true
+      required: true,
     },
-    addedDate: {
-      type: Date,
-      default: Date.now(),
+    status: {
+      type: Boolean,
+      default: true,
     },
   },
   { strict: false }
 );
 
-let FAQs: Model<any>;
-try {
-  FAQs = models.FAQs || model("FAQs", faqsSchema, "FAQs");
-} catch (error) {
-  FAQs = model("FAQs", faqsSchema, "FAQs");
-}
+const FAQsCategory: Model<any> =
+  models.FAQsCategory ||
+  model("FAQsCategory", faqsCategorySchema, "faqsCategory");
 
-export default FAQs;
+const faqsSchema = new Schema(
+  {
+    question: {
+      type: String,
+      required: true,
+    },
+    answer: {
+      type: String,
+      required: true,
+    },
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "FAQsCategory",
+      required: [true, "FAQs Category is required"],
+    },
+    status: {
+      type: Boolean,
+      default: true, 
+    },
+    addedDate: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  { strict: false }
+);
+
+const FAQs: Model<any> = models.FAQs || model("FAQs", faqsSchema, "FAQs");
+
+export { FAQs, FAQsCategory };
