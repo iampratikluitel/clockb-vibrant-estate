@@ -14,6 +14,7 @@ const Page = () => {
     <>
       <Header />
       <main className="pt-24"> {/* Adjust based on header height */}
+        <h1 className="md:px-28 md:py-4 font-semibold text-2xl">Privacy Policy</h1>
         {Loading ? (
           <PageLoader />
         ) : (
@@ -21,7 +22,7 @@ const Page = () => {
             dangerouslySetInnerHTML={{
               __html: ExistingDetail?.description as string,
             }}
-            className="px-4 md:px-28 md:py-10 bg-white"
+            className="px-4 md:px-28 md:py-5 bg-white"
           ></div>
         )}
       </main>

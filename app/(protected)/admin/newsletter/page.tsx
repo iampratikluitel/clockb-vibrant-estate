@@ -12,7 +12,7 @@ import NewsLetterTable from "../components/newsletter/NewsLetterTable";
 
 const NewsLetter = () => {
   return (
-    <div className="px-5 py-10">
+    <div className="p-4 bg-white">
       <Breadcrumb >
         <BreadcrumbList>
           <BreadcrumbItem>

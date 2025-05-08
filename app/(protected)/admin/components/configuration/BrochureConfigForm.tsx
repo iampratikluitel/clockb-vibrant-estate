@@ -26,7 +26,9 @@ export default function BrochureConfigForm({ ConfigData }: Props) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       brochure: ConfigData?.brochure
-        ? `/api/resources/download?filename=${encodeURIComponent(ConfigData.brochure)}`
+        ? `/api/resources/download?filename=${encodeURIComponent(
+            ConfigData.brochure
+          )}`
         : null,
     },
   });
@@ -118,39 +120,46 @@ export default function BrochureConfigForm({ ConfigData }: Props) {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
-          Upload PDF Brochure
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4 py-4">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg space-y-6">
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          PDF Brochure Manager
         </h2>
 
-        {/* File input */}
-        <input
-          type="file"
-          accept="application/pdf"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg py-2 px-4 mb-4 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
+        {/* File Input */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Brochure (PDF Only)
+          </label>
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={handleFileChange}
+            className="block w-full border border-gray-300 rounded-lg px-4 py-2 text-sm shadow-sm file:border-0 file:bg-blue-100 file:text-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
 
-        {/* If brochure already exists, show download link */}
+        {/* Existing Brochure Link */}
         {ConfigData?.brochure && (
-          <div className="mb-4">
+          <div className="text-center">
             <a
-              href={`/api/resources/download?filename=${encodeURIComponent(ConfigData.brochure)}`}
+              href={`/api/resources/download?filename=${encodeURIComponent(
+                ConfigData.brochure
+              )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 underline text-sm"
+              className="text-blue-600 hover:underline text-sm"
             >
-              Download Current Brochure
+              📄 Download Current Brochure
             </a>
           </div>
         )}
 
-        {/* Upload button */}
+        {/* Upload Button */}
         <button
           onClick={form.handleSubmit(onSubmit)}
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 rounded-lg mt-2 hover:bg-blue-600 disabled:opacity-50"
+          className="w-full bg-blue-600 text-white py-2.5 rounded-lg text-base font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading
             ? "Uploading..."
@@ -159,12 +168,12 @@ export default function BrochureConfigForm({ ConfigData }: Props) {
             : "Upload Brochure"}
         </button>
 
-        {/* Delete button */}
+        {/* Delete Button */}
         {existingId && (
           <button
             onClick={handleDelete}
             disabled={loading}
-            className="w-full bg-red-500 text-white py-2 rounded-lg mt-4 hover:bg-red-600 disabled:opacity-50"
+            className="w-full bg-red-500 text-white py-2.5 rounded-lg text-base font-semibold hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Deleting..." : "Delete Brochure"}
           </button>

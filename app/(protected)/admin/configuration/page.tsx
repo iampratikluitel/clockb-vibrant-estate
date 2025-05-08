@@ -1,9 +1,24 @@
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import { paths } from "@/lib/paths";
 import Link from "next/link";
 import React from "react";
 
 const Configuration = () => {
   return (
-    <div className="p-6">
+    <div className="p-4 bg-white">
+      <Breadcrumb className="">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href={paths.admin.configuration}>
+              Dashboard
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Configuration</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Configurations</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -116,7 +116,7 @@ const FooterForm = ({ ConfigData }: props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-full space-y-6 p-4 bg-gray-100"
+        className="w-full space-y-6 p-4 bg-white"
       >
         <h1 className="font-semibold text-2xl">Footer Configuration</h1>
         <div className="flex w-full gap-4">

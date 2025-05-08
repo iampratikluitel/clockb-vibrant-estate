@@ -192,8 +192,8 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-semibold mb-6">Projects Journey</h1>
+    <div className="w-full max-w-6xl mx-auto">
+      <h1 className="text-2xl font-semibold mb-6 p-4">Projects Journey</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

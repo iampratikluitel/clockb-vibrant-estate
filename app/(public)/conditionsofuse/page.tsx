@@ -13,16 +13,18 @@ const Page = () => {
   return (
     <>
       <Header />
-      {Loading ? (
-        <PageLoader />
-      ) : (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: ExistingDetail?.description as string,
-          }}
-          className="md:px-28 md:py-10 bg-white"
-        ></div>
-      )}
+      <main className="pt-24">
+        {Loading ? (
+          <PageLoader />
+        ) : (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: ExistingDetail?.description as string,
+            }}
+            className="px-4 md:px-28 md:py-10 bg-white"
+          ></div>
+        )}
+      </main>
       <Footer />
     </>
   );

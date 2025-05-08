@@ -183,8 +183,8 @@ export default function DevelopmentPhaseForm({ ExistingDetail }: Props) {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-semibold mb-6">Projects Journey</h1>
+    <div className="w-full max-w-6xl mx-auto p-6 ">
+      <h1 className="text-2xl font-semibold mb-6">Development Phases</h1>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -193,7 +193,7 @@ export default function DevelopmentPhaseForm({ ExistingDetail }: Props) {
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid grid-cols-5 mb-6">
+            <TabsList className="grid grid-cols-3 mb-6">
               {Array.from({ length: 3 }).map((_, index) => (
                 <TabsTrigger key={index} value={`card${index + 1}`}>
                   Card {index + 1}
