@@ -60,7 +60,7 @@ export default function PlanningPartner() {
               <div className="flex justify-center mb-6">
                 <div className="bg-estates-primary/10 rounded-full p-0">
                   <Image
-                    src={`${MINIOURL}/${partner.logo}`}
+                    src={`/api/resources/download?filename=${encodeURIComponent(partner.logo)}`}
                     alt={partner.name}
                     width={96}
                     height={96}

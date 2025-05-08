@@ -5,11 +5,11 @@ import Link from "next/link";
 
 const handleDownloadBrochure = async () => {
   try {
-    const fetchData = await fetch("/api/public/configuration/brochure");
-    const data = await fetchData.json();
+    const res = await fetch("/api/public/configuration/brochure");
+    const data = await res.json();
 
     if (data?.brochureUrl) {
-      const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+      const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
       window.open(fileUrl, "_blank");
     } else {
       console.error("Brochure URL not found.");
@@ -18,6 +18,7 @@ const handleDownloadBrochure = async () => {
     console.error("Error fetching brochure:", error);
   }
 };
+
 
 const Hero = () => {
   return (

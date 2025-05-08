@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const docs = await prisma.InvestmentDoc.findMany({
+    const docs = await prisma.investmentDoc.findMany({
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(docs);
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const doc = await prisma.InvestmentDoc.create({
+    const doc = await prisma.investmentDoc.create({
       data: {
         icon,
         title,

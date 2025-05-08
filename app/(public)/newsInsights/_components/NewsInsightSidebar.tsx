@@ -88,7 +88,7 @@ const NewsInsightsSidebar = () => {
             {recentPosts.map((post) => (
               <div key={post._id} className="flex gap-3">
                 <img
-                  src={`${MINIOURL}${post.image}`}
+                  src={`/api/resources/download?filename=${encodeURIComponent(post.image)}`}
                   alt={post.title}
                   className="w-16 h-16 object-cover rounded"
                 />

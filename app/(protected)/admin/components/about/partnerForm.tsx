@@ -48,7 +48,7 @@ export default function PartnerForm({ type, ExistingDetail }: props) {
     defaultValues: {
       name: ExistingDetail?.name ?? "",
       description: ExistingDetail?.description ?? "",
-      logo: ExistingDetail?.logo ? `${MINIOURL}${ExistingDetail?.logo}` : null,
+      logo: ExistingDetail?.logo ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.logo)}` : null,
     },
   });
 
@@ -91,7 +91,7 @@ export default function PartnerForm({ type, ExistingDetail }: props) {
         setLoading(true);
         let ImageUrl = null;
 
-        if (data.logo != `${MINIOURL}${ExistingDetail?.logo}`) {
+        if (data.logo != `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.logo ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.logo, "partner");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");

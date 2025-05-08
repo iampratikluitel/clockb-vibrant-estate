@@ -25,7 +25,7 @@ const About = () => {
       const data = await fetchData.json();
 
       if (data?.brochureUrl) {
-        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
         window.open(fileUrl, "_blank");
       } else {
         console.error("Brochure URL not found.");

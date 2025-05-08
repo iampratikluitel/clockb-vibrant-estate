@@ -52,7 +52,7 @@ const TestimonialForm = ({ type, ExistingDetail }: props) => {
       description: ExistingDetail?.description ?? "",
       role: ExistingDetail?.role ?? "",
       image: ExistingDetail?.image
-        ? `${MINIOURL}${ExistingDetail?.image}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image)}`
         : null,
     },
   });
@@ -94,7 +94,7 @@ const TestimonialForm = ({ type, ExistingDetail }: props) => {
       } else if (type == "Edit") {
         setLoading(true);
         let ImageUrl = null;
-        if (data.image != `${MINIOURL}${ExistingDetail?.image}`) {
+        if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.image, "testimonials");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");

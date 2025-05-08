@@ -52,7 +52,7 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
       name: investmentCircleData?.name ?? "",
       description: investmentCircleData?.description ?? "",
       logo: investmentCircleData?.logo
-        ? `${MINIOURL}${investmentCircleData?.logo}`
+        ? `/api/resources/download?filename=${encodeURIComponent(investmentCircleData?.logo)}`
         : "",
       points: investmentCircleData?.points ?? [""],
     },
@@ -76,7 +76,7 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
 
       let backgroundUrl = null;
 
-      if (data.logo !== `${MINIOURL}${investmentCircleData?.logo}`) {
+      if (data.logo !== `/api/resources/download?filename=${encodeURIComponent(investmentCircleData?.logo ?? "")}`) {
         backgroundUrl = await uploadToMinIO(data.logo, "InvestmentCircle");
         if (backgroundUrl === "") {
           toast.error("Background upload failed. Please try again.");

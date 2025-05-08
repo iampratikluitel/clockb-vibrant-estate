@@ -54,7 +54,7 @@ const FooterForm = ({ ConfigData }: props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      logo: ConfigData?.logo ? `${MINIOURL}${ConfigData?.logo}` : null,
+      logo: ConfigData?.logo ? `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}` : null,
       email: ConfigData?.email ?? "",
       about: ConfigData?.about ?? "",
       address: ConfigData?.address ?? "",
@@ -81,7 +81,7 @@ const FooterForm = ({ ConfigData }: props) => {
         return;
       }
       let ImageUrl = null;
-      if (data.logo != `${MINIOURL}${ConfigData?.logo}`) {
+      if (data.logo != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}`) {
         ImageUrl = await uploadToMinIO(data.logo, "footer");
         if (ImageUrl === "") {
           toast.error("Image Upload Failed Please try again");

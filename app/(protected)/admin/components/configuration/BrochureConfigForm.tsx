@@ -26,7 +26,7 @@ export default function BrochureConfigForm({ ConfigData }: Props) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       brochure: ConfigData?.brochure
-        ? `${MINIOURL}${ConfigData.brochure}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ConfigData.brochure)}`
         : null,
     },
   });
@@ -136,7 +136,7 @@ export default function BrochureConfigForm({ ConfigData }: Props) {
         {ConfigData?.brochure && (
           <div className="mb-4">
             <a
-              href={`${MINIOURL}${ConfigData.brochure}`}
+              href={`/api/resources/download?filename=${encodeURIComponent(ConfigData.brochure)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-600 underline text-sm"

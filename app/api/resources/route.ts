@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { auth } from '@/auth';
 import { prisma } from "@/lib/prisma";
 import getServerSession from "next-auth";
-import { authOptions } from "@/lib/auth";
 import minioClient from '@/lib/minioClient';
+import { currentUser } from "@/lib/auth";
 
 interface Document {
   id: string;
@@ -61,9 +61,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
-    
-    if (!session) {
+    const user = currentUser()
+    if (!currentUser) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

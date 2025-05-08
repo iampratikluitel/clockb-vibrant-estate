@@ -44,7 +44,7 @@ export default function InvestmentCircle() {
                     <div className="absolute inset-0 bg-estates-primary/10 rounded-full transform -rotate-6"></div>
                     <div className="relative bg-estates-primary/20 rounded-full">
                       <img
-                        src={investmentCircle ? `${MINIOURL}/${investmentCircle.logo}` : ""}
+                        src={investmentCircle ? `/api/resources/download?filename=${encodeURIComponent(investmentCircle.logo)}` : ""}
                         alt=""
                         className="h-24 w-24 object-cover rounded-full"
                       />

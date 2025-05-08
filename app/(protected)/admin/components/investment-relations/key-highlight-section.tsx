@@ -72,13 +72,13 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       card1icon: ConfigData?.card1icon
-        ? `${MINIOURL}${ConfigData?.card1icon}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card1icon)}`
         : null,
       card2icon: ConfigData?.card2icon
-        ? `${MINIOURL}${ConfigData?.card2icon}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card2icon)}`
         : null,
       card3icon: ConfigData?.card3icon
-        ? `${MINIOURL}${ConfigData?.card3icon}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card3icon)}`
         : null,
 
       card1name: ConfigData?.card1name ?? "",
@@ -101,7 +101,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
       let ImageUrl2 = null;
       let ImageUrl3 = null;
 
-      if (data.card1icon != `${MINIOURL}${ConfigData?.card1icon}`) {
+      if (data.card1icon != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card1icon ?? "")}`) {
         ImageUrl1 = await uploadToMinIO(data.card1icon, "landingpageConfig");
         if (ImageUrl1 === "") {
           toast.error("Icon 4 upload failed Please try again");
@@ -109,7 +109,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
         }
       }
 
-      if (data.card2icon != `${MINIOURL}${ConfigData?.card2icon}`) {
+      if (data.card2icon != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card2icon ?? "")}`) {
         ImageUrl2 = await uploadToMinIO(data.card2icon, "landingpageConfig");
         if (ImageUrl2 === "") {
           toast.error("Icon 4 upload failed Please try again");
@@ -117,7 +117,7 @@ export default function KeyHighlightsEditor({ ConfigData }: props) {
         }
       }
 
-      if (data.card3icon != `${MINIOURL}${ConfigData?.card3icon}`) {
+      if (data.card3icon != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.card3icon ?? "")}`) {
         ImageUrl3 = await uploadToMinIO(data.card3icon, "landingpageConfig");
         if (ImageUrl3 === "") {
           toast.error("Icon 1 upload failed Please try again");

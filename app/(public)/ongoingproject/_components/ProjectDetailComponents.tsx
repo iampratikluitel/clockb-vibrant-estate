@@ -20,7 +20,9 @@ const NewsInsightsPost = () => {
       <div className="relative h-[40vh] md:h-[60vh] bg-slate-900">
         <div className="absolute inset-0">
           <img
-            src={`${MINIOURL}${projectbySlug?.image}`}
+            src={`/api/resources/download?filename=${encodeURIComponent(
+              projectbySlug?.image ?? ""
+            )}`}
             alt={projectbySlug?.title}
             className="w-full h-full object-cover opacity-40"
           />

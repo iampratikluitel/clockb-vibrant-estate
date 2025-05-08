@@ -33,7 +33,7 @@ const OngoingProjects = () => {
               >
                 <div className="relative h-60 overflow-hidden">
                   <img
-                    src={`${MINIOURL}${project.image}`}
+                    src={`/api/resources/download?filename=${encodeURIComponent(project.image)}`}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />

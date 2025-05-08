@@ -131,7 +131,7 @@ const TestimonialTable = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-4">
           <img
-            src={`${MINIOURL}${row.original.image}`}
+            src={`/api/resources/download?filename=${encodeURIComponent(row.original.image)}`}
             alt=""
             className="rounded-full h-12 w-12 object-cover"
           />

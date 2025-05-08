@@ -5,7 +5,6 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MINIOURL } from "@/lib/constants";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -25,7 +24,7 @@ const Header = () => {
       const data = await fetchData.json();
 
       if (data?.brochureUrl) {
-        const fileUrl = `${MINIOURL}${data.brochureUrl}`;
+        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
         // Open the file in a new tab
         window.open(fileUrl, "_blank");
       } else {

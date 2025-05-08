@@ -37,7 +37,7 @@ const NewsInsights = () => {
               >
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={`${MINIOURL}${category.image}`}
+                    src={`/api/resources/download?filename=${encodeURIComponent(category.image)}`}
                     alt={category.title}
                     className="w-full h-full object-cover"
                   />

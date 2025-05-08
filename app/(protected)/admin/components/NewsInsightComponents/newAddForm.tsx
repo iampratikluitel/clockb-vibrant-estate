@@ -56,10 +56,10 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
       description: ExistingDetails?.description ?? "",
       author: ExistingDetails?.author ?? "",
       image: ExistingDetails?.image
-        ? `${MINIOURL}${ExistingDetails?.image}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image)}`
         : null,
       bannerImage: ExistingDetails
-        ? `${MINIOURL}${ExistingDetails.bannerImage}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetails.bannerImage)}`
         : null,
       overview: ExistingDetails?.overview ?? "",
       categoryId: ExistingDetails?.categoryId ?? "",
@@ -119,14 +119,14 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         let ImageUrl = null;
         let BannerImageUrl = null;
 
-        if (data.image != `${MINIOURL}${ExistingDetails?.image}`) {
+        if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.image, "newsinsight");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");
             return;
           }
         }
-        if (data.bannerImage != `${MINIOURL}${ExistingDetails?.bannerImage}`) {
+        if (data.bannerImage != `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.bannerImage ?? "")}`) {
           BannerImageUrl = await uploadToMinIO(data.bannerImage, "courses");
           if (BannerImageUrl === "") {
             toast.error("Banner Image Upload Failed Please try again");
