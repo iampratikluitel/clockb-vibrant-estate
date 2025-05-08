@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { Download } from "lucide-react";
@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MINIOURL } from "@/lib/constants";
+import Menu from "./MobileMenu";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,12 +61,28 @@ const Header = () => {
 
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-10">
-          <NavLink href="/" isActive={pathname === "/"}>Home</NavLink>
-          <NavLink href="/about" isActive={pathname === "/about"}>About</NavLink>
-          <NavLink href="/projectdescription" isActive={pathname === "/project-description"}>Project Description</NavLink>
+          <NavLink href="/" isActive={pathname === "/"}>
+            Home
+          </NavLink>
+          <NavLink href="/about" isActive={pathname === "/about"}>
+            About
+          </NavLink>
+          <NavLink
+            href="/projectdescription"
+            isActive={pathname === "/project-description"}
+          >
+            Project Description
+          </NavLink>
           {/* <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink> */}
-          <NavLink href="/investorelations" isActive={pathname === "/investor-relations"}>Investor Relations</NavLink>
-          <NavLink href="/contact" isActive={pathname === "/contact"}>Contact</NavLink>
+          <NavLink
+            href="/investorelations"
+            isActive={pathname === "/investor-relations"}
+          >
+            Investor Relations
+          </NavLink>
+          <NavLink href="/contact" isActive={pathname === "/contact"}>
+            Contact
+          </NavLink>
         </div>
 
         {/* CTA Button */}
@@ -78,7 +95,7 @@ const Header = () => {
         </Button>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+        {/* <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
           <svg
             className="w-6 h-6 text-estates-secondary"
             fill="none"
@@ -92,7 +109,11 @@ const Header = () => {
               d="M4 6h16M4 12h16M4 18h16"
             />
           </svg>
-        </button>
+        </button> */}
+
+        <div className="md:hidden">
+          <Menu />
+        </div>
       </nav>
     </header>
   );
@@ -110,11 +131,15 @@ const NavLink = ({
 }) => (
   <Link
     href={href}
-    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${isActive ? "text-estates-primary" : ""}`}
+    className={`text-estates-secondary hover:text-estates-primary transition-colors duration-300 relative group text-[15px] font-medium ${
+      isActive ? "text-estates-primary" : ""
+    }`}
   >
     {children}
     <span
-      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
+      className={`absolute left-0 bottom-[-4px] w-full h-[2px] bg-estates-primary transform transition-transform duration-300 origin-left ${
+        isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
+      }`}
     />
   </Link>
 );
