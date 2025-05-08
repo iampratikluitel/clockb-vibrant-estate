@@ -14,6 +14,7 @@ export const paths = {
     resetpassword: "/resetpassword",
     login: "/login",
 
+    home: "/",
     about: "/about",
     contact: "/contact",
     faqs: "/faqs",
