@@ -45,7 +45,6 @@ import { toast } from "sonner";
 import { Partner } from "@/lib/types";
 import { convertToHumanReadable } from "@/lib/helper";
 import AlertDialogBox from "../AlertDialogBox";
-import { MINIOURL } from "@/lib/constants";
 import {
   Dialog,
   DialogContent,
