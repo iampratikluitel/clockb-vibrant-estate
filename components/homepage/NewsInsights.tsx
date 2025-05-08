@@ -37,7 +37,9 @@ const NewsInsights = () => {
               >
                 <div className="h-48 overflow-hidden">
                   <img
-                    src={`/api/resources/download?filename=${encodeURIComponent(category.image)}`}
+                    src={`/api/resources/download?filename=${encodeURIComponent(
+                      category.image
+                    )}`}
                     alt={category.title}
                     className="w-full h-full object-cover"
                   />
@@ -54,9 +56,11 @@ const NewsInsights = () => {
                   <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">
                     {category.title}
                   </h3>
-                  <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                    {category.overview}
-                  </p>
+                  <div
+                    className="text-gray-600 text-sm line-clamp-3 mb-4"
+                    dangerouslySetInnerHTML={{ __html: category.overview }}
+                  />
+
                   <Link
                     href={`${paths.public.newsInsight}/${category.slug}`}
                     className="text-estates-primary p-0 h-auto inline-flex items-center"

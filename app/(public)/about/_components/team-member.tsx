@@ -138,7 +138,7 @@ const TeamMemberView = () => {
               </button>
             </div>
           ) : (
-            <p className="text-center text-gray-500">No team members found.</p>
+            <p className="text-center text-gray-500"></p>
           )}
         </div>
       </div>

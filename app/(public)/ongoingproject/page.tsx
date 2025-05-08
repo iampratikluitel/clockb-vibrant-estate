@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import PageLoader from "@/components/PageLoader";
-import { MINIOURL } from "@/lib/constants";
 import Link from "next/link";
 import { paths } from "@/lib/paths";
 import { useSearchParams } from "next/navigation";
@@ -32,6 +31,9 @@ const Projects = () => {
 
   const pageSize = 3;
   const { data: Projects, isLoading: ProjectLoading } = useGetPublicProjectQuery("");
+
+  // ✅ Dynamically derive unique categories from data
+  const categories = ["All", ...Array.from(new Set(Projects?.map(p => p.category).filter(Boolean)))];
 
   useEffect(() => {
     if (Projects && Projects.length > 0) {
@@ -80,6 +82,13 @@ const Projects = () => {
 
   if (ProjectLoading) return <PageLoader />;
 
+  // ✅ Category color map
+  const categoryColorMap: Record<string, string> = {
+    completed: "bg-gray-700",
+    ongoing: "bg-green-600",
+    upcoming: "bg-estates-primary",
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -90,9 +99,9 @@ const Projects = () => {
             Ongoing & Upcoming Projects
           </h2>
 
-          {/* Category Filter Tabs */}
-          <div className="flex justify-center gap-4 mb-10">
-            {["All", "Ongoing", "Upcomming", "Completed"].map((tab) => (
+          {/* ✅ Dynamic Category Filter Tabs */}
+          <div className="flex flex-wrap justify-center gap-4 mb-10">
+            {categories.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setCurrentTab(tab.toLowerCase())}
@@ -109,47 +118,44 @@ const Projects = () => {
 
           {/* Projects Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {slicedProjects.map((project) => (
-              <div
-                key={project._id}
-                className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="relative h-60 overflow-hidden">
-                  <img
-                    src={`/api/resources/download?filename=${encodeURIComponent(project.image)}`}
-                    alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  />
-                  <div
-                    className={`absolute top-4 right-4 text-white text-sm font-medium py-1 px-3 rounded-full ${
-                      project.category?.toLowerCase() === "completed"
-                        ? "bg-gray-700"
-                        : project.category?.toLowerCase() === "ongoing"
-                        ? "bg-green-600"
-                        : project.category?.toLowerCase() === "upcomming"
-                        ? "bg-estates-primary"
-                        : "bg-gray-400"
-                    }`}
-                  >
-                    {project.category}
+            {slicedProjects.map((project) => {
+              const categoryKey = project.category?.toLowerCase().trim() || "unknown";
+              const categoryColor = categoryColorMap[categoryKey] || "bg-gray-400";
+
+              return (
+                <div
+                  key={project._id}
+                  className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl"
+                >
+                  <div className="relative h-60 overflow-hidden">
+                    <img
+                      src={`/api/resources/download?filename=${encodeURIComponent(project.image)}`}
+                      alt={project.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    />
+                    <div
+                      className={`absolute top-4 right-4 text-white text-sm font-medium py-1 px-3 rounded-full ${categoryColor}`}
+                    >
+                      {project.category}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-estates-secondary mb-3">
+                      {project.title}
+                    </h3>
+                    <p className="text-gray-600 mb-6 line-clamp-4">
+                      {project.description}
+                    </p>
+                    <Link href={`${paths.public.ongoingprojects}/${project.slug}`}>
+                      <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
+                        Learn More
+                        <ArrowRight size={16} />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-estates-secondary mb-3">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 line-clamp-4">
-                    {project.description}
-                  </p>
-                  <Link href={`${paths.public.ongoingprojects}/${project.slug}`}>
-                    <Button className="bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center gap-2">
-                      Learn More
-                      <ArrowRight size={16} />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Pagination */}

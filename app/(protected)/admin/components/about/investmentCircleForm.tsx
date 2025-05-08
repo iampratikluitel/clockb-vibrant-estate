@@ -63,44 +63,46 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
     name: "points",
   });
 
-  // Handle form submission
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setLoading(true);
     try {
-      setLoading(true);
-
       if (!data.logo || data.logo === "") {
-        toast.error("No background image selected");
+        toast.error("No logo selected");
         return;
       }
-
+  
       let backgroundUrl = null;
-
-      if (data.logo !== `/api/resources/download?filename=${encodeURIComponent(investmentCircleData?.logo ?? "")}`) {
+      const currentLogoPath = investmentCircleData?.logo ?? "";
+      const isLogoUpdated =
+        data.logo !== `/api/resources/download?filename=${encodeURIComponent(currentLogoPath)}`;
+  
+      if (isLogoUpdated) {
         backgroundUrl = await uploadToMinIO(data.logo, "InvestmentCircle");
-        if (backgroundUrl === "") {
-          toast.error("Background upload failed. Please try again.");
+        if (!backgroundUrl) {
+          toast.error("Logo upload failed. Please try again.");
           return;
         }
       }
-
+  
       const formData = {
         ...data,
         logo: backgroundUrl ?? investmentCircleData?.logo,
       };
-
+  
+      // Call the mutation and handle response
       const response = await AdminInvestmentCircle({
         ...formData,
       }).unwrap();
-
+  
       toast.success("Updated successfully");
     } catch (error) {
-      console.log(error);
+      console.error("Error during update:", error);
       toast.error("Failed to update");
     } finally {
       setLoading(false);
     }
   }
+  
 
   return (
     <Form {...form}>
