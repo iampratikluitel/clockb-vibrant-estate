@@ -35,7 +35,7 @@ const Hero = () => {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-10 mt-10 md:mt-0">
         <div className="max-w-3xl animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Transforming Real Estate into Value-Driven Investments
