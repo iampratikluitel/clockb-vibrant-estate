@@ -8,7 +8,7 @@ export const GET = async () => {
   console.log("Running GET request: Get Footer");
   try {
     await connectDb();
-    const data = await Partner.findOne();
+    const data = await Partner.find();
     return NextResponse.json(data, { status: 201 });
   } catch (error) {
     console.log(error);

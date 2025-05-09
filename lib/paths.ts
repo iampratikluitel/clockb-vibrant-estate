@@ -28,7 +28,7 @@ export const paths = {
   admin: {
     dashboard: `${ROOTS.admin}`,
 
-    about: `${ROOTS.admin}`,
+    about: `${ROOTS.admin}/about`,
 
     addTeamMember: `${ROOTS.admin}/about/addMember`,
     editTeamMember: `${ROOTS.admin}/about/editMember`,

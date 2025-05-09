@@ -48,7 +48,7 @@ const DashboardSidebar = () => {
       icon: User 
     },
     {
-      name: "Upcomming Projects",
+      name: "Projects",
       path: "/admin/projectdescription",
       icon: FileText,
     },

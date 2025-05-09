@@ -51,57 +51,84 @@ export default function PlanningPartner() {
             </h2>
           </div>
 
-          {currentPartners.map((partner) => (
-            <div
-              key={partner?._id || partner?.name} // key prop
-              className="bg-white rounded-xl shadow-md p-8 text-center"
-            >
-              <div className="flex justify-center mb-6">
-                {partner?.logo && (
-                  <div className="bg-estates-primary/10 rounded-full p-0">
-                    <Image
-                      src={`/api/resources/download?filename=${encodeURIComponent(
-                        partner.logo
-                      )}`}
-                      alt={partner.name}
-                      width={96}
-                      height={96}
-                    />
-                  </div>
-                )}
-              </div>
-              <h3 className="text-2xl font-bold text-estates-secondary mb-4">
-                {partner?.name || "Managed by Investment Circle"}
-              </h3>
-              <p className="text-gray-600 max-w-3xl mx-auto">
-                {partner?.description ||
-                  "The entire project is backed and managed by a structured Investment Circle, ensuring financial security, risk mitigation, and project success through expert governance."}
-              </p>
-            </div>
-          ))}
-
-          {/* Pagination Controls */}
-          <div className="flex justify-between mt-8">
+          <div className="relative">
+            {/* Left Arrow */}
             <button
               onClick={prevPage}
-              className="bg-estates-primary text-white px-4 py-2 rounded-md disabled:opacity-50"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white text-estates-primary w-10 h-10 rounded-full shadow-md flex items-center justify-center z-10 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={currentPage === 1}
+              aria-label="Previous partner"
             >
-              Previous
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
             </button>
-            <span className="text-lg text-estates-primary">
-              Page {currentPage} of{" "}
-              {Math.ceil(planningPartner.length / partnersPerPage)}
-            </span>
+
+            {/* Partner Card */}
+            {currentPartners.map((partner) => (
+              <div
+                key={partner?._id || partner?.name}
+                className="bg-white rounded-xl shadow-md p-8 text-center mx-12"
+              >
+                <div className="flex justify-center mb-6">
+                  {partner?.logo && (
+                    <div className="bg-estates-primary/10 rounded-full p-0">
+                      <Image
+                        src={`/api/resources/download?filename=${encodeURIComponent(
+                          partner.logo
+                        )}`}
+                        alt={partner.name}
+                        width={96}
+                        height={96}
+                      />
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-2xl font-bold text-estates-secondary mb-4">
+                  {partner?.name || "Managed by Investment Circle"}
+                </h3>
+                <p className="text-gray-600 max-w-3xl mx-auto">
+                  {partner?.description ||
+                    "The entire project is backed and managed by a structured Investment Circle, ensuring financial security, risk mitigation, and project success through expert governance."}
+                </p>
+              </div>
+            ))}
+
+            {/* Right Arrow */}
             <button
               onClick={nextPage}
-              className="bg-estates-primary text-white px-4 py-2 rounded-md disabled:opacity-50"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white text-estates-primary w-10 h-10 rounded-full shadow-md flex items-center justify-center z-10 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={
                 currentPage ===
                 Math.ceil(planningPartner.length / partnersPerPage)
               }
+              aria-label="Next partner"
             >
-              Next
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </button>
           </div>
         </div>
