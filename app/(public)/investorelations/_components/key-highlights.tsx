@@ -17,23 +17,6 @@ interface KeyHighlight {
 
 export default function KeyHighlightsInvestment() {
   const [keyHighlights, setKeyHighlights] = useState<KeyHighlight | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log("Fetching data...jndjcn");
-      try {
-        const response = await fetch(
-          "/api/public/investor-relations/key-highlight"
-        );
-        const data = await response.json();
-        setKeyHighlights(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
-
   return (
     <>
       {/* Key Highlights Section */}

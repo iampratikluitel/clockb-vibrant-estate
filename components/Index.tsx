@@ -1,7 +1,5 @@
 "use client"
 
-import Footer from "./homepage/Footer";
-import Header from "./homepage/Header";
 import Hero from "./homepage/Hero";
 import InvestmentBenefits from "./homepage/InvestmentBenefits";
 import KeyHighlights from "./homepage/KeyHighlights";
@@ -13,7 +11,6 @@ import Testimonials from "./homepage/Testimonials";
 const Index = () => {
   return (
     <div className="min-h-screen bg-estates-gray-100">
-      <Header />
       <Hero />
       <KeyHighlights />
       <InvestmentBenefits />
@@ -21,7 +18,6 @@ const Index = () => {
       <OngoingProjects />
       <Testimonials />
       <NewsInsights />
-      <Footer />              
     </div>
   );
 };

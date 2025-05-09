@@ -18,8 +18,6 @@ import {
   PaginationEllipsis,
   PaginationNext,
 } from "@/components/pagination";
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
 
 const Projects = () => {
   const searchParams = useSearchParams();
@@ -91,7 +89,6 @@ const Projects = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
 
       <section className="py-16 bg-white mt-20">
         <div className="container mx-auto px-4">
@@ -205,8 +202,6 @@ const Projects = () => {
           )}
         </div>
       </section>
-
-      <Footer />
     </div>
   );
 };

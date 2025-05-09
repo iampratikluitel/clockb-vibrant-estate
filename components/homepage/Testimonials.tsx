@@ -61,7 +61,7 @@ const Testimonials = () => {
                 </CarouselItem>
               ))
             ) : (
-              <p className="text-center text-gray-600">No testimonials available.</p>
+              <p className="text-center text-gray-600"></p>
             )}
           </CarouselContent>
 

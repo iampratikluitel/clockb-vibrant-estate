@@ -1,10 +1,8 @@
 "use client";
 
 import React from "react";
-import { Calendar, User } from "lucide-react";
-import Footer from "@/components/homepage/Footer";
+import { Calendar } from "lucide-react";
 import { useParams } from "next/navigation";
-import { MINIOURL } from "@/lib/constants";
 import { useGetPublicProjectBySlugQuery } from "@/store/api/Public/publicProject";
 import ProjectOverview from "./ProjectOverview";
 import ProjectDescriptionSidebar from "./ProjectDestcriptionSidebar";
@@ -56,8 +54,6 @@ const NewsInsightsPost = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };

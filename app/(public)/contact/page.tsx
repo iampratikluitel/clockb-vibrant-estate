@@ -1,18 +1,39 @@
-"use client"
+"use client";
 
 import { useState } from "react";
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Send, ArrowRight, Calendar } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Send,
+  ArrowRight,
+  Calendar,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/homepage/Header";
 import Footer from "@/components/homepage/Footer";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-
 
 const Contact = () => {
   const [nameInput, setNameInput] = useState("");
@@ -26,7 +47,9 @@ const Contact = () => {
   const [appointmentName, setAppointmentName] = useState("");
   const [appointmentEmail, setAppointmentEmail] = useState("");
   const [appointmentPhone, setAppointmentPhone] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState<Date | undefined>(undefined);
+  const [appointmentDate, setAppointmentDate] = useState<Date | undefined>(
+    undefined
+  );
   const [appointmentTime, setAppointmentTime] = useState("");
   const [appointmentNote, setAppointmentNote] = useState("");
   const [isAppointmentSubmitting, setIsAppointmentSubmitting] = useState(false);
@@ -34,38 +57,38 @@ const Contact = () => {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch(`api/public/contact`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: nameInput,
           email: emailInput,
           subject: subjectInput,
-          message: messageInput
+          message: messageInput,
         }),
       });
-  
-      if (!response.ok) throw new Error('Failed to submit');
-      
+
+      if (!response.ok) throw new Error("Failed to submit");
+
       toast({
         title: "Message sent!",
         description: "We'll get back to you as soon as possible.",
       });
-      
+
       setNameInput("");
       setEmailInput("");
       setSubjectInput("");
       setMessageInput("");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -75,12 +98,12 @@ const Contact = () => {
   const handleAppointmentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsAppointmentSubmitting(true);
-    
+
     try {
       const response = await fetch(`/api/public/appointment`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: appointmentName,
@@ -88,17 +111,17 @@ const Contact = () => {
           phone: appointmentPhone,
           date: appointmentDate,
           time: appointmentTime,
-          note: appointmentNote
+          note: appointmentNote,
         }),
       });
-  
-      if (!response.ok) throw new Error('Failed to schedule appointment');
-      
+
+      if (!response.ok) throw new Error("Failed to schedule appointment");
+
       toast({
         title: "Appointment scheduled!",
         description: "We'll confirm your appointment soon.",
       });
-      
+
       setAppointmentName("");
       setAppointmentEmail("");
       setAppointmentPhone("");
@@ -107,11 +130,11 @@ const Contact = () => {
       setAppointmentNote("");
       setIsAppointmentModalOpen(false);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast({
         title: "Error",
         description: "Failed to schedule appointment. Please try again.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsAppointmentSubmitting(false);
@@ -120,8 +143,6 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-estates-gray-100">
-      <Header />
-      
       <main className="flex-grow pt-24 pb-16">
         <section className="bg-gradient-to-r from-estates-primary to-estates-primary/80 py-16 text-white">
           <div className="container mx-auto px-4">
@@ -129,7 +150,10 @@ const Contact = () => {
               <h1 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in">
                 Get In Touch
               </h1>
-              <p className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+              <p
+                className="text-lg md:text-xl opacity-90 mb-8 animate-fade-in"
+                style={{ animationDelay: "0.2s" }}
+              >
                 Have questions about our properties or investment opportunities?
                 We&apos;re here to help you every step of the way.
               </p>
@@ -140,8 +164,10 @@ const Contact = () => {
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             <div className="bg-white rounded-xl shadow-md p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-estates-secondary mb-8">Contact Information</h2>
-              
+              <h2 className="text-2xl font-bold text-estates-secondary mb-8">
+                Contact Information
+              </h2>
+
               <div className="space-y-8">
                 <div className="flex items-start">
                   <div className="bg-estates-primary/10 p-3 rounded-lg mr-4 shrink-0">
@@ -150,18 +176,20 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Our Location</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Project Estates Headquarters<br />
-                      123 Investment Avenue<br />
+                      Project Estates Headquarters
+                      <br />
+                      123 Investment Avenue
+                      <br />
                       Kathmandu, Nepal
                     </p>
-                    
+
                     <div className="mt-5 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                      <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56516.27776837737!2d85.28493263136324!3d27.70962473370189!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb5137c1bf18db1ea!2sKathmandu%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1716582193918!5m2!1sen!2sus" 
-                        width="100%" 
-                        height="250" 
-                        style={{ border: 0 }} 
-                        loading="lazy" 
+                      <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56516.27776837737!2d85.28493263136324!3d27.70962473370189!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb5137c1bf18db1ea!2sKathmandu%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1716582193918!5m2!1sen!2sus"
+                        width="100%"
+                        height="250"
+                        style={{ border: 0 }}
+                        loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
                         title="Project Estates Location"
                         className="rounded-lg"
@@ -169,49 +197,94 @@ const Contact = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <div className="bg-estates-primary/10 p-3 rounded-lg mr-4 shrink-0">
                     <Phone className="h-6 w-6 text-estates-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">Phone Numbers</h3>
+                    <h3 className="font-semibold text-lg mb-2">
+                      Phone Numbers
+                    </h3>
                     <div className="space-y-2 text-gray-600">
                       <p>Sales & Investments: +977-9851079636</p>
                       <p>Customer Support: +977-9843260542</p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start">
                   <div className="bg-estates-primary/10 p-3 rounded-lg mr-4 shrink-0">
                     <Mail className="h-6 w-6 text-estates-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg mb-2">Email Addresses</h3>
+                    <h3 className="font-semibold text-lg mb-2">
+                      Email Addresses
+                    </h3>
                     <div className="space-y-2 text-gray-600">
-                      <p>General Inquiries: <a href="mailto:info@projestates.com" className="text-estates-primary hover:underline">info@projestates.com</a></p>
-                      <p>Investor Relations: <a href="mailto:investors@projestates.com" className="text-estates-primary hover:underline">investors@projestates.com</a></p>
-                      <p>Support: <a href="mailto:support@projestates.com" className="text-estates-primary hover:underline">support@projestates.com</a></p>
+                      <p>
+                        General Inquiries:{" "}
+                        <a
+                          href="mailto:info@projestates.com"
+                          className="text-estates-primary hover:underline"
+                        >
+                          info@projestates.com
+                        </a>
+                      </p>
+                      <p>
+                        Investor Relations:{" "}
+                        <a
+                          href="mailto:investors@projestates.com"
+                          className="text-estates-primary hover:underline"
+                        >
+                          investors@projestates.com
+                        </a>
+                      </p>
+                      <p>
+                        Support:{" "}
+                        <a
+                          href="mailto:support@projestates.com"
+                          className="text-estates-primary hover:underline"
+                        >
+                          support@projestates.com
+                        </a>
+                      </p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
-                  <h3 className="font-semibold text-lg mb-4">Connect With Us</h3>
+                  <h3 className="font-semibold text-lg mb-4">
+                    Connect With Us
+                  </h3>
                   <div className="flex space-x-4">
-                    <a href="https://facebook.com" target="_blank" rel="noreferrer" className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300">
+                    <a
+                      href="https://facebook.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                    >
                       <Facebook className="h-6 w-6" />
                     </a>
-                    <a href="https://instagram.com" target="_blank" rel="noreferrer" className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300">
+                    <a
+                      href="https://instagram.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                    >
                       <Instagram className="h-6 w-6" />
                     </a>
-                    <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300">
+                    <a
+                      href="https://linkedin.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                    >
                       <Linkedin className="h-6 w-6" />
                     </a>
                   </div>
                 </div>
-                
+
                 <div className="border-t border-gray-100 pt-6">
                   <h3 className="font-semibold text-lg mb-4">Office Hours</h3>
                   <div className="space-y-2 text-gray-600">
@@ -222,62 +295,84 @@ const Contact = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-xl shadow-md p-8 border border-gray-100">
-              <h2 className="text-2xl font-bold text-estates-secondary mb-8">Send Us a Message</h2>
-              
+              <h2 className="text-2xl font-bold text-estates-secondary mb-8">
+                Send Us a Message
+              </h2>
+
               <form onSubmit={handleContactSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                  <Input 
-                    id="name" 
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Full Name
+                  </label>
+                  <Input
+                    id="name"
                     value={nameInput}
                     onChange={(e) => setNameInput(e.target.value)}
-                    className="w-full" 
+                    className="w-full"
                     placeholder="Enter your full name"
-                    required 
+                    required
                   />
                 </div>
-                
+
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                  <Input 
-                    id="email" 
-                    type="email" 
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Email Address
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    className="w-full" 
+                    className="w-full"
                     placeholder="Enter your email address"
-                    required 
+                    required
                   />
                 </div>
-                
+
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
-                  <Input 
-                    id="subject" 
+                  <label
+                    htmlFor="subject"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Subject
+                  </label>
+                  <Input
+                    id="subject"
                     value={subjectInput}
                     onChange={(e) => setSubjectInput(e.target.value)}
-                    className="w-full" 
+                    className="w-full"
                     placeholder="What is this regarding?"
-                    required 
+                    required
                   />
                 </div>
-                
+
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Your Message</label>
-                  <textarea 
-                    id="message" 
-                    rows={6} 
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Your Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={6}
                     value={messageInput}
                     onChange={(e) => setMessageInput(e.target.value)}
-                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" 
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                     placeholder="Please provide as much detail as possible..."
                     required
                   />
                 </div>
-                
-                <Button 
+
+                <Button
                   className="w-full py-6 bg-estates-primary hover:bg-estates-primary/90 text-white flex items-center justify-center gap-2"
                   type="submit"
                   disabled={isSubmitting}
@@ -291,20 +386,24 @@ const Contact = () => {
                   )}
                 </Button>
               </form>
-              
+
               <div className="mt-8 bg-estates-primary/5 p-4 rounded-lg">
                 <h3 className="font-semibold text-lg mb-2 flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2 text-estates-primary" />
                   Prefer In-Person Meeting?
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  Schedule a visit to our office for a personalized consultation with our investment advisors. 
-                  We can discuss your investment goals and provide tailored solutions.
+                  Schedule a visit to our office for a personalized consultation
+                  with our investment advisors. We can discuss your investment
+                  goals and provide tailored solutions.
                 </p>
-                <Dialog open={isAppointmentModalOpen} onOpenChange={setIsAppointmentModalOpen}>
+                <Dialog
+                  open={isAppointmentModalOpen}
+                  onOpenChange={setIsAppointmentModalOpen}
+                >
                   <DialogTrigger asChild>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       className="mt-3 hover:bg-estates-primary hover:text-white"
                     >
                       Schedule Appointment
@@ -312,14 +411,25 @@ const Contact = () => {
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px]">
                     <DialogHeader>
-                      <DialogTitle className="text-2xl">Schedule an Appointment</DialogTitle>
+                      <DialogTitle className="text-2xl">
+                        Schedule an Appointment
+                      </DialogTitle>
                       <DialogDescription>
-                        Fill out the form below to schedule a consultation with our investment advisors.
+                        Fill out the form below to schedule a consultation with
+                        our investment advisors.
                       </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={handleAppointmentSubmit} className="space-y-4 mt-4">
+                    <form
+                      onSubmit={handleAppointmentSubmit}
+                      className="space-y-4 mt-4"
+                    >
                       <div className="space-y-2">
-                        <label htmlFor="appointmentName" className="text-sm font-medium">Full Name</label>
+                        <label
+                          htmlFor="appointmentName"
+                          className="text-sm font-medium"
+                        >
+                          Full Name
+                        </label>
                         <Input
                           id="appointmentName"
                           value={appointmentName}
@@ -328,9 +438,14 @@ const Contact = () => {
                           required
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <label htmlFor="appointmentEmail" className="text-sm font-medium">Email Address</label>
+                        <label
+                          htmlFor="appointmentEmail"
+                          className="text-sm font-medium"
+                        >
+                          Email Address
+                        </label>
                         <Input
                           id="appointmentEmail"
                           type="email"
@@ -340,9 +455,14 @@ const Contact = () => {
                           required
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <label htmlFor="appointmentPhone" className="text-sm font-medium">Contact Number</label>
+                        <label
+                          htmlFor="appointmentPhone"
+                          className="text-sm font-medium"
+                        >
+                          Contact Number
+                        </label>
                         <Input
                           id="appointmentPhone"
                           type="tel"
@@ -352,10 +472,12 @@ const Contact = () => {
                           required
                         />
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                          <label className="text-sm font-medium">Preferred Date</label>
+                          <label className="text-sm font-medium">
+                            Preferred Date
+                          </label>
                           <Popover>
                             <PopoverTrigger asChild>
                               <Button
@@ -366,7 +488,11 @@ const Contact = () => {
                                 )}
                               >
                                 <Calendar className="mr-2 h-4 w-4" />
-                                {appointmentDate ? format(appointmentDate, "PPP") : <span>Pick a date</span>}
+                                {appointmentDate ? (
+                                  format(appointmentDate, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
                               </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto p-0">
@@ -376,16 +502,25 @@ const Contact = () => {
                                 onSelect={setAppointmentDate}
                                 initialFocus
                                 disabled={(date) => {
-                                  return date < new Date(new Date().setHours(0, 0, 0, 0)) || 
-                                         date.getDay() === 0;
+                                  return (
+                                    date <
+                                      new Date(
+                                        new Date().setHours(0, 0, 0, 0)
+                                      ) || date.getDay() === 0
+                                  );
                                 }}
                               />
                             </PopoverContent>
                           </Popover>
                         </div>
-                        
+
                         <div className="space-y-2">
-                          <label htmlFor="appointmentTime" className="text-sm font-medium">Preferred Time</label>
+                          <label
+                            htmlFor="appointmentTime"
+                            className="text-sm font-medium"
+                          >
+                            Preferred Time
+                          </label>
                           <select
                             id="appointmentTime"
                             value={appointmentTime}
@@ -393,7 +528,9 @@ const Contact = () => {
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             required
                           >
-                            <option value="" disabled>Select a time</option>
+                            <option value="" disabled>
+                              Select a time
+                            </option>
                             <option value="09:00">9:00 AM</option>
                             <option value="10:00">10:00 AM</option>
                             <option value="11:00">11:00 AM</option>
@@ -406,9 +543,14 @@ const Contact = () => {
                           </select>
                         </div>
                       </div>
-                      
+
                       <div className="space-y-2">
-                        <label htmlFor="appointmentNote" className="text-sm font-medium">Appointment Note</label>
+                        <label
+                          htmlFor="appointmentNote"
+                          className="text-sm font-medium"
+                        >
+                          Appointment Note
+                        </label>
                         <textarea
                           id="appointmentNote"
                           rows={3}
@@ -418,21 +560,23 @@ const Contact = () => {
                           placeholder="Tell us what you'd like to discuss..."
                         />
                       </div>
-                      
+
                       <DialogFooter>
-                        <Button 
-                          type="button" 
-                          variant="outline" 
+                        <Button
+                          type="button"
+                          variant="outline"
                           onClick={() => setIsAppointmentModalOpen(false)}
                         >
                           Cancel
                         </Button>
-                        <Button 
+                        <Button
                           type="submit"
                           className="bg-estates-primary hover:bg-estates-primary/90"
                           disabled={isAppointmentSubmitting}
                         >
-                          {isAppointmentSubmitting ? "Scheduling..." : "Schedule Appointment"}
+                          {isAppointmentSubmitting
+                            ? "Scheduling..."
+                            : "Schedule Appointment"}
                         </Button>
                       </DialogFooter>
                     </form>
@@ -441,24 +585,25 @@ const Contact = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-16 text-center">
-            <h2 className="text-2xl font-bold text-estates-secondary mb-4">Have More Questions?</h2>
+            <h2 className="text-2xl font-bold text-estates-secondary mb-4">
+              Have More Questions?
+            </h2>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Check out our frequently asked questions section for quick answers to common inquiries about our investment opportunities.
+              Check out our frequently asked questions section for quick answers
+              to common inquiries about our investment opportunities.
             </p>
-            <Button 
+            <Button
               variant="default"
               className="bg-estates-primary hover:bg-estates-primary/90 text-white"
-              onClick={() => window.location.href = '/faqs'}
+              onClick={() => (window.location.href = "/faqs")}
             >
               Visit FAQ Page
             </Button>
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };

@@ -12,7 +12,7 @@ import { paths } from "@/lib/paths";
 
 const AboutPAGE = () => {
   return (
-    <div className="px-5 py-10">
+    <div className="p-4 bg-white">
       <Breadcrumb className="">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -24,7 +24,7 @@ const AboutPAGE = () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pt-4">
         <h1 className="font-semibold text-2xl">About</h1>
       </div>
       <AdminAboutPage />

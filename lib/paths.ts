@@ -28,7 +28,7 @@ export const paths = {
   admin: {
     dashboard: `${ROOTS.admin}`,
 
-    about: `${ROOTS.admin}`,
+    about: `${ROOTS.admin}/about`,
 
     addTeamMember: `${ROOTS.admin}/about/addMember`,
     editTeamMember: `${ROOTS.admin}/about/editMember`,
@@ -49,7 +49,7 @@ export const paths = {
     editNews: `${ROOTS.admin}/newsinsight/edit`,
 
     configuration: `${ROOTS.admin}/configuration`,
-    landingpage: `${ROOTS.admin}/configuration/landingpage`,
+    projectjourney: `${ROOTS.admin}/configuration/landingpage`,
     footer: `${ROOTS.admin}/configuration/footer`,
     brochure: `${ROOTS.admin}/configuration/brochure`,
 
@@ -57,10 +57,16 @@ export const paths = {
 
     privacypolicy: `${ROOTS.admin}/privacypolicy`,
 
+    phases: `${ROOTS.admin}/phases`,
+    appointment: `${ROOTS.admin}/appointment`,
+    resources: `${ROOTS.admin}/resources`,
+
     projectdescription: `${ROOTS.admin}/projectdescription`,
     addproject: `${ROOTS.admin}/projectdescription/add`,
     editproject: `${ROOTS.admin}/projectdescription/edit`,
 
     termsandcondition: `${ROOTS.admin}/termsandcondition`,
+
+    contact: `${ROOTS.admin}/contact`,
   },
 };

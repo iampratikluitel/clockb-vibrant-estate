@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { format } from "date-fns"; // ✅ Correct import for formatting dates
 import { toast } from "sonner";
-import { ArrowRight, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";

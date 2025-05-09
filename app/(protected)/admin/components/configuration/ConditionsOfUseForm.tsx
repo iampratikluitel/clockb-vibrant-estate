@@ -50,7 +50,6 @@ const ConditionsOfUseForm = ({ ConfigData }: props) => {
         if (response) {
           toast.success(`${response.message}`);
           setLoading(false);
-          router.push(paths.admin.configuration);
         } else {
           toast.error(`Couldn't Update`);
           setLoading(false);

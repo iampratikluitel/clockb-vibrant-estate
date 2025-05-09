@@ -27,12 +27,6 @@ const ConditionsOfUse = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.configuration}>
-              Configurations
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
             <BreadcrumbPage>Privacy Policy</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>

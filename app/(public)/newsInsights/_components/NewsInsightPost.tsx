@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Calendar, User } from "lucide-react";
-import Footer from "@/components/homepage/Footer";
 import { useGetPublicNewsInsightBySlugQuery } from "@/store/api/Public/publicNewsInsight";
 import { useParams } from "next/navigation";
 import { MINIOURL } from "@/lib/constants";
@@ -77,8 +76,6 @@ const NewsInsightsPost = () => {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 };
