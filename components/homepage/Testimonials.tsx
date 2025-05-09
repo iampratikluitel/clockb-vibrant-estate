@@ -6,7 +6,6 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { QuoteIcon } from "lucide-react";
 import { useGetPublicTestimonialsQuery } from "@/store/api/Public/publicTestimonails";
 import { TESTIMONIALS } from "@/lib/types";
-import { MINIOURL } from "@/lib/constants";
 
 const Testimonials = () => {
   const { data, isLoading, error } = useGetPublicTestimonialsQuery("");

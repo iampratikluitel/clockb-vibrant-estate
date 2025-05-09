@@ -6,9 +6,6 @@ export const adminMiscsApi = createApi({
   reducerPath: "adminMiscsApi",
   tagTypes: [
     "Admin NewsLetter",
-    "Admin Support",
-    "Admin Trainer",
-    "Admin Users",
     "Admin Dashboard",
   ],
   baseQuery: baseQuery,
@@ -19,9 +16,13 @@ export const adminMiscsApi = createApi({
       query: () => `admin/newsletter`,
       providesTags: ["Admin NewsLetter"],
     }),
+
+    getDashboardCount: builder.query<any, string>({
+      query: () => `admin/dashboard/counts`,
+      providesTags: ["Admin Dashboard"],
+    }),
   }),
 });
 
-export const {
-  useGetAllAdminNewsLetterQuery,
-} = adminMiscsApi;
+export const { useGetAllAdminNewsLetterQuery, useGetDashboardCountQuery } =
+  adminMiscsApi;
