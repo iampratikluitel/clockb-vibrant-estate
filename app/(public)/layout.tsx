@@ -1,9 +1,15 @@
-import React from 'react'
+import Footer from "@/components/homepage/Footer";
+import Header from "@/components/homepage/Header";
+import React from "react";
 
-const layout = async({children}: {children: React.ReactNode}) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
   return (
-    <div><main>{children}</main></div>
-  )
-}
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">{children}</main>
+      <Footer />
+    </div>
+  );
+};
 
-export default layout
+export default layout;

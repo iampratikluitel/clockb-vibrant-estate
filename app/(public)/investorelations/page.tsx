@@ -1,7 +1,5 @@
 "use client";
 
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
 import DownloadInvestmentBrochure from "./_components/download-investment-brochure";
 import KeyHighlightsInvestment from "./_components/key-highlights";
 import InvestmentModelSection from "./_components/investment-modle-section";
@@ -14,7 +12,6 @@ import ContactInformationSection from "./_components/contact-information-section
 const InvestmentRelations = () => {
   return (
     <div className="min-h-screen bg-estates-gray-100">
-      <Header />
       {/* Hero Section */}
       <section className="relative pt-28 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-estates-gray-100 via-white to-estates-gray-200 opacity-60" />
@@ -47,7 +44,6 @@ const InvestmentRelations = () => {
       <InvestmentTeamSection />
       <CallToAction />
       <ContactInformationSection />
-      <Footer />
     </div>
   );
 };

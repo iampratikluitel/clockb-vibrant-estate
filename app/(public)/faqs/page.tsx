@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Search } from "lucide-react";
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
 import {
   Accordion,
   AccordionContent,
@@ -48,26 +46,8 @@ const Faqs = () => {
       return matchesSearch && matchesCategory;
     }) || [];
 
-  // Loading state UI
-  // if (isFaqLoading || isCategoryLoading) {
-  //   return (
-  //     <div className="min-h-screen bg-estates-gray-100">
-  //       <Header />
-  //       <div className="container mx-auto px-4 pt-32 pb-20 flex justify-center items-center">
-  //         <div className="text-center">
-  //           <div className="w-16 h-16 border-4 border-estates-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-  //           <p className="text-lg text-gray-600">Loading FAQs...</p>
-  //         </div>
-  //       </div>
-  //       <Footer />
-  //     </div>
-  //   );
-  // }
-
   return (
     <div className="min-h-screen bg-estates-gray-100">
-      <Header />
-
       <div className="container mx-auto px-4 pt-32 pb-20">
         {/* Hero Section */}
         <div className="text-center mb-12">
@@ -207,7 +187,6 @@ const Faqs = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

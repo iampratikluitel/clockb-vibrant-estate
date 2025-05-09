@@ -15,8 +15,6 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Button } from '@/components/ui/button';
-import Header from '@/components/homepage/Header';
-import Footer from '@/components/homepage/Footer';
 import NewsInsightSidebar from './_components/NewsInsightSidebar';
 import { useGetPublicNewsInsightsQuery } from '@/store/api/Public/publicNewsInsight';
 import { NEWSINSIGHT } from '@/lib/types';
@@ -127,9 +125,7 @@ const NewsInsight = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      
+    <div className="flex flex-col min-h-screen">      
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 py-16 mt-20">
         <div className="container mx-auto px-4 md:px-6">
@@ -226,7 +222,6 @@ const NewsInsight = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

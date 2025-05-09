@@ -33,7 +33,6 @@ const About = () => {
   };
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
 
       <main className="flex-grow pt-24">
         {/* Hero Section */}
@@ -108,8 +107,6 @@ const About = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
       <AppointmentDialog
         open={isAppointmentOpen}
         onOpenChange={setIsAppointmentOpen}

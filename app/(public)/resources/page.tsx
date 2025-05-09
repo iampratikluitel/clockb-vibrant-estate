@@ -32,8 +32,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
 import  Link from "next/link";
 import ReportTable from "@/components/report/reporttable";
 import { toast } from "sonner";
@@ -390,9 +388,7 @@ const Resources = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-estates-gray-100">
-      <Header />
-      
+    <div className="min-h-screen flex flex-col bg-estates-gray-100">      
       <main className="flex-grow pt-24 pb-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-estates-primary to-estates-primary/80 py-16 text-white">
@@ -710,8 +706,6 @@ const Resources = () => {
         </div>
       </main>
       
-      <Footer />
-
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
         <DialogContent className="max-w-4xl h-[80vh]">
           <DialogHeader>

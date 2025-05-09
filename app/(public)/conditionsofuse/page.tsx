@@ -1,7 +1,5 @@
 "use client";
 
-import Footer from "@/components/homepage/Footer";
-import Header from "@/components/homepage/Header";
 import PageLoader from "@/components/PageLoader";
 import { useGetPublicConfigConditionsOfUseQuery } from "@/store/api/Public/publicConfiguration";
 import React from "react";
@@ -12,8 +10,9 @@ const Page = () => {
 
   return (
     <>
-      <Header />
       <main className="pt-24">
+      <h1 className="md:px-28 md:py-4 font-semibold text-2xl">Terms and Condition</h1>
+
         {Loading ? (
           <PageLoader />
         ) : (
@@ -25,7 +24,6 @@ const Page = () => {
           ></div>
         )}
       </main>
-      <Footer />
     </>
   );
 };
