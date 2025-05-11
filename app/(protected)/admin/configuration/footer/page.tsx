@@ -49,10 +49,4 @@ const FooterConfig = () => {
   );
 };
 
-const FooterConfigEditor = () => (
-  <Provider store={store}>
-    <FooterConfig />
-  </Provider>
-);
-
-export default FooterConfigEditor;
+export default FooterConfig;

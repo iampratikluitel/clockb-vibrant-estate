@@ -45,7 +45,7 @@ const FormSchema = z.object({
 });
 
 interface props {
-  ConfigData: FOOTER | undefined;
+  ConfigData?: FOOTER;
 }
 
 const FooterForm = ({ ConfigData }: props) => {
