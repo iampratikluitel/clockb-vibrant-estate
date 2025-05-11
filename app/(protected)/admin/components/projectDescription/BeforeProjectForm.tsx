@@ -10,7 +10,7 @@ interface props {
   id: string;
 }
 
-export default function BeforeUpcommingForm({
+export default function BeforeProjectForm({
   type,
   projectCategory,
   id,

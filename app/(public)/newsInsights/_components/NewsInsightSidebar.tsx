@@ -17,13 +17,14 @@ import { paths } from "@/lib/paths";
 
 const NewsInsightsSidebar = () => {
   const { slug } = useParams();
- 
+
   const { data: NewsInsight } = useGetPublicNewsInsightsQuery("");
   const { data: NewsInsightBySlug } = useGetPublicNewsInsightBySlugQuery(
     slug as string
   );
 
-  const { data: NewsInsightCategories} = useGetPublicNewsInsightsCategoryQuery("")
+  const { data: NewsInsightCategories } =
+    useGetPublicNewsInsightsCategoryQuery("");
 
   const recentPosts = NewsInsight
     ? NewsInsight.filter(
@@ -62,18 +63,20 @@ const NewsInsightsSidebar = () => {
         </CardHeader>
         <CardContent>
           <ul className="space-y-2">
-            {NewsInsightCategories && NewsInsightCategories.length > 0 && NewsInsightCategories.slice(0,5).map((category, index) => (
-              <li key={index}>
-                <Link
-                  href={`${paths.public.newsInsight}/${category.slug}`}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
-                >
-                  <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
-                  {category.name}
-                </Link>
-                <Separator className="mt-2" />
-              </li>
-            ))}
+            {NewsInsightCategories &&
+              NewsInsightCategories.length > 0 &&
+              NewsInsightCategories.slice(0, 5).map((category, index) => (
+                <li key={index}>
+                  <Link
+                    href={`${paths.public.categorizedNews}?category=${category.slug}`}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors flex items-center"
+                  >
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></span>
+                    {category.name}
+                  </Link>
+                  <Separator className="mt-2" />
+                </li>
+              ))}
           </ul>
         </CardContent>
       </Card>
@@ -88,7 +91,9 @@ const NewsInsightsSidebar = () => {
             {recentPosts.map((post) => (
               <div key={post._id} className="flex gap-3">
                 <img
-                  src={`/api/resources/download?filename=${encodeURIComponent(post.image)}`}
+                  src={`/api/resources/download?filename=${encodeURIComponent(
+                    post.image
+                  )}`}
                   alt={post.title}
                   className="w-16 h-16 object-cover rounded"
                 />

@@ -5,7 +5,7 @@ import TeamTab from "./team-member-tab";
 import PartnersTab from "./partner-tab";
 import InvestmentCircle from "./investmentCircleForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MainSectionTab from "./aboutHero";
+import AboutSectionTab from "./aboutHero";
 
 export default function AdminAboutPage() {
   const [activeTab, setActiveTab] = useState("about");
@@ -44,7 +44,7 @@ export default function AdminAboutPage() {
         </TabsList>
 
         <TabsContent value="about">
-          <MainSectionTab />
+          <AboutSectionTab />
         </TabsContent>
 
         <TabsContent value="team">
