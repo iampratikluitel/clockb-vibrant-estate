@@ -130,7 +130,7 @@ const NewsInsight = () => {
       <div className="bg-gradient-to-r from-slate-900 to-slate-800 py-16 mt-20">
         <div className="container mx-auto px-4 md:px-6">
           <h1 className="text-3xl md:text-4xl font-bold text-white text-center">
-            News & Insight
+            News & Insights
           </h1>
           <p className="mt-4 text-slate-300 text-center max-w-2xl mx-auto">
             Stay updated with the latest insights, market trends, and expert analyses in the world of real estate investment.

@@ -19,12 +19,15 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Project Estate",
+  title: "Project Estates",
   description: "Transforming Real Estate into Value-Driven Investments",
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     type: "website",
     url: DOMAIN,
-    title: `Project Estate`,
+    title: `Project Estates`,
     description: "Transforming Real Estate into Value-Driven Investments",
     images: [
       {

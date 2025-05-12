@@ -34,6 +34,8 @@ import {
 } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useGetPublicConfigFooterQuery } from "@/store/api/Public/publicConfiguration";
+import Link from "next/link";
 
 const Contact = () => {
   const [nameInput, setNameInput] = useState("");
@@ -53,6 +55,9 @@ const Contact = () => {
   const [appointmentTime, setAppointmentTime] = useState("");
   const [appointmentNote, setAppointmentNote] = useState("");
   const [isAppointmentSubmitting, setIsAppointmentSubmitting] = useState(false);
+
+  const { data: ConfigData, isLoading: Loading } =
+    useGetPublicConfigFooterQuery("");
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,16 +181,16 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Our Location</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Project Estates Headquarters
+                      Clock B Business Innovation
                       <br />
-                      123 Investment Avenue
-                      <br />
+                      {/* 123 Investment Avenue
+                      <br /> */}
                       Kathmandu, Nepal
                     </p>
 
                     <div className="mt-5 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                       <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56516.27776837737!2d85.28493263136324!3d27.70962473370189!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb5137c1bf18db1ea!2sKathmandu%2044600%2C%20Nepal!5e0!3m2!1sen!2sus!4v1716582193918!5m2!1sen!2sus"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8296488884735!2d85.33535309999999!3d27.7225455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19094e6425bf%3A0x132662741329893f!2sClock%20b%20Business%20Innovations!5e0!3m2!1sen!2snp!4v1747035036785!5m2!1sen!2snp"
                         width="100%"
                         height="250"
                         style={{ border: 0 }}
@@ -258,30 +263,32 @@ const Contact = () => {
                     Connect With Us
                   </h3>
                   <div className="flex space-x-4">
-                    <a
-                      href="https://facebook.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
-                    >
-                      <Facebook className="h-6 w-6" />
-                    </a>
-                    <a
-                      href="https://instagram.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
-                    >
-                      <Instagram className="h-6 w-6" />
-                    </a>
-                    <a
-                      href="https://linkedin.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
-                    >
-                      <Linkedin className="h-6 w-6" />
-                    </a>
+                    {ConfigData?.socialHandles.facebook && (
+                      <Link
+                        href={ConfigData?.socialHandles.facebook}
+                        className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                      >
+                        <Facebook className="h-6 w-6" />
+                      </Link>
+                    )}
+
+                    {ConfigData?.socialHandles.instagram && (
+                      <Link
+                        href={ConfigData?.socialHandles.instagram}
+                        className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                      >
+                        <Instagram className="h-6 w-6" />
+                      </Link>
+                    )}
+
+                    {ConfigData?.socialHandles.linkedin && (
+                      <Link
+                        href={ConfigData?.socialHandles.linkedin}
+                        className="bg-estates-primary/10 hover:bg-estates-primary text-estates-primary hover:text-white p-3 rounded-full transition-colors duration-300"
+                      >
+                        <Linkedin className="h-6 w-6" />
+                      </Link>
+                    )}
                   </div>
                 </div>
 
@@ -289,8 +296,8 @@ const Contact = () => {
                   <h3 className="font-semibold text-lg mb-4">Office Hours</h3>
                   <div className="space-y-2 text-gray-600">
                     <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p>Saturday: 10:00 AM - 2:00 PM</p>
-                    <p>Sunday: Closed</p>
+                    <p>Saturday: Closed</p>
+                    <p>Sunday: 10:00 AM - 5:00 AM</p>
                   </div>
                 </div>
               </div>

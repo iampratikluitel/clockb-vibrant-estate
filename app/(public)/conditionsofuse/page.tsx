@@ -11,7 +11,7 @@ const Page = () => {
   return (
     <>
       <main className="pt-24">
-      <h1 className="md:px-28 md:py-4 font-semibold text-2xl">Terms and Condition</h1>
+      <h1 className="md:px-28 md:py-4 font-semibold text-2xl">Terms and Conditions</h1>
 
         {Loading ? (
           <PageLoader />
