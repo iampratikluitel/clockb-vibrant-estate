@@ -5,6 +5,7 @@ import ReduxProvider from "@/store/ReduxProvider";
 import { auth } from "@/auth";
 import "./globals.css";
 import SessionProviderWrapper from "@/components/sessionProvider";
+import { DOMAIN } from "@/lib/constants";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,21 +20,17 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Project Estate",
-  description: "Welcome to ProjectEstate",
+  description: "Transforming Real Estate into Value-Driven Investments",
   openGraph: {
-    title: "Project Estate",
-    description: "Welcome to ProjectEstate",
+    type: "website",
+    url: DOMAIN,
+    title: `Project Estate`,
+    description: "Transforming Real Estate into Value-Driven Investments",
     images: [
       {
         url: "/logo/project-estate.png",
-        width: 120,
-        height: 630,
-        alt: "Project Estate Logo",
       },
     ],
-  },
-  icons: {
-    icon: "/favicon.ico",  
   },
 };
 
