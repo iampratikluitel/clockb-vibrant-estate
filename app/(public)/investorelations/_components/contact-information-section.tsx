@@ -60,14 +60,14 @@ export default function ContactInformationSection() {
                 />
                 <ContactItem
                   icon={<MapPin className="h-6 w-6 text-estates-primary" />}
-                  text="Visit Us: Furtiman Marg-5, Bishalnagar, Kathmandu, Nepal"
+                  text="Visit Us: Phurtiman Marg, Bishalnagar, Kathmandu, Nepal"
                   action={
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() =>
                         window.open(
-                          "https://maps.google.com/?q=Bishalnagar,Kathmandu,Nepal",
+                          "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8296488884735!2d85.33535309999999!3d27.7225455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19094e6425bf%3A0x132662741329893f!2sClock%20b%20Business%20Innovations!5e0!3m2!1sen!2snp!4v1747035036785!5m2!1sen!2snp",
                           "_blank"
                         )
                       }
