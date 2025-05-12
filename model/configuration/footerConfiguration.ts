@@ -7,6 +7,7 @@ const footerSchema = new Schema(
     email: String,
     address: String,
     phone: String,
+    phone2: String,
     socialHandles: {
       facebook: String,
       twitter: String,

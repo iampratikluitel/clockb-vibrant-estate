@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -12,17 +12,16 @@ import {
   useGetPublicNewsInsightsCategoryQuery,
   useGetPublicNewsInsightsQuery,
 } from "@/store/api/Public/publicNewsInsight";
-import { MINIOURL } from "@/lib/constants";
 import { paths } from "@/lib/paths";
 
 const NewsInsightsSidebar = () => {
   const { slug } = useParams();
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { data: NewsInsight } = useGetPublicNewsInsightsQuery("");
   const { data: NewsInsightBySlug } = useGetPublicNewsInsightBySlugQuery(
     slug as string
   );
-
   const { data: NewsInsightCategories } =
     useGetPublicNewsInsightsCategoryQuery("");
 
@@ -30,6 +29,12 @@ const NewsInsightsSidebar = () => {
     ? NewsInsight.filter(
         (newsinsight) => newsinsight._id !== NewsInsightBySlug?._id
       ).slice(0, 5)
+    : [];
+
+  const filteredPosts = NewsInsight
+    ? NewsInsight.filter((post) =>
+        post.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     : [];
 
   return (
@@ -44,15 +49,38 @@ const NewsInsightsSidebar = () => {
             <input
               type="text"
               placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             />
             <Button
               className="absolute right-0 top-0 h-full px-3 py-2 rounded-l-none"
               variant="outline"
+              onClick={() => {}}
             >
               Search
             </Button>
           </div>
+
+          {/* Optional: Show search results */}
+          {searchTerm && (
+            <div className="mt-4 space-y-3">
+              {filteredPosts.slice(0, 5).map((post) => (
+                <div key={post._id} className="text-sm">
+                  <Link
+                    href={`${paths.public.newsInsight}/${post.slug}`}
+                    className="hover:text-primary transition-colors block"
+                  >
+                    {post.title}
+                  </Link>
+                  <Separator />
+                </div>
+              ))}
+              {filteredPosts.length === 0 && (
+                <p className="text-sm text-muted-foreground">No results found.</p>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -115,7 +143,7 @@ const NewsInsightsSidebar = () => {
                         month: "long",
                         day: "numeric",
                       }
-                    )}{" "}
+                    )}
                   </div>
                 </div>
               </div>
@@ -123,24 +151,6 @@ const NewsInsightsSidebar = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Subscribe */}
-      {/* <Card className="bg-primary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="text-primary">Subscribe</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Stay updated with our latest news and articles
-          </p>
-          <input
-            type="email"
-            placeholder="Your email address"
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mb-3"
-          />
-          <Button className="w-full">Subscribe</Button>
-        </CardContent>
-      </Card> */}
     </div>
   );
 };

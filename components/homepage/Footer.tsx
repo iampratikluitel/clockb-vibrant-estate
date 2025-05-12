@@ -127,6 +127,13 @@ const Footer = () => {
                 </div>
               </li>
               <li className="flex items-center">
+                <Phone className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
+                <div className="text-[#9F9EA1]">
+                  <div>{ConfigData?.phone2}</div>
+                  {/* <div>+977-9843260542</div> */}
+                </div>
+              </li>
+              <li className="flex items-center">
                 <Mail className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
                 <a href={ConfigData?.email} className="text-[#9F9EA1] hover:text-white transition-colors">
                   {ConfigData?.email}

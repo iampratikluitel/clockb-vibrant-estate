@@ -30,7 +30,6 @@ const socialLink = z.object({
 });
 
 const FormSchema = z.object({
-  logo: z.any(),
   email: z.string().email(),
   about: z.string().min(2, {
     message: "About must be at least 2 characters.",
@@ -39,8 +38,9 @@ const FormSchema = z.object({
     message: "Address must be at least 2 characters.",
   }),
   phone: z.string().min(2, {
-    message: "Phone must be at least 2 characters.",
+    message: "Phone must be at least 10 characters.",
   }),
+  phone2: z.string().optional(),
   socialHandles: socialLink,
 });
 
@@ -54,11 +54,11 @@ const FooterForm = ({ ConfigData }: props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      logo: ConfigData?.logo ? `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}` : null,
       email: ConfigData?.email ?? "",
       about: ConfigData?.about ?? "",
       address: ConfigData?.address ?? "",
       phone: ConfigData?.phone ?? "",
+      phone2: ConfigData?.phone2 ?? "",
       socialHandles: {
         facebook: ConfigData?.socialHandles?.facebook ?? "",
         linkedin: ConfigData?.socialHandles?.linkedin ?? "",
@@ -75,23 +75,23 @@ const FooterForm = ({ ConfigData }: props) => {
 
     try {
       setLoading(true);
-      if (!data.logo) {
-        console.log("Logo data:", data.logo); 
-        toast.error("Please select Logo");
-        return;
-      }
-      let ImageUrl = null;
-      if (data.logo != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}`) {
-        ImageUrl = await uploadToMinIO(data.logo, "footer");
-        if (ImageUrl === "") {
-          toast.error("Image Upload Failed Please try again");
-          return;
-        }
-      }
+      // if (!data.logo) {
+      //   console.log("Logo data:", data.logo);
+      //   toast.error("Please select Logo");
+      //   return;
+      // }
+      // let ImageUrl = null;
+      // if (data.logo != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}`) {
+      //   ImageUrl = await uploadToMinIO(data.logo, "footer");
+      //   if (ImageUrl === "") {
+      //     toast.error("Image Upload Failed Please try again");
+      //     return;
+      //   }
+      // }
       const formData = {
         _id: ConfigData?._id,
         ...data,
-        logo: ImageUrl ?? ConfigData?.logo,
+        // logo: ImageUrl ?? ConfigData?.logo,
       };
       const response = await fetch(`/api/admin/configuration/footer`, {
         method: "POST",
@@ -105,7 +105,7 @@ const FooterForm = ({ ConfigData }: props) => {
 
       toast.success("Configuration updated successfully.");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Failed to update configuration. Please try again.");
     } finally {
       setLoading(false);
@@ -116,11 +116,14 @@ const FooterForm = ({ ConfigData }: props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-full space-y-6 p-4 bg-white"
+        className="w-full max-w-5xl mx-auto space-y-8 p-6 bg-white rounded-xl shadow-md"
       >
-        <h1 className="font-semibold text-2xl">Footer Configuration</h1>
-        <div className="flex w-full gap-4">
-          <div className="w-1/2 flex flex-col gap-2">
+        <h1 className="font-semibold text-3xl text-gray-800">
+          Footer Configuration
+        </h1>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="flex flex-col gap-6">
             <FormField
               control={form.control}
               name="email"
@@ -173,18 +176,67 @@ const FooterForm = ({ ConfigData }: props) => {
                 </FormItem>
               )}
             />
-            <div className="flex gap-4">
+            <FormField
+              control={form.control}
+              name="phone2"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Secont Phone number</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Another Number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="socialHandles.facebook"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Facebook URL</FormLabel>
+                    <FormLabel>Facebook</FormLabel>
                     <FormControl>
                       <Input
-                        className=""
                         type="url"
-                        placeholder="Eg: https://www.facebook.com/"
+                        placeholder="https://facebook.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="socialHandles.instagram"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Instagram</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="https://instagram.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="socialHandles.linkedin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="https://linkedin.com"
                         {...field}
                       />
                     </FormControl>
@@ -197,56 +249,31 @@ const FooterForm = ({ ConfigData }: props) => {
                 name="socialHandles.twitter"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Instagram Link</FormLabel>
+                    <FormLabel>Twitter</FormLabel>
                     <FormControl>
                       <Input
-                        className=""
                         type="url"
-                        placeholder="Eg: https://www.instagram.com"
+                        placeholder="https://twitter.com"
                         {...field}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="socialHandles.linkedin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn Link</FormLabel>
-                    <FormControl>
-                      <Input
-                        className=""
-                        type="url"
-                        placeholder="Eg: https://www.linkedin.com"
-                        {...field}
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="flex gap-4">
               <FormField
                 control={form.control}
                 name="socialHandles.whatsapp"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Whatsapp Link</FormLabel>
+                    <FormLabel>WhatsApp</FormLabel>
                     <FormControl>
                       <Input
-                        className=""
                         type="url"
-                        placeholder="Eg: https://www.whatsapp.com"
+                        placeholder="https://whatsapp.com"
                         {...field}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
@@ -256,37 +283,34 @@ const FooterForm = ({ ConfigData }: props) => {
                 name="socialHandles.youtube"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Youtube Link</FormLabel>
+                    <FormLabel>YouTube</FormLabel>
                     <FormControl>
                       <Input
-                        className=""
                         type="url"
-                        placeholder="Eg: https://www.youtube.com"
+                        placeholder="https://youtube.com"
                         {...field}
                       />
                     </FormControl>
-
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
           </div>
-          <div className="w-1/2">
-            <SCNSingleImagePicker
-              name="Logo"
-              variant="avatar"
-              schemaName="logo"
-            />
-          </div>
         </div>
-        {Loading ? (
-          <div>
-            <div className="loader"></div>
-          </div>
-        ) : (
-          <Button type="submit">Submit</Button>
-        )}
+
+        {/* Submit Button */}
+        <div className="pt-4">
+          {Loading ? (
+            <div className="text-center">
+              <div className="loader mx-auto"></div>
+            </div>
+          ) : (
+            <Button type="submit" className="w-full sm:w-auto">
+              Submit
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );
