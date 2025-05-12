@@ -13,7 +13,6 @@ export const GET = async () => {
     const Faqs = await FAQs.find({ status: true }).sort({
       addedDate: -1,
     });
-    console.log("fetch", Faqs)
 
     const categoryIds = Faqs.map((Faq) => Faq.categoryId);
     const categories = await FAQsCategory.find({

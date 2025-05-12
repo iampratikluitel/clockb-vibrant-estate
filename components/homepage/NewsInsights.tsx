@@ -18,7 +18,7 @@ const NewsInsights = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            News & Insight
+            News & Insights
           </h2>
           <div className="w-20 h-1 bg-estates-primary mx-auto"></div>
           <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
@@ -78,7 +78,7 @@ const NewsInsights = () => {
             href={paths.public.newsInsight}
             className="inline-flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white px-6 py-2 rounded-md"
           >
-            View More Insight
+            View More Insights
             <ArrowRight className="ml-2 w-4 h-4" />
           </Link>
         </div>

@@ -5,7 +5,6 @@ export const NewsSchema = z.object({
   description: z.string().min(1, {message: "Description is requires"}),
   author: z.string().min(1, {message: "Author is required"}),
   image: z.any(),
-  bannerImage: z.any(),
   overview: z.string().min(1, { message: "Overview is required." }),
   categoryId: z.string().min(2, {
     message: "CategoryId is required.",

@@ -103,7 +103,6 @@ export default function DevelopmentPhaseForm({ ExistingDetail }: Props) {
       
       if (response) {
         toast.success(response.message || "Changes saved successfully");
-        router.push(paths.admin.configuration);
       } else {
         toast.error("Couldn't update configuration");
       }

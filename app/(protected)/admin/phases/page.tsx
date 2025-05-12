@@ -9,7 +9,6 @@ import { paths } from "@/lib/paths";
 const DevelopmentPhase = () => {
   const { data: ConfigData, isLoading: Loading } =
     useGetAdminDevelopmentPhaseQuery("");
-  console.log(ConfigData);
 
   return (
     <div className="p-4 bg-white">
@@ -29,7 +28,7 @@ const DevelopmentPhase = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <DevelopmentPhaseForm ExistingDetail={ConfigData?.[0]} />
+        <DevelopmentPhaseForm ExistingDetail={Array.isArray(ConfigData) ? ConfigData[0] : ConfigData} />
       )}
       </div>
   );

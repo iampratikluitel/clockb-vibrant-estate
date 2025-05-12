@@ -39,6 +39,7 @@ export interface FOOTER {
   about: string;
   address: string;
   phone: string;
+  phone2: string;
   socialHandles: {
     facebook: string;
     linkedin: string;
@@ -97,7 +98,6 @@ export interface NEWSINSIGHT {
   image: string;
   description: string;
   author: string;
-  bannerImage: string;
   slug: string;
   overview: string;
   categoryId?: string;

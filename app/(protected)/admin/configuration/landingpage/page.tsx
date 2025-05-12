@@ -9,7 +9,6 @@ import { paths } from "@/lib/paths";
 const LandingPageConfig = () => {
   const { data: ConfigData, isLoading: Loading } =
     useGetAdminConfigLandingPageQuery("");
-  console.log(ConfigData);
 
   return (
     <div className="p-4 bg-white">

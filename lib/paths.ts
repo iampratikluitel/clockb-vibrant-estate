@@ -22,6 +22,7 @@ export const paths = {
     investorelations: "/investorelations",
     projectdescription: "/projectdescription",
     newsInsight: "/newsInsights",
+    categorizedNews: "/newsInsights/category",
     resources: "/resources",
   },
 

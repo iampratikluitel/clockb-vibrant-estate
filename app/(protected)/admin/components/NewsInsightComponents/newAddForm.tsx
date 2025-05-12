@@ -39,13 +39,14 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetails?: NEWSINSIGHT;
+  ExistingDetails?: any;
   newsCategory: any[];
 }
 
 const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
   const [Loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  
   const router = useRouter();
   const [AdminAddUpdateNews] = useAdminAddUpdateNewsInsightMutation();
 
@@ -57,9 +58,6 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
       author: ExistingDetails?.author ?? "",
       image: ExistingDetails?.image
         ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image)}`
-        : null,
-      bannerImage: ExistingDetails
-        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetails.bannerImage)}`
         : null,
       overview: ExistingDetails?.overview ?? "",
       categoryId: ExistingDetails?.categoryId ?? "",
@@ -74,12 +72,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
           toast.error("Please select Image");
           return;
         }
-        if (!data.bannerImage) {
-          toast.error("Please select Banner Image");
-          return;
-        }
         let uploadedFileName;
-        let uploadedBannerFileName;
         if (data.image) {
           uploadedFileName = await uploadToMinIO(data.image, "newsinsight");
           if (uploadedFileName === "") {
@@ -87,20 +80,9 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
             return;
           }
         }
-        if (data.bannerImage) {
-          uploadedBannerFileName = await uploadToMinIO(
-            data.bannerImage,
-            "newsinsight"
-          );
-          if (uploadedBannerFileName === "") {
-            toast.error("Banner Image Upload Failed Please try again");
-            return;
-          }
-        }
         const formData = {
           ...data,
           image: uploadedFileName,
-          bannerImage: uploadedBannerFileName,
         };
         const response = await AdminAddUpdateNews({
           ...formData,
@@ -117,7 +99,6 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
       } else if (type == "Edit") {
         setLoading(true);
         let ImageUrl = null;
-        let BannerImageUrl = null;
 
         if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image ?? "")}`) {
           ImageUrl = await uploadToMinIO(data.image, "newsinsight");
@@ -126,18 +107,11 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
             return;
           }
         }
-        if (data.bannerImage != `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.bannerImage ?? "")}`) {
-          BannerImageUrl = await uploadToMinIO(data.bannerImage, "courses");
-          if (BannerImageUrl === "") {
-            toast.error("Banner Image Upload Failed Please try again");
-            return;
-          }
-        }
+
         const formData = {
           _id: ExistingDetails?._id,
           ...data,
           image: ImageUrl ?? ExistingDetails?.image,
-          bannerImage: BannerImageUrl ?? ExistingDetails?.bannerImage,
         };
         const response = await AdminAddUpdateNews({
           ...formData,
@@ -300,11 +274,6 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                 name="NewsInsight Image"
                 variant="imageBox"
                 schemaName="image"
-              ></SCNSingleImagePicker>
-              <SCNSingleImagePicker
-                name="Banner Image"
-                variant="imageBox"
-                schemaName="bannerImage"
               ></SCNSingleImagePicker>
               {/* <ReactQuillEditor name="overview" label="News Overview" /> */}
             </div>

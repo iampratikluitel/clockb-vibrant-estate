@@ -39,6 +39,7 @@ export const publicFunctionsApi = createApi({
 
 export const {
   usePublicSubscribeNewsLetterMutation,
+  
   useForgotPasswordMutation,
   useResetPasswordMutation,
 } = publicFunctionsApi;

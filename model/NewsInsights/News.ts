@@ -6,7 +6,6 @@ const newsSchema = new Schema({
   author: String,
   description: String,
   image: String,
-  bannerImage: String,
   date: String,
   categoryId: {
     type: Schema.Types.ObjectId,

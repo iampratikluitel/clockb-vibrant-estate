@@ -29,7 +29,11 @@ export const publicNewsInsightsApi = createApi({
     getPublicNewsInsightsCategory: builder.query<NEWSINSIGHTCATEGORY[], string>({
       query: () => `public/newsInsight/category`,
       providesTags: ["Public NewsInsights"],
-    })
+    }),
+    getPublicNewsInsightCategoryBySlug: builder.query<NEWSINSIGHTCATEGORY, string>({
+      query: (slug) => `public/jobs/category/byslug?slug=${slug}`,
+      providesTags: ["Public NewsInsights"],
+    }),
   }),
 });
 
@@ -37,5 +41,6 @@ export const {
   useGetPublicNewsInsightBySlugQuery,
   useGetPublicNewsInsightsByCategoryQuery,
   useGetPublicNewsInsightsQuery,
-  useGetPublicNewsInsightsCategoryQuery
+  useGetPublicNewsInsightsCategoryQuery,
+  useGetPublicNewsInsightCategoryBySlugQuery,
 } = publicNewsInsightsApi;

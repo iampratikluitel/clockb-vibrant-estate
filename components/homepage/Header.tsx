@@ -51,8 +51,8 @@ const Header = () => {
         >
           <img
             className="w-12 h-12 group-hover:scale-110 transition-transform duration-30"
-            src="logo/project-estate.png"
-            alt="nss-logo-png"
+            src="/logo/project-estate.png"
+            alt="logo"
           />
           <span className="text-xl font-bold tracking-tight">
             Project Estates

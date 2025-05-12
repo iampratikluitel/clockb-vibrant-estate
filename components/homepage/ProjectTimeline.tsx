@@ -58,10 +58,9 @@ const ProjectTimeline = ({ initialData }: ProjectTimelineProps) => {
         let period = "Unknown";
 
         if (currentDateStr) {
-          // Extract only the year from the date string (assuming the format is YYYY or a full date string)
           const startYear = new Date(currentDateStr).getFullYear();
           const endYear = nextDateStr
-            ? new Date(nextDateStr).getFullYear() - 1
+            ? new Date(nextDateStr).getFullYear()
             : startYear;
 
           if (!isNaN(startYear)) {
@@ -308,7 +307,6 @@ const TimelineItem = ({
             })()}
           </span> */}
           <span>{milestone.period}</span>
-
         </div>
         <h3
           className={cn(
@@ -382,7 +380,6 @@ const MobileTimelineItem = ({
           })()}
         </span> */}
         <span>{milestone.period}</span>
-
       </div>
       <p className="text-slate-600 text-sm leading-relaxed">
         {milestone.description}

@@ -11,6 +11,7 @@ import { paths } from "@/lib/paths";
 import { connectDb } from "@/lib/mongodb";
 import ProjectCategory from "@/model/Projects/ProjectCategory";
 import AddProjectForm from "../../components/projectDescription/projectForm";
+import BeforeProjectForm from "../../components/projectDescription/BeforeProjectForm";
 
 type Props = {
   params: {};
@@ -48,7 +49,11 @@ const Edit = async (props: Props) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <AddProjectForm type={"Edit"} projectCategory={plainCategories} />
+      <BeforeProjectForm
+        type={"Edit"}
+        projectCategory={plainCategories}
+        id={id}
+      />
     </>
   );
 };

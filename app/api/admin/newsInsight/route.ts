@@ -37,10 +37,6 @@ export const POST = async (request: NextRequest) => {
         if (existingDoc.image && existingDoc.image != Data.image) {
           await minioClient.removeObject(BUCKET_NAME, existingDoc.image);
         }       
-
-        if (existingDoc.bannerImage && existingDoc.bannerImage != Data.bannerImage) {
-          await minioClient.removeObject(BUCKET_NAME, existingDoc.bannerImage);
-        }
         
         await existingDoc.updateOne(Data);
         return NextResponse.json({ message: "NewsInsight Updated" }, { status: 201 });
@@ -128,9 +124,6 @@ export const DELETE = async (request: NextRequest) => {
       await NewsInsight.deleteOne({ _id });
       if (exisitingDoc.image != null) {
         await minioClient.removeObject(BUCKET_NAME, exisitingDoc.image);
-      }
-      if (exisitingDoc.bannerImage != null) {
-        await minioClient.removeObject(BUCKET_NAME, exisitingDoc.bannerImage);
       }
       return NextResponse.json({ message: "NewsInsight Deleted" }, { status: 201 });
     } else {
