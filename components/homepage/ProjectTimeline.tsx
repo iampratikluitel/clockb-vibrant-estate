@@ -141,7 +141,7 @@ const ProjectTimeline = ({ initialData }: ProjectTimelineProps) => {
 
   return (
     <section
-      className="py-24 bg-gradient-to-b from-white to-estates-gray-100"
+      className="pt-24 bg-gradient-to-b from-white to-estates-gray-100"
       id="timeline"
     >
       <div className="container px-4 mx-auto">
