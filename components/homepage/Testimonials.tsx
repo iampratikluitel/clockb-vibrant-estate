@@ -6,19 +6,11 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { QuoteIcon } from "lucide-react";
 import { useGetPublicTestimonialsQuery } from "@/store/api/Public/publicTestimonails";
 import { TESTIMONIALS } from "@/lib/types";
+import PageLoader from "../PageLoader";
 
 const Testimonials = () => {
   const { data, isLoading, error } = useGetPublicTestimonialsQuery("");
 
-  if (isLoading) {
-    return <p className="text-center text-gray-700">Loading testimonials...</p>;
-  }
-
-  if (error) {
-    return <p className="text-center text-red-600">Failed to load testimonials.</p>;
-  }
-
-  // Ensure data is structured correctly
   const testimonials: TESTIMONIALS[] = data || [];
 
   return (
@@ -60,7 +52,7 @@ const Testimonials = () => {
                 </CarouselItem>
               ))
             ) : (
-              <p className="text-center text-gray-600"></p>
+              <p className="text-center text-gray-600"><PageLoader /></p>
             )}
           </CarouselContent>
 
