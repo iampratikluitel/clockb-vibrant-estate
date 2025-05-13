@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
 import { DEVELOPMENTPHASE } from "@/lib/types";
 import { useGetPublicDevelopmentPhaseQuery } from "@/store/api/Public/publicDevelopmentPhase";
+import PageLoader from "@/components/PageLoader";
 
 const PhaseWise = () => {
   const { data, isLoading, error } = useGetPublicDevelopmentPhaseQuery("")
@@ -56,7 +57,7 @@ const PhaseWise = () => {
           {isLoading ? (
             <p className="text-center">Loading...</p>
           ) : error ? (
-            <p className="text-center text-red-500">Failed to load timeline.</p>
+            <p className="loader"></p>
           ) : (
             <div className="relative pb-12">
               <div className="hidden md:block absolute left-0 right-0 top-1/2 h-1 bg-estates-gray-300 transform -translate-y-1/2"></div>

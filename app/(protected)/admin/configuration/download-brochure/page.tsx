@@ -37,7 +37,7 @@ const DownloadBrochure = () => {
         <h1 className="p-4 text-xl font-bold">Download Brochure</h1>
         </div>
       {Loading ? (
-        <div className="w-full h-[30vh] flex justify-center items-center">
+        <div className="w-full flex justify-center items-center">
           <p className="loader"></p>
         </div>
       ) : (

@@ -25,8 +25,9 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-6">Project Estates</h3>
             <p className="text-[#9F9EA1] mb-6 leading-relaxed">
-              Premium real estate investment opportunities with exceptional
-              returns and long-term growth potential across strategic locations.
+              {/* Premium real estate investment opportunities with exceptional
+              returns and long-term growth potential across strategic locations. */}
+              {ConfigData?.about}
             </p>
             <div className="flex space-x-4">
               {ConfigData?.socialHandles.facebook && (
