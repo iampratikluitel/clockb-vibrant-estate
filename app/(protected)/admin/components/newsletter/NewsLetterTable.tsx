@@ -2,9 +2,7 @@
 
 import * as React from "react";
 
-import {
-  ChevronDownIcon,
-} from "@radix-ui/react-icons";
+import { ChevronDownIcon } from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -37,7 +35,20 @@ import {
 } from "@/components/ui/table";
 import { NEWSLETTER } from "@/lib/types";
 import { convertToHumanReadable } from "@/lib/helper";
-import { useGetAllAdminNewsLetterQuery } from "@/store/api/Admin/adminMisc";
+import {
+  useDeleteMultipleNewsLetterAdminMutation,
+  useGetAllAdminNewsLetterQuery,
+} from "@/store/api/Admin/adminMisc";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const NewsLetterTable = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -48,6 +59,20 @@ const NewsLetterTable = () => {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const { data: Data, isLoading: Loading } = useGetAllAdminNewsLetterQuery("");
+  const [deleteMultiple] = useDeleteMultipleNewsLetterAdminMutation();
+
+  const handleMultipleDelete = async (ids: string[]) => {
+    toast.promise(
+      deleteMultiple({
+        ids: ids,
+      }),
+      {
+        loading: "Deleting...",
+        success: <b> Deleted</b>,
+        error: <b>Error while deleting</b>,
+      }
+    );
+  };
 
   const data: NEWSLETTER[] = Data!;
   const columns: ColumnDef<NEWSLETTER>[] = [
@@ -109,6 +134,20 @@ const NewsLetterTable = () => {
     },
   });
 
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+  const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
+
+  const openDeleteModal = (ids: string[]) => {
+    setSelectedRowIds(ids);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedRowIds([]);
+    setRowSelection({});
+  };
+
   return (
     <div className="w-full h- ">
       {Loading ? (
@@ -120,15 +159,54 @@ const NewsLetterTable = () => {
           {" "}
           <div className="flex items-center py-4">
             <Input
-              placeholder="Filter Email..."
+              placeholder="Filter Name..."
               value={
-                (table.getColumn("email")?.getFilterValue() as string) ?? ""
+                (table.getColumn("name")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn("email")?.setFilterValue(event.target.value)
+                table.getColumn("name")?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
+            {table.getFilteredSelectedRowModel().rows.length > 0 && (
+              <Button
+                onClick={() =>
+                  openDeleteModal(
+                    table
+                      .getFilteredSelectedRowModel()
+                      .rows.map((row) => row.original._id ?? "")
+                  )
+                }
+                variant={"destructive"}
+                className="m-2"
+              >
+                Delete
+              </Button>
+            )}
+            <Dialog open={isDeleteModalOpen} onOpenChange={closeDeleteModal}>
+              <DialogTrigger asChild></DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Are you sure?</DialogTitle>
+                  <DialogDescription>
+                    This will delete your data permanently.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DialogFooter>
+                  <Button onClick={closeDeleteModal}>Cancel</Button>
+                  <Button
+                    onClick={async () => {
+                      await handleMultipleDelete(selectedRowIds);
+                      closeDeleteModal();
+                    }}
+                    variant={"destructive"}
+                  >
+                    Delete
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="ml-auto">

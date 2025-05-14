@@ -9,7 +9,6 @@ import { publicAboutApi } from "./api/Public/publicAbout";
 import { adminFaqApi } from "./api/Admin/adminFaqs";
 import { adminTestimonialsApi } from "./api/Admin/adminTestimonials";
 import { publicTestimonailsApi } from "./api/Public/publicTestimonails";
-import { adminTermsAndConditionsApi } from "./api/Admin/adminTermsAndCondition";
 import { adminNewsInsightsApi } from "./api/Admin/adminNewsInsight";
 import { publicNewsInsightsApi } from "./api/Public/publicNewsInsight";
 import { adminProjectApi } from "./api/Admin/adminProject";
@@ -27,7 +26,6 @@ export const store = configureStore({
     [adminAboutApi.reducerPath]: adminAboutApi.reducer,
     [adminFaqApi.reducerPath]: adminFaqApi.reducer,
     [adminTestimonialsApi.reducerPath]: adminTestimonialsApi.reducer,
-    [adminTermsAndConditionsApi.reducerPath]: adminTermsAndConditionsApi.reducer,
     [adminNewsInsightsApi.reducerPath]: adminNewsInsightsApi.reducer,
     [adminProjectApi.reducerPath]: adminProjectApi.reducer,
     [adminDevelopementPhaseApi.reducerPath]: adminDevelopementPhaseApi.reducer,
@@ -53,7 +51,6 @@ export const store = configureStore({
       adminFaqApi.middleware,
       adminTestimonialsApi.middleware,
       adminProjectApi.middleware,
-      adminTermsAndConditionsApi.middleware,
       adminNewsInsightsApi.middleware,
       adminContactApi.middleware,
       adminDevelopementPhaseApi.middleware,

@@ -17,6 +17,19 @@ export const adminMiscsApi = createApi({
       providesTags: ["Admin NewsLetter"],
     }),
 
+    deleteMultipleNewsLetterAdmin: builder.mutation<
+      { message: string },
+      { ids: string[] }
+    >({
+      query: (body) => ({
+        url: `admin/newsletter/deletemultiple`,
+        method: "DELETE",
+        body: body,
+      }),
+      invalidatesTags: ["Admin NewsLetter"],
+    }),
+
+
     getDashboardCount: builder.query<any, string>({
       query: () => `admin/dashboard/counts`,
       providesTags: ["Admin Dashboard"],
@@ -24,5 +37,5 @@ export const adminMiscsApi = createApi({
   }),
 });
 
-export const { useGetAllAdminNewsLetterQuery, useGetDashboardCountQuery } =
+export const { useGetAllAdminNewsLetterQuery, useDeleteMultipleNewsLetterAdminMutation, useGetDashboardCountQuery } =
   adminMiscsApi;
