@@ -99,6 +99,11 @@ export const adminAboutApi = createApi({
       invalidatesTags: ["Admin Partner"],
     }),
 
+    getAllAdminInvestmentCircle: builder.query<any, string>({
+      query: () => `admin/about/investment-circle`,
+      providesTags: ["Admin Investment Circle"],
+    }),
+
     adminAddUpdateInvestmentCircle: builder.mutation<{ message: string }, any>({
       query: (body) => ({
         url: `admin/about/investment-circle`,
@@ -125,5 +130,7 @@ export const {
   useAdminAddUpdatePartnerMutation,
   useAdminDeletePartnerMutation,
   useDeleteMultiplePartnerAdminMutation,
+
+  useGetAllAdminInvestmentCircleQuery,
   useAdminAddUpdateInvestmentCircleMutation,
 } = adminAboutApi;

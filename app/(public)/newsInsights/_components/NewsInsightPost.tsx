@@ -4,7 +4,6 @@ import React from "react";
 import { Calendar, User } from "lucide-react";
 import { useGetPublicNewsInsightBySlugQuery } from "@/store/api/Public/publicNewsInsight";
 import { useParams } from "next/navigation";
-import { MINIOURL } from "@/lib/constants";
 import NewsInsightOverview from "./NewsInsightOverview";
 import NewsInsightsSidebar from "./NewsInsightSidebar";
 
@@ -14,7 +13,7 @@ const NewsInsightsPost = () => {
     useGetPublicNewsInsightBySlugQuery(slug as string);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen pt-24">
       {/* Hero Section */}
       <div className="relative h-[40vh] md:h-[60vh] bg-slate-900">
         <div className="absolute inset-0">

@@ -5,87 +5,76 @@ import { connectDb } from "@/lib/mongodb";
 import InvestmentCircle from "@/model/about/investmentCircle";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
-  const user = await currentUser();
-
+export const POST = async (request: NextRequest) => {
   try {
-    await connectDb();
-    const data = await request.json();
-
+    const user = await currentUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
 
-    let responseMessage = "Added";
-
-    if (data?._id) {
-      const existingConfig = await InvestmentCircle.findById(data._id);
-      if (existingConfig) {
-        if (existingConfig.image && existingConfig.image !== data.image) {
-          await minioClient.removeObject(BUCKET_NAME, existingConfig.image);
-        }
-
-        await InvestmentCircle.findByIdAndUpdate(data._id, data, { new: true });
-        responseMessage = "Updated";
-      } else {
-        await new InvestmentCircle(data).save();
-      }
-    } else {
-      await new InvestmentCircle(data).save();
-    }
-
-    return NextResponse.json({ message: responseMessage }, { status: 200 });
-
-  } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
-  }
-}
-
-
-export const GET = async () => {
-  console.log("Running GET request: Get Footer");
-  try {
+    const data = await request.json();
     await connectDb();
-    const data = await InvestmentCircle.find();
-    return NextResponse.json(data, { status: 200 });
+
+    if (data._id) {
+      const existingConfig = await InvestmentCircle.findById(data._id);
+
+      if (!existingConfig) {
+        return NextResponse.json(
+          { error: "About page configuration not found" },
+          { status: 404 }
+        );
+      }
+      
+      // Delete old logo if it exists and has changed
+      if (existingConfig.logo && existingConfig.logo !== data.logo) {
+        try {
+          await minioClient.removeObject(BUCKET_NAME, existingConfig.logo);
+        } catch (logoError) {
+          console.error("Error removing old logo:", logoError);
+          // Continue with update even if logo removal fails
+        }
+      }
+
+      await existingConfig.updateOne(data);
+      return NextResponse.json(
+        { message: "Updated successfully" },
+        { status: 200 }
+      );
+    } else {
+      const newConfig = new InvestmentCircle(data);
+      await newConfig.save();
+      return NextResponse.json(
+        { message: "Created successfully" },
+        { status: 201 }
+      );
+    }
   } catch (error) {
-    console.error("Error:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    console.error("Error updating about page:", error);
+    return NextResponse.json(
+      { error: "Failed to process request" },
+      { status: 500 }
+    );
   }
 };
 
-export const DELETE = async (request: NextRequest) => {
-  console.log("Running DELETE request: Admin DELETE InvestmentCircle by id");
-  const user = await currentUser();
+export const GET = async () => {
   try {
     await connectDb();
-    const { searchParams } = new URL(request.url);
-    const _id = searchParams.get("id");
+    const data = await InvestmentCircle.findOne();
 
-    if (user) {
-    const exisitingDoc = await InvestmentCircle.findOne({ _id });
-    if (!exisitingDoc) {
-    return NextResponse.json({ message: "No Testimonial Found" }, { status: 404 });
-    }
-
-    await InvestmentCircle.deleteOne({ _id });
-    if (exisitingDoc.image != null) {
-      await minioClient.removeObject(
-        BUCKET_NAME,
-        exisitingDoc.image
+    if (!data) {
+      return NextResponse.json(
+        { error: "No about page data found" },
+        { status: 404 }
       );
     }
-    return NextResponse.json({ message: "Testimonial Deleted" }, { status: 201 });
 
-    }else{
-      return NextResponse.json(JSON.stringify("Forbidden"), { status: 200 });
-    }
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-      console.log(error);
-      return NextResponse.json({ error: "Invalid request body" }, { status: 400 });  
+    console.error("Error fetching about page data:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch data" },
+      { status: 500 }
+    );
   }
-}
+};

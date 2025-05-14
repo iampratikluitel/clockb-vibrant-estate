@@ -12,12 +12,10 @@ export const POST = async (request: NextRequest) => {
   try {
     const Data = await request.json();
     await connectDb();
-    console.log("MongoDb Connected");
 
     if (user) {
       const existingDoc = await Partner.findOne({ _id: Data?._id });
       if (existingDoc) {
-        //check if logo has been changed or not if yes delete previous one
         if (existingDoc.logo && existingDoc.logo != Data.logo) {
           await minioClient.removeObject(BUCKET_NAME, existingDoc.logo);
         }

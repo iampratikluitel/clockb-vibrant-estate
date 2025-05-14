@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import React from "react";
 import AboutForm from "./aboutHeroForm";
 import { useGetAllAdminAboutHeroQuery } from "@/store/api/Admin/adminAboutPage";
@@ -9,7 +7,7 @@ const AboutSectionTab = () => {
       useGetAllAdminAboutHeroQuery("");
 
   return (
-    <div className="flex justify-end">
+    <div className="">
       <AboutForm  ExistingDetail={ConfigData}/>
     </div>
   );

@@ -1,8 +1,6 @@
 "use client";
 
 import { Phone, MapPin, FileText } from "lucide-react";
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
 import TeamMemberView from "./_components/team-member";
 import PlanningPartner from "./_components/planning-partner";
 import InvestmentCircle from "./_components/investment-circle";

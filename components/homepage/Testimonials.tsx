@@ -52,7 +52,7 @@ const Testimonials = () => {
                 </CarouselItem>
               ))
             ) : (
-              <p className="text-center text-gray-600"><PageLoader /></p>
+              <p className="loader"></p>
             )}
           </CarouselContent>
 

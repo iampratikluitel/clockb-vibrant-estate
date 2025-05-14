@@ -71,14 +71,14 @@ export default function AboutForm({ ExistingDetail }: Props) {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto p-2">
+    <Card className="w-full max-w-full mx-auto p-4">
       <CardHeader>
         <CardTitle className="text-xl font-bold">Edit Main Section</CardTitle>
       </CardHeader>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <CardContent className="space-y-5">
-          <div className="grid gap-2">
-            <Label htmlFor="title" className="font-medium">Title</Label>
+          <div className="grid gap-2 pb-4">
+            <Label htmlFor="title" className="text-md font-medium">Title</Label>
             <Input
               id="title"
               placeholder="Enter title"
@@ -92,7 +92,7 @@ export default function AboutForm({ ExistingDetail }: Props) {
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="description" className="font-medium">Description</Label>
+            <Label htmlFor="description" className="text-md font-medium">Description</Label>
             <Textarea
               id="description"
               placeholder="Enter description"

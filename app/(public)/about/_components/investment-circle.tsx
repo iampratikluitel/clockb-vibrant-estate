@@ -1,31 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-interface Investment {
-  name: string;
-  description: string;
-  logo: string;
-  points?: string[];
-}
+import { useGetPublicInvestmentCircleQuery } from "@/store/api/Public/publicAbout";
+import React from "react";
 
 export default function InvestmentCircle() {
-  const [investmentCircle, setInvestmentCircle] = useState<Investment | null>(
-    null
-  );
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/public/about/investment-circle");
-        const data = await response.json();
-        setInvestmentCircle(data);
-      } catch (error) {
-        console.log("Error fetching Data", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: InvestmentCircle, isLoading} = useGetPublicInvestmentCircleQuery();
 
   return (
     <>
@@ -34,7 +13,7 @@ export default function InvestmentCircle() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10">
               <h2 className="text-3xl font-bold text-estates-primary mb-4">
-                {investmentCircle?.name}
+                {InvestmentCircle?.name}
               </h2>
             </div>
 
@@ -46,9 +25,9 @@ export default function InvestmentCircle() {
                     <div className="relative bg-estates-primary/20 rounded-full">
                       <img
                         src={
-                          investmentCircle
+                          InvestmentCircle
                             ? `/api/resources/download?filename=${encodeURIComponent(
-                                investmentCircle.logo
+                                InvestmentCircle.logo
                               )}`
                             : ""
                         }
@@ -61,13 +40,13 @@ export default function InvestmentCircle() {
                 </div>
                 <div className="md:w-2/3">
                   <p className="text-lg text-gray-700 mb-6">
-                    {investmentCircle?.description}
+                    {InvestmentCircle?.description}
                   </p>
 
                   {/* Dynamically generated points */}
-                  {investmentCircle?.points && (
+                  {InvestmentCircle?.points && (
                     <ul className="space-y-3">
-                      {investmentCircle?.points.map((point, index) => (
+                      {InvestmentCircle?.points.map((point: string, index: number) => (
                         <li key={index} className="flex items-start">
                           <div className="flex-shrink-0 mr-2 mt-1">
                             <div className="w-5 h-5 rounded-full bg-estates-primary flex items-center justify-center">

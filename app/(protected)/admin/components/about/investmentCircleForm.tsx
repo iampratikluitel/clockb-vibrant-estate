@@ -1,7 +1,6 @@
-"use client";
+"use client"
 
-import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,19 +18,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
 import { useAdminAddUpdateInvestmentCircleMutation } from "@/store/api/Admin/adminAboutPage";
 
-interface InvestmentCircleData {
-  name?: string;
-  description?: string;
-  logo?: string;
-  points?: string[];
-}
-
 interface Props {
-  investmentCircleData?: InvestmentCircleData;
+  ExistingDetail?: any;
 }
 
 const FormSchema = z.object({
@@ -41,7 +32,7 @@ const FormSchema = z.object({
   points: z.array(z.string()).min(1, "At least one point is required"),
 });
 
-export default function InvestmentCircle({ investmentCircleData }: Props) {
+export default function InvestmentCircleForm({ ExistingDetail }: Props) {
   const [loading, setLoading] = useState(false);
 
   const [AdminInvestmentCircle] = useAdminAddUpdateInvestmentCircleMutation();
@@ -49,14 +40,32 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: investmentCircleData?.name ?? "",
-      description: investmentCircleData?.description ?? "",
-      logo: investmentCircleData?.logo
-        ? `/api/resources/download?filename=${encodeURIComponent(investmentCircleData?.logo)}`
+      name: ExistingDetail?.name ?? "",
+      description: ExistingDetail?.description ?? "",
+      logo: ExistingDetail?.logo
+        ? `/api/resources/download?filename=${encodeURIComponent(
+            ExistingDetail?.logo
+          )}`
         : "",
-      points: investmentCircleData?.points ?? [""],
+      points: ExistingDetail?.points?.length > 0 ? ExistingDetail.points : [""],
     },
   });
+
+  useEffect(() => {
+    if (ExistingDetail) {
+      form.reset({
+        name: ExistingDetail.name || "",
+        description: ExistingDetail.description || "",
+        logo: ExistingDetail.logo
+          ? `/api/resources/download?filename=${encodeURIComponent(
+              ExistingDetail?.logo
+            )}`
+          : "",
+        points:
+          ExistingDetail?.points?.length > 0 ? ExistingDetail.points : [""],
+      });
+    }
+  }, [ExistingDetail, form]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -68,41 +77,48 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
     try {
       if (!data.logo || data.logo === "") {
         toast.error("No logo selected");
+        setLoading(false);
         return;
       }
-  
+
       let backgroundUrl = null;
-      const currentLogoPath = investmentCircleData?.logo ?? "";
+      const currentLogoPath = ExistingDetail?.logo ?? "";
       const isLogoUpdated =
-        data.logo !== `/api/resources/download?filename=${encodeURIComponent(currentLogoPath)}`;
-  
+        data.logo !==
+        `/api/resources/download?filename=${encodeURIComponent(
+          currentLogoPath
+        )}`;
+
       if (isLogoUpdated) {
         backgroundUrl = await uploadToMinIO(data.logo, "InvestmentCircle");
         if (!backgroundUrl) {
           toast.error("Logo upload failed. Please try again.");
+          setLoading(false);
           return;
         }
       }
-  
+
       const formData = {
-        ...data,
-        logo: backgroundUrl ?? investmentCircleData?.logo,
+        _id: ExistingDetail?._id, // Include the _id field for updates
+        name: data.name,
+        description: data.description,
+        logo: backgroundUrl ?? ExistingDetail?.logo,
+        points: data.points.filter((point) => point.trim() !== ""), // Filter out empty points
       };
-  
-      // Call the mutation and handle response
-      const response = await AdminInvestmentCircle({
-        ...formData,
-      }).unwrap();
-  
-      toast.success("Updated successfully");
+
+      const response = await AdminInvestmentCircle(formData).unwrap();
+      if (response) {
+        toast.success(response.message || "Changes saved successfully");
+      } else {
+        toast.error("Couldn't update configuration");
+      }
     } catch (error) {
-      console.error("Error during update:", error);
-      toast.error("Failed to update");
+      console.error("Error saving configuration:", error);
+      toast.error("Failed to save changes");
     } finally {
       setLoading(false);
     }
   }
-  
 
   return (
     <Form {...form}>
@@ -154,6 +170,7 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
                           type="button"
                           variant="destructive"
                           onClick={() => remove(index)}
+                          disabled={fields.length <= 1}
                         >
                           ✕
                         </Button>
@@ -168,7 +185,11 @@ export default function InvestmentCircle({ investmentCircleData }: Props) {
                       Add Point
                     </Button>
                   </div>
-                  <FormMessage />
+                  {form.formState.errors.points && (
+                    <p className="text-sm font-medium text-destructive mt-1">
+                      {form.formState.errors.points.message}
+                    </p>
+                  )}
                 </div>
               </div>
 

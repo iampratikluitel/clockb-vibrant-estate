@@ -9,11 +9,10 @@ import Link from "next/link";
 import { paths } from "@/lib/paths";
 import { useGetPublicProjectQuery } from "@/store/api/Public/publicProject";
 
-// Category color mapping with index signature
 const categoryColorMap: { [key: string]: string } = {
   completed: "bg-gray-700",
   ongoing: "bg-green-600",
-  upcoming: "bg-blue-700", // fixing the typo here (was "upcomming")
+  upcoming: "bg-blue-700",
   default: "bg-gray-400",
 };
 

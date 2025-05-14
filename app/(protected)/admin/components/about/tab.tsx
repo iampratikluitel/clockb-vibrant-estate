@@ -3,9 +3,9 @@
 import { useState } from "react";
 import TeamTab from "./team-member-tab";
 import PartnersTab from "./partner-tab";
-import InvestmentCircle from "./investmentCircleForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AboutSectionTab from "./aboutHero";
+import InvestmentCircleTab from "./InvestmentCircle";
 
 export default function AdminAboutPage() {
   const [activeTab, setActiveTab] = useState("about");
@@ -56,7 +56,7 @@ export default function AdminAboutPage() {
         </TabsContent>
 
         <TabsContent value="investmentCircle">
-          <InvestmentCircle />
+          <InvestmentCircleTab />
         </TabsContent>
       </Tabs>
     </div>

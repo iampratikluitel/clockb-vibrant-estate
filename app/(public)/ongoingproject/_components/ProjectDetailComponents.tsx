@@ -13,7 +13,7 @@ const NewsInsightsPost = () => {
     useGetPublicProjectBySlugQuery(slug as string);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen pt-24">
       {/* Hero Section */}
       <div className="relative h-[40vh] md:h-[60vh] bg-slate-900">
         <div className="absolute inset-0">
@@ -26,7 +26,7 @@ const NewsInsightsPost = () => {
           />
         </div>
         <div className="relative container mx-auto px-4 h-full flex items-center">
-          <div className="max-w-3xl">
+          <div className="w-3/5">
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
               {projectbySlug?.title}
             </h1>
@@ -35,7 +35,7 @@ const NewsInsightsPost = () => {
                 <Calendar className="mr-2 h-4 w-4" />
                 {projectbySlug?.addedDate
                   ? new Date(projectbySlug.addedDate).toLocaleDateString()
-                  : "Date not available"}
+                  : ""}
               </span>
             </div>
           </div>

@@ -5,7 +5,7 @@ import { Partner, Member } from "@/lib/types";
 export const publicAboutApi = createApi({
   reducerPath: "publicAboutApi",
   baseQuery: baseQuery,
-  tagTypes: ["PublicAboutMain", "PublicTeam", "PublicPartner"],
+  tagTypes: ["PublicAboutMain", "PublicTeam", "PublicPartner", "Public Investment Circle"],
   keepUnusedDataFor: 2,
   endpoints: (builder) => ({
     
@@ -23,6 +23,10 @@ export const publicAboutApi = createApi({
       query: () => `public/about/partner`,
       providesTags: ["PublicPartner"],
     }),
+    getPublicInvestmentCircle: builder.query<any, void>({
+      query: () => `public/about/investment-circle`,
+      providesTags: ["Public Investment Circle"],
+    }),
   }),
 });
 
@@ -30,4 +34,5 @@ export const {
   useGetPublicAboutMainSectionQuery,
   useGetPublicTeamMembersQuery,
   useGetPublicPartnersQuery, 
+  useGetPublicInvestmentCircleQuery,
 } = publicAboutApi;
