@@ -10,7 +10,6 @@ import {
 import { paths } from "@/lib/paths";
 import { connectDb } from "@/lib/mongodb";
 import ProjectCategory from "@/model/Projects/ProjectCategory";
-import AddProjectForm from "../../components/projectDescription/projectForm";
 import BeforeProjectForm from "../../components/projectDescription/BeforeProjectForm";
 
 type Props = {
@@ -39,13 +38,13 @@ const Edit = async (props: Props) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.projectdescription}>
+            <BreadcrumbLink href={paths.admin.project}>
               Project Description
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Edit</BreadcrumbPage>
+            <BreadcrumbPage>Edit Project</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

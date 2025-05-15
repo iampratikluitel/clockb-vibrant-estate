@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import ConditionsOfUseForm from "../components/configuration/ConditionsOfUseForm";
 import { useGetAdminConfigConditionsOfUseQuery } from "@/store/api/Admin/adminConfiguration";
 import { paths } from "@/lib/paths";
 import {
@@ -11,8 +10,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import TermsAndConditionForm from "../components/configuration/TermsAndCondition";
 
-const ConditionsOfUse = () => {
+const TermsAndConditions = () => {
   const { data: ConfigData, isLoading: Loading } =
     useGetAdminConfigConditionsOfUseQuery("");
 
@@ -27,7 +27,7 @@ const ConditionsOfUse = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Conditions Of Use</BreadcrumbPage>
+            <BreadcrumbPage>Terms And Conditions</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -36,10 +36,10 @@ const ConditionsOfUse = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <ConditionsOfUseForm ConfigData={ConfigData} />
+        <TermsAndConditionForm ConfigData={ConfigData} />
       )}
     </>
   );
 };
 
-export default ConditionsOfUse;
+export default TermsAndConditions;

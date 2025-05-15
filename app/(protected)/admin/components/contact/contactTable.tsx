@@ -61,7 +61,9 @@ const ContactTable = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
-  const [viewedMessage, setViewedMessage] = React.useState<string | null>(null);
+  const [viewedContact, setViewedContact] = React.useState<Contact | null>(
+    null
+  );
 
   const handleMultipleDelete = async (ids: string[]) => {
     toast.promise(
@@ -131,7 +133,7 @@ const ContactTable = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setViewedMessage(row.getValue("message"))}
+          onClick={() => setViewedContact(row.original)}
         >
           View
         </Button>
@@ -328,18 +330,70 @@ const ContactTable = () => {
 
           {/* View Message Dialog */}
           <Dialog
-            open={!!viewedMessage}
-            onOpenChange={() => setViewedMessage(null)}
+            open={!!viewedContact}
+            onOpenChange={() => setViewedContact(null)}
           >
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Message</DialogTitle>
+                <DialogTitle className="text-xl font-semibold text-primary">
+                 Contact Details
+                </DialogTitle>
               </DialogHeader>
-              <div className="max-h-[400px] overflow-y-auto whitespace-pre-line text-sm">
-                {viewedMessage}
-              </div>
-              <DialogFooter>
-                <Button onClick={() => setViewedMessage(null)}>Close</Button>
+
+              {viewedContact && (
+                <div className="space-y-4 text-sm">
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Name:
+                    </span>
+                    <span className="text-base font-semibold">
+                      {viewedContact.name}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Email:
+                    </span>
+                    <a
+                      href={`mailto:${viewedContact.email}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {viewedContact.email}
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Subject:
+                    </span>
+                    <span className="">{viewedContact.subject}</span>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Date:
+                    </span>
+                    <span className="">
+                      {convertToHumanReadable(viewedContact.date)}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="font-medium text-muted-foreground block mb-1">
+                      Message:
+                    </span>
+                    <div className="whitespace-pre-line border p-4 rounded-md bg-gray-50 dark:bg-zinc-900 text-sm leading-relaxed shadow-inner">
+                      {viewedContact.message}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <DialogFooter className="pt-6">
+                <Button variant="ghost" onClick={() => setViewedContact(null)}>
+                  Close
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

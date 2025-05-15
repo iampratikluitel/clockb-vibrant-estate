@@ -39,7 +39,7 @@ export const paths = {
 
     testimonial: `${ROOTS.admin}/testimonial`,
     addTestimonial: `${ROOTS.admin}/testimonial/add`,
-    editTestimonial:  `${ROOTS.admin}/testimonial/edit`,
+    editTestimonial: `${ROOTS.admin}/testimonial/edit`,
 
     faqs: `${ROOTS.admin}/faqs`,
     addfaq: `${ROOTS.admin}/faqs/add`,
@@ -62,9 +62,9 @@ export const paths = {
     appointment: `${ROOTS.admin}/appointment`,
     resources: `${ROOTS.admin}/resources`,
 
-    projectdescription: `${ROOTS.admin}/projectdescription`,
-    addproject: `${ROOTS.admin}/projectdescription/add`,
-    editproject: `${ROOTS.admin}/projectdescription/edit`,
+    project: `${ROOTS.admin}/projects`,
+    addproject: `${ROOTS.admin}/projects/add`,
+    editproject: `${ROOTS.admin}/projects/edit`,
 
     termsandcondition: `${ROOTS.admin}/termsandcondition`,
 

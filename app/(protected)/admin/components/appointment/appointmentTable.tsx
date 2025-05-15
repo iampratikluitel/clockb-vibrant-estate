@@ -63,7 +63,9 @@ const AppointmentTable = () => {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
   const [selectedRowIds, setSelectedRowIds] = React.useState<string[]>([]);
-  const [viewedMessage, setViewedMessage] = React.useState<string | null>(null);
+  const [viewedMessage, setViewedMessage] = React.useState<APPOINTMENT | null>(
+    null
+  );
 
   const handleMultipleDelete = async (ids: string[]) => {
     toast.promise(
@@ -128,12 +130,21 @@ const AppointmentTable = () => {
     },
     {
       accessorKey: "time",
-      header: "time",
-      cell: ({ row }) => (
-        <div className="capitalize">
-          {convertToHumanReadable(row.getValue("time"))}
-        </div>
-      ),
+      header: "Time",
+      cell: ({ row }) => {
+        const timeValue = row.getValue("time");
+
+        // If it's a string or Date object, convert and format it
+        const formattedTime = new Date(
+          `1970-01-01T${timeValue}`
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+
+        return <div>{formattedTime}</div>;
+      },
     },
     {
       accessorKey: "note",
@@ -142,7 +153,7 @@ const AppointmentTable = () => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setViewedMessage(row.getValue("note"))}
+          onClick={() => setViewedMessage(row.original)}
         >
           View
         </Button>
@@ -342,15 +353,80 @@ const AppointmentTable = () => {
             open={!!viewedMessage}
             onOpenChange={() => setViewedMessage(null)}
           >
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Message</DialogTitle>
+                <DialogTitle className="text-xl font-semibold text-primary">
+                  📝 Appointment Note
+                </DialogTitle>
               </DialogHeader>
-              <div className="max-h-[400px] overflow-y-auto whitespace-pre-line text-sm">
-                {viewedMessage}
-              </div>
-              <DialogFooter>
-                <Button onClick={() => setViewedMessage(null)}>Close</Button>
+
+              {viewedMessage && (
+                <div className="space-y-4 text-sm max-h-[400px] overflow-y-auto">
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Name:
+                    </span>
+                    <span className="text-base font-semibold">
+                      {viewedMessage.name}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Email:
+                    </span>
+                    <a
+                      href={`mailto:${viewedMessage.email}`}
+                      className="text-blue-600 hover:underline"
+                    >
+                      {viewedMessage.email}
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Phone:
+                    </span>
+                    <span>{viewedMessage.phone}</span>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Date:
+                    </span>
+                    <span>{convertToHumanReadable(viewedMessage.date)}</span>
+                  </div>
+
+                  <div className="grid grid-cols-[100px_1fr] gap-2 items-center">
+                    <span className="font-medium text-muted-foreground">
+                      Time:
+                    </span>
+                    <span>
+                      {new Date(
+                        `1970-01-01T${viewedMessage.time}`
+                      ).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="font-medium text-muted-foreground block mb-1">
+                      Note:
+                    </span>
+                    <div className="whitespace-pre-line border p-4 rounded-md bg-gray-50 dark:bg-zinc-900 text-sm leading-relaxed shadow-inner">
+                      {viewedMessage.note}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <DialogFooter className="pt-6">
+                <Button variant="ghost" onClick={() => setViewedMessage(null)}>
+                  Close
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

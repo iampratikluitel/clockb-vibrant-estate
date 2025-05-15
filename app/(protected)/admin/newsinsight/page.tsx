@@ -26,12 +26,12 @@ export default function NewsInsight() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>News Insight</BreadcrumbPage>
+            <BreadcrumbPage>News Insights</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-2xl">News And Insight</h1>
+        <h1 className="font-semibold text-2xl">News And Insights</h1>
         <div className="flex justify-end">
           <Link href={paths.admin.addNews} className="self-end">
             <Button className="m-4">Add News </Button>

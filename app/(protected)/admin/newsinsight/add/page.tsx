@@ -21,7 +21,7 @@ const AddNews = async () => {
   }));
 
   return (
-    <div className="px-5 py-10">
+    <div className="p-4 bg-white">
       <Breadcrumb className="">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -29,11 +29,11 @@ const AddNews = async () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.newsinsight}>News</BreadcrumbLink>
+            <BreadcrumbLink href={paths.admin.newsinsight}>News and Insights</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>AddNews</BreadcrumbPage>
+            <BreadcrumbPage>Add News and Insights</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

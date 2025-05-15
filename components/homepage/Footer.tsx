@@ -117,7 +117,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/conditionsofuse"
+                  href="/termsandcondition"
                   className="text-[#9F9EA1] hover:text-white transition-colors flex items-center"
                 >
                   <span className="w-1.5 h-1.5 bg-estates-primary rounded-full mr-2"></span>

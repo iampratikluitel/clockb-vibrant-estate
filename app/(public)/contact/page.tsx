@@ -10,32 +10,13 @@ import {
   Linkedin,
   Send,
   ArrowRight,
-  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import Header from "@/components/homepage/Header";
-import Footer from "@/components/homepage/Footer";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import { useGetPublicConfigFooterQuery } from "@/store/api/Public/publicConfiguration";
 import Link from "next/link";
+import AppointmentDialog from "./_component/appointmentDialog";
+import { toast } from "sonner";
 
 const Contact = () => {
   const [nameInput, setNameInput] = useState("");
@@ -43,18 +24,8 @@ const Contact = () => {
   const [subjectInput, setSubjectInput] = useState("");
   const [messageInput, setMessageInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
 
-  const [isAppointmentModalOpen, setIsAppointmentModalOpen] = useState(false);
-  const [appointmentName, setAppointmentName] = useState("");
-  const [appointmentEmail, setAppointmentEmail] = useState("");
-  const [appointmentPhone, setAppointmentPhone] = useState("");
-  const [appointmentDate, setAppointmentDate] = useState<Date | undefined>(
-    undefined
-  );
-  const [appointmentTime, setAppointmentTime] = useState("");
-  const [appointmentNote, setAppointmentNote] = useState("");
-  const [isAppointmentSubmitting, setIsAppointmentSubmitting] = useState(false);
+  const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
   const { data: ConfigData, isLoading: Loading } =
     useGetPublicConfigFooterQuery("");
@@ -79,10 +50,7 @@ const Contact = () => {
 
       if (!response.ok) throw new Error("Failed to submit");
 
-      toast({
-        title: "Message sent!",
-        description: "We'll get back to you as soon as possible.",
-      });
+      toast.success(`Message Sent!`);
 
       setNameInput("");
       setEmailInput("");
@@ -90,59 +58,9 @@ const Contact = () => {
       setMessageInput("");
     } catch (error) {
       console.log(error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
+      toast.error(`Couldn't Send Message`);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleAppointmentSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAppointmentSubmitting(true);
-
-    try {
-      const response = await fetch(`/api/public/appointment`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: appointmentName,
-          email: appointmentEmail,
-          phone: appointmentPhone,
-          date: appointmentDate,
-          time: appointmentTime,
-          note: appointmentNote,
-        }),
-      });
-
-      if (!response.ok) throw new Error("Failed to schedule appointment");
-
-      toast({
-        title: "Appointment scheduled!",
-        description: "We'll confirm your appointment soon.",
-      });
-
-      setAppointmentName("");
-      setAppointmentEmail("");
-      setAppointmentPhone("");
-      setAppointmentDate(undefined);
-      setAppointmentTime("");
-      setAppointmentNote("");
-      setIsAppointmentModalOpen(false);
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Error",
-        description: "Failed to schedule appointment. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsAppointmentSubmitting(false);
     }
   };
 
@@ -404,191 +322,14 @@ const Contact = () => {
                   with our investment advisors. We can discuss your investment
                   goals and provide tailored solutions.
                 </p>
-                <Dialog
-                  open={isAppointmentModalOpen}
-                  onOpenChange={setIsAppointmentModalOpen}
+
+                <Button
+                  variant="outline"
+                  className="mt-3 hover:bg-estates-primary hover:text-white"
+                  onClick={() => setIsAppointmentOpen(true)}
                 >
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="mt-3 hover:bg-estates-primary hover:text-white"
-                    >
-                      Schedule Appointment
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px]">
-                    <DialogHeader>
-                      <DialogTitle className="text-2xl">
-                        Schedule an Appointment
-                      </DialogTitle>
-                      <DialogDescription>
-                        Fill out the form below to schedule a consultation with
-                        our investment advisors.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form
-                      onSubmit={handleAppointmentSubmit}
-                      className="space-y-4 mt-4"
-                    >
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="appointmentName"
-                          className="text-sm font-medium"
-                        >
-                          Full Name
-                        </label>
-                        <Input
-                          id="appointmentName"
-                          value={appointmentName}
-                          onChange={(e) => setAppointmentName(e.target.value)}
-                          placeholder="Enter your full name"
-                          required
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="appointmentEmail"
-                          className="text-sm font-medium"
-                        >
-                          Email Address
-                        </label>
-                        <Input
-                          id="appointmentEmail"
-                          type="email"
-                          value={appointmentEmail}
-                          onChange={(e) => setAppointmentEmail(e.target.value)}
-                          placeholder="Enter your email address"
-                          required
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="appointmentPhone"
-                          className="text-sm font-medium"
-                        >
-                          Contact Number
-                        </label>
-                        <Input
-                          id="appointmentPhone"
-                          type="tel"
-                          value={appointmentPhone}
-                          onChange={(e) => setAppointmentPhone(e.target.value)}
-                          placeholder="Enter your phone number"
-                          required
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">
-                            Preferred Date
-                          </label>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-full justify-start text-left font-normal",
-                                  !appointmentDate && "text-muted-foreground"
-                                )}
-                              >
-                                <Calendar className="mr-2 h-4 w-4" />
-                                {appointmentDate ? (
-                                  format(appointmentDate, "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                              <CalendarComponent
-                                mode="single"
-                                selected={appointmentDate}
-                                onSelect={setAppointmentDate}
-                                initialFocus
-                                disabled={(date) => {
-                                  return (
-                                    date <
-                                      new Date(
-                                        new Date().setHours(0, 0, 0, 0)
-                                      ) || date.getDay() === 0
-                                  );
-                                }}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-
-                        <div className="space-y-2">
-                          <label
-                            htmlFor="appointmentTime"
-                            className="text-sm font-medium"
-                          >
-                            Preferred Time
-                          </label>
-                          <select
-                            id="appointmentTime"
-                            value={appointmentTime}
-                            onChange={(e) => setAppointmentTime(e.target.value)}
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            required
-                          >
-                            <option value="" disabled>
-                              Select a time
-                            </option>
-                            <option value="09:00">9:00 AM</option>
-                            <option value="10:00">10:00 AM</option>
-                            <option value="11:00">11:00 AM</option>
-                            <option value="12:00">12:00 PM</option>
-                            <option value="13:00">1:00 PM</option>
-                            <option value="14:00">2:00 PM</option>
-                            <option value="15:00">3:00 PM</option>
-                            <option value="16:00">4:00 PM</option>
-                            <option value="17:00">5:00 PM</option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <label
-                          htmlFor="appointmentNote"
-                          className="text-sm font-medium"
-                        >
-                          Appointment Note
-                        </label>
-                        <textarea
-                          id="appointmentNote"
-                          rows={3}
-                          value={appointmentNote}
-                          onChange={(e) => setAppointmentNote(e.target.value)}
-                          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                          placeholder="Tell us what you'd like to discuss..."
-                        />
-                      </div>
-
-                      <DialogFooter>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => setIsAppointmentModalOpen(false)}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          type="submit"
-                          className="bg-estates-primary hover:bg-estates-primary/90"
-                          disabled={isAppointmentSubmitting}
-                        >
-                          {isAppointmentSubmitting
-                            ? "Scheduling..."
-                            : "Schedule Appointment"}
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
+                  Schedule Appointment
+                </Button>
               </div>
             </div>
           </div>
@@ -611,6 +352,10 @@ const Contact = () => {
           </div>
         </div>
       </main>
+      <AppointmentDialog
+        open={isAppointmentOpen}
+        onOpenChange={setIsAppointmentOpen}
+      />
     </div>
   );
 };

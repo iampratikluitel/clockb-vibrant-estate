@@ -6,7 +6,7 @@ import React from "react";
 const Configuration = () => {
   return (
     <div className="p-4 bg-white">
-      <Breadcrumb className="">
+      <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href={paths.admin.configuration}>
@@ -15,7 +15,7 @@ const Configuration = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Configuration</BreadcrumbPage>
+            <BreadcrumbPage>Configurations</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

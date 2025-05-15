@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { format } from "date-fns"; // ✅ Correct import for formatting dates
+import { format } from "date-fns";
 import { toast } from "sonner";
 import { Calendar } from "lucide-react";
 
@@ -14,7 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -61,9 +60,11 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
 
       if (!response.ok) throw new Error("Failed to schedule appointment");
 
-      toast("Appointment scheduled!", {
-        description: "We'll confirm your appointment soon.",
-      });
+      // toast("Appointment scheduled!", {
+      //   description: "We'll confirm your appointment soon.",
+      // });
+
+      toast.success(`Appointment scheduled!`);
 
       setAppointmentName("");
       setAppointmentEmail("");
@@ -74,9 +75,7 @@ const AppointmentDialog = ({ open, onOpenChange }: AppointmentDialogProps) => {
       onOpenChange(false);
     } catch (error) {
       console.error(error);
-      toast("Error", {
-        description: "Failed to schedule appointment. Please try again.",
-      });
+      toast.error(`Appointment Not Send`);
     } finally {
       setIsAppointmentSubmitting(false);
     }
