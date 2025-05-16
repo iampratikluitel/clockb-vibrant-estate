@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: any) {
   const newsinsight = (await NewsInsight.findOne({
     status: true,
     slug: params.slug,
-  }).lean()) as NEWSINSIGHT;
+  }).lean()) as unknown as NEWSINSIGHT;
   const descriptionWithoutHtml = newsinsight?.overview.replace(/<[^>]*>/g, "");
 
   return {

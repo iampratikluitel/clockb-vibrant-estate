@@ -10,12 +10,12 @@ interface props {
 const ProjectOverview = ({ ProjectBySlug }: props) => {
   return (
     <div className="px-4">
-      <div
-        className={inter.className}
-        dangerouslySetInnerHTML={{
-          __html: ProjectBySlug?.overview as string,
-        }}
-      ></div>
+      <article
+          className={`ProseMirror tiptap-content mt-3 text-[#454F5B] md:text-lg leading-8 text-sm font-normal  transition delay-300 font-publicsans`}
+          dangerouslySetInnerHTML={{
+            __html: ProjectBySlug?.overview as string,
+          }}
+        />
     </div>
   );
 };

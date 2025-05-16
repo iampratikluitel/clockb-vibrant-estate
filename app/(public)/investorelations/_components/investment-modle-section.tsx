@@ -114,7 +114,7 @@ export default function InvestmentModelSection() {
 
               {/* Step 3 */}
               <div className="md:grid md:grid-cols-2 gap-8 mb-24 relative">
-                <div className="md:col-span-2 flex justify-center mb-8">
+                <div className="md:col-span-2 flex justify-center mb-8 pt-24">
                   <div className="w-20 h-20 rounded-full bg-estates-primary text-white flex items-center justify-center text-2xl font-bold z-10 shadow-lg">
                     3
                   </div>
@@ -152,7 +152,7 @@ export default function InvestmentModelSection() {
 
               {/* Step 4 */}
               <div className="md:grid md:grid-cols-2 gap-8 mb-24 relative">
-                <div className="md:col-span-2 flex justify-center mb-8">
+                <div className="md:col-span-2 flex justify-center mb-8 pt-24">
                   <div className="w-20 h-20 rounded-full bg-estates-primary text-white flex items-center justify-center text-2xl font-bold z-10 shadow-lg">
                     4
                   </div>
@@ -190,7 +190,7 @@ export default function InvestmentModelSection() {
 
               {/* Step 5 */}
               <div className="md:grid md:grid-cols-2 gap-8 relative">
-                <div className="md:col-span-2 flex justify-center mb-8">
+                <div className="md:col-span-2 flex justify-center mb-8 pt-24">
                   <div className="w-20 h-20 rounded-full bg-estates-primary text-white flex items-center justify-center text-2xl font-bold z-10 shadow-lg">
                     5
                   </div>

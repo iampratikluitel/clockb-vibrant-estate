@@ -19,7 +19,7 @@ const DevelopmentPhase = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Phases</BreadcrumbPage>
+            <BreadcrumbPage>Development Phases</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

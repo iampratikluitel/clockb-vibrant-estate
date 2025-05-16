@@ -132,7 +132,7 @@ const TestimonialForm = ({ type, ExistingDetail }: props) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-6 p-4 bg-white"
       >
-        <h1 className="font-semibold text-2xl">{type} Testimonoial</h1>
+        <h1 className="font-semibold text-2xl">{type} Testimonials</h1>
         <div className="flex w-full gap-4">
           <div className="w-1/2 flex flex-col gap-2">
             <FormField

@@ -49,12 +49,12 @@ const DashboardSidebar = () => {
     },
     {
       name: "Projects",
-      path: "/admin/projectdescription",
+      path: "/admin/projects",
       icon: FileText,
     },
     {
       name: "Development Phase",
-      path: "/admin/phases",
+      path: "/admin/developmentphases",
       icon: FileText,
     },
     {
@@ -87,7 +87,7 @@ const DashboardSidebar = () => {
   const moreLinks = [
     {
       name: "Terms & Conditions",
-      path: "/admin/conditionsofuse",
+      path: "/admin/termsandconditions",
       icon: FileQuestion,
     },
     { 
@@ -96,7 +96,7 @@ const DashboardSidebar = () => {
       icon: Shield 
     },
     { 
-      name: "Configuration", 
+      name: "Configurations", 
       path: "/admin/configuration", 
       icon: Settings 
     },

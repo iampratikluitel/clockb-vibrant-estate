@@ -3,7 +3,14 @@ import { paths } from "@/lib/paths";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import ProjectTable from "../components/projectDescription/projectTable";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function UpcommingProjects() {
   return (
@@ -11,7 +18,9 @@ export default function UpcommingProjects() {
       <Breadcrumb className="">
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.dashboard}>Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href={paths.admin.dashboard}>
+              Dashboard
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -20,10 +29,10 @@ export default function UpcommingProjects() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex items-center justify-between">
-        <h1 className="font-semibold text-2xl">Upcomming Project</h1>
+        <h1 className="font-semibold text-2xl">Projects</h1>
         <div className="flex justify-end">
           <Link href={paths.admin.addproject} className="self-end">
-            <Button className="m-4">Add Project </Button>
+            <Button className="m-4">Add Projects</Button>
           </Link>
         </div>
       </div>

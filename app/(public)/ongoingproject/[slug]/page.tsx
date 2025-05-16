@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: any) {
   const projects = (await UpcommingProject.findOne({
     status: true,
     slug: params.slug,
-  }).lean()) as PROJECTDESCRIPTION;
+  }).lean()) as unknown as PROJECTDESCRIPTION;
   const descriptionWithoutHtml = projects?.overview.replace(/<[^>]*>/g, "");
 
   return {

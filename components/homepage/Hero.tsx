@@ -9,7 +9,9 @@ const handleDownloadBrochure = async () => {
     const data = await res.json();
 
     if (data?.brochureUrl) {
-      const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
+      const fileUrl = `/api/resources/download?filename=${encodeURIComponent(
+        data.brochureUrl
+      )}`;
       window.open(fileUrl, "_blank");
     } else {
       console.error("Brochure URL not found.");
@@ -18,7 +20,6 @@ const handleDownloadBrochure = async () => {
     console.error("Error fetching brochure:", error);
   }
 };
-
 
 const Hero = () => {
   return (
@@ -37,7 +38,7 @@ const Hero = () => {
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10 mt-10 md:mt-0">
         <div className="max-w-3xl animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
             Transforming Real Estate into Value-Driven Investments
           </h1>
           <p className="text-xl md:text-2xl text-gray-200 mb-8 leading-relaxed">
@@ -46,20 +47,20 @@ const Hero = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button
               className="bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-8 py-6 text-lg rounded-lg 
-                transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
-                shadow-lg hover:shadow-estates-primary/20 group"
+      transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
+      shadow-lg hover:shadow-estates-primary/20 group w-full sm:w-auto"
               onClick={handleDownloadBrochure}
             >
               <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
               Download Brochure
             </Button>
 
-            {/* <DownloadAboutBrochure /> */}
-            <Link href="/projectdescription">
+            <Link href="/projectdescription" className="w-full sm:w-auto">
               <Button
                 variant="outline"
-                className="border-2 border-white text-estates-primary/90 hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg
-                transition-all duration-300"
+                className="border-2 border-white text-estates-primary/90 hover:bg-white/20 font-semibold px-8 py-6 text-lg rounded-lg 
+        transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
+        shadow-lg hover:shadow-estates-primary/20 w-full sm:w-auto"
               >
                 Project Description
               </Button>

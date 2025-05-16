@@ -23,7 +23,7 @@ interface props {
   ConfigData: CONDITIONSOFUSE | undefined;
 }
 
-const ConditionsOfUseForm = ({ ConfigData }: props) => {
+const TermsAndConditionForm = ({ ConfigData }: props) => {
   const [Loading, setLoading] = useState(false);
   const [AddUpdateConditionsOfUse] = useAdminAddUpdateConditionsOfUseMutation();
   const router = useRouter();
@@ -69,7 +69,7 @@ const ConditionsOfUseForm = ({ ConfigData }: props) => {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full space-y-6 p-4 bg-white"
       >
-        <h1 className="font-semibold text-2xl">Conditions Of Use</h1>
+        <h1 className="font-semibold text-2xl">Terms And Conditions</h1>
         <ReactQuillEditor name="description" label="" />
         {Loading ? (
           <div>
@@ -83,4 +83,4 @@ const ConditionsOfUseForm = ({ ConfigData }: props) => {
   );
 };
 
-export default ConditionsOfUseForm;
+export default TermsAndConditionForm;

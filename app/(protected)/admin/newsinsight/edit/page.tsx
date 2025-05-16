@@ -29,7 +29,7 @@ const Edit = async (props: Props) => {
 
   return (
     <>
-      <Breadcrumb className="px-5 py-10 bg-white">
+      <Breadcrumb className="p-4 bg-white">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href={paths.admin.dashboard}>
@@ -39,12 +39,12 @@ const Edit = async (props: Props) => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink href={paths.admin.newsinsight}>
-              News Insight
+              News and Insights
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Edit</BreadcrumbPage>
+            <BreadcrumbPage>Edit News and Insights</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

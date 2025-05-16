@@ -36,6 +36,7 @@ import { deleteNewsCategory } from "@/action/news-category";
 import { uploadToMinIO } from "@/lib/helper";
 import { paths } from "@/lib/paths";
 import { Textarea } from "@/components/ui/textarea";
+import ReactTipTapEditor from "@/components/CustomComponent/CustomEditor/ReactTipTapEditor";
 
 interface props {
   type: "Add" | "Edit";
@@ -46,7 +47,7 @@ interface props {
 const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
   const [Loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const router = useRouter();
   const [AdminAddUpdateNews] = useAdminAddUpdateNewsInsightMutation();
 
@@ -57,7 +58,9 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
       description: ExistingDetails?.description ?? "",
       author: ExistingDetails?.author ?? "",
       image: ExistingDetails?.image
-        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image)}`
+        ? `/api/resources/download?filename=${encodeURIComponent(
+            ExistingDetails?.image
+          )}`
         : null,
       overview: ExistingDetails?.overview ?? "",
       categoryId: ExistingDetails?.categoryId ?? "",
@@ -100,7 +103,12 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         setLoading(true);
         let ImageUrl = null;
 
-        if (data.image != `/api/resources/download?filename=${encodeURIComponent(ExistingDetails?.image ?? "")}`) {
+        if (
+          data.image !=
+          `/api/resources/download?filename=${encodeURIComponent(
+            ExistingDetails?.image ?? ""
+          )}`
+        ) {
           ImageUrl = await uploadToMinIO(data.image, "newsinsight");
           if (ImageUrl === "") {
             toast.error("Image Upload Failed Please try again");
@@ -163,12 +171,9 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="w-full space-y-6 p-4 bg-white"
         >
-          <div className="flex justify-between">
-            <h1 className="font-semibold text-2xl">{type} News</h1>
-          </div>
           <div className="flex w-full gap-4 flex-col md:flex-row">
             <div className="w-full md:w-1/2 flex flex-col gap-2">
-              <div className="text-2xl font-semibold">News Detail</div>
+              <div className="text-2xl font-semibold">News and Insights Detail</div>
               <FormField
                 control={form.control}
                 name="title"
@@ -204,13 +209,16 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                   <FormItem>
                     <FormLabel>News Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Enter Short Description" {...field} />
+                      <Textarea
+                        placeholder="Enter Short Description"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              
+
               <div className="relative flex items-center justify-start">
                 <FormField
                   control={form.control}
@@ -266,7 +274,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                   <Plus />
                 </div>
               </div>
-
+                {/* <ReactTipTapEditor name="overview" label="News Overview" /> */}
               <ReactQuillEditor name="overview" label="News Overview" />
             </div>
             <div className="w-1/2 space-y-2">
