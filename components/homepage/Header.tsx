@@ -85,6 +85,7 @@ const Header = () => {
           <NavLink href="/contact" isActive={pathname === "/contact"}>
             Contact
           </NavLink>
+        </div>
           <Button
             onClick={handleDownloadBrochure}
             className="hidden lg:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
@@ -92,7 +93,6 @@ const Header = () => {
             <Download className="w-4 h-4 mr-2 animate-bounce" />
             Download Brochure
           </Button>
-        </div>
         <div className="md:hidden">
           <Menu />
         </div>
