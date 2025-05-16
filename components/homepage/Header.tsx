@@ -26,7 +26,9 @@ const Header = () => {
       const data = await fetchData.json();
 
       if (data?.brochureUrl) {
-        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
+        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(
+          data.brochureUrl
+        )}`;
         // Open the file in a new tab
         window.open(fileUrl, "_blank");
       } else {
@@ -83,34 +85,14 @@ const Header = () => {
           <NavLink href="/contact" isActive={pathname === "/contact"}>
             Contact
           </NavLink>
-        </div>
-
-        {/* CTA Button */}
-        <Button
-          onClick={handleDownloadBrochure}
-          className="hidden md:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-        >
-          <Download className="w-4 h-4 mr-2 animate-bounce" />
-          Download Brochure
-        </Button>
-
-        {/* Mobile Menu Button */}
-        {/* <button className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200">
-          <svg
-            className="w-6 h-6 text-estates-secondary"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <Button
+            onClick={handleDownloadBrochure}
+            className="hidden lg:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button> */}
-
+            <Download className="w-4 h-4 mr-2 animate-bounce" />
+            Download Brochure
+          </Button>
+        </div>
         <div className="md:hidden">
           <Menu />
         </div>
