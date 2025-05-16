@@ -36,6 +36,7 @@ import { deleteNewsCategory } from "@/action/news-category";
 import { uploadToMinIO } from "@/lib/helper";
 import { paths } from "@/lib/paths";
 import { Textarea } from "@/components/ui/textarea";
+import ReactTipTapEditor from "@/components/CustomComponent/CustomEditor/ReactTipTapEditor";
 
 interface props {
   type: "Add" | "Edit";
@@ -172,7 +173,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         >
           <div className="flex w-full gap-4 flex-col md:flex-row">
             <div className="w-full md:w-1/2 flex flex-col gap-2">
-              <div className="text-2xl font-semibold">Add News and Insights</div>
+              <div className="text-2xl font-semibold">News and Insights Detail</div>
               <FormField
                 control={form.control}
                 name="title"
@@ -273,7 +274,7 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
                   <Plus />
                 </div>
               </div>
-
+                {/* <ReactTipTapEditor name="overview" label="News Overview" /> */}
               <ReactQuillEditor name="overview" label="News Overview" />
             </div>
             <div className="w-1/2 space-y-2">

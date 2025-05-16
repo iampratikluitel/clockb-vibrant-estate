@@ -135,7 +135,7 @@ const DashboardWelcome = () => {
                 </Link>
               </button>
               <button className="w-full flex items-center justify-between p-2 hover:bg-gray-100 rounded-md transition-colors">
-                <Link href={paths.admin.projectdescription}>
+                <Link href={paths.admin.project}>
                   <span className="font-medium">Update Projects</span>
                   <span className="text-estates-primary">→</span>
                 </Link>

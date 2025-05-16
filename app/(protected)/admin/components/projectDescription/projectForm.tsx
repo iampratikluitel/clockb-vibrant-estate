@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import ReactQuillEditor from "@/components/ReactQuillEditor";
-import { MINIOURL } from "@/lib/constants";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -114,7 +113,7 @@ export default function AddProjectForm({
         if (response) {
           const responseData = response as ApiResponse;
           toast.success(responseData.message);
-          router.push(`${paths.admin.projectdescription}`);
+          router.push(`${paths.admin.project}`);
           setLoading(false);
         } else {
           toast.error("Could not Add");
@@ -146,7 +145,7 @@ export default function AddProjectForm({
         if (response) {
           toast.success(`${response.message}`);
           setLoading(false);
-          router.push(`${paths.admin.projectdescription}`);
+          router.push(`${paths.admin.project}`);
         } else {
           toast.error(`Couldn't Edit`);
           setLoading(false);
