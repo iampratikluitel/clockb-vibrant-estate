@@ -181,8 +181,8 @@ export default function InvestmentModelSection() {
                     Value Growth
                   </h4>
                   <p className="text-gray-600 mb-4">
-                    Track your investment&apos;s appreciation through our investor
-                    portal.
+                    Track your investment&apos;s appreciation through our
+                    investor portal.
                   </p>
                   <TrendingUp className="h-12 w-12 text-estates-primary/20" />
                 </div>
@@ -227,15 +227,17 @@ export default function InvestmentModelSection() {
               </div>
             </div>
 
-            <div className="text-center mt-16">
+            <div className="flex justify-center mt-16 px-4">
               <Button
                 variant="cta"
                 size="xl"
                 onClick={() => (window.location.href = "/contact")}
-                className="group"
+                className="w-full max-w-xs sm:max-w-fit group text-sm sm:text-base px-4 py-3 whitespace-normal text-center"
               >
-                Start Your Investment Journey Today!
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                <span className="leading-snug text-center">
+                  Start Your Investment Journey Today!
+                </span>
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform shrink-0" />
               </Button>
             </div>
           </div>

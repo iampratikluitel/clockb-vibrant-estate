@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MINIOURL } from "@/lib/constants";
 import { Member } from "@/lib/types";
 import { User, LucideIcon, ChevronLeft, ChevronRight } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const TeamMember = ({
   name,
@@ -18,7 +17,7 @@ const TeamMember = ({
   image?: string;
 }) => {
   return (
-    <div className="flex flex-col bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 gap-3 w-60 shrink-0">
+    <div className="flex flex-col bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 gap-3 w-full sm:w-full md:w-full lg:w-full shrink-0">
       <div className="flex flex-col items-center">
         {image ? (
           <Avatar className="h-24 w-24 mb-2">
@@ -48,9 +47,9 @@ const TeamMember = ({
 
 const TeamMemberView = () => {
   const [viewTeam, setViewTeam] = useState<Member[]>([]);
-  const [startIndex, setStartIndex] = useState(0);
-  const membersPerRow = 4;
-
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,22 +64,32 @@ const TeamMemberView = () => {
     fetchData();
   }, []);
 
-  const nextSlide = () => {
-    if ((startIndex + 1) * membersPerRow < viewTeam.length) {
-      setStartIndex(startIndex + 1);
+  const scroll = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return;
+    
+    const container = carouselRef.current;
+    const cardWidth = container.querySelector('div')?.offsetWidth || 0;
+    const scrollAmount = direction === 'left' ? -cardWidth : cardWidth;
+    
+    container.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+    
+    // Update scroll position for arrow visibility
+    setScrollPosition(container.scrollLeft + scrollAmount);
+  };
+
+  const handleScroll = () => {
+    if (carouselRef.current) {
+      setScrollPosition(carouselRef.current.scrollLeft);
     }
   };
 
-  const prevSlide = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
-    }
-  };
-
-  const paginatedTeam = viewTeam.slice(
-    startIndex * membersPerRow,
-    (startIndex + 1) * membersPerRow
-  );
+  const showLeftArrow = scrollPosition > 0;
+  const showRightArrow = carouselRef.current 
+    ? scrollPosition < carouselRef.current.scrollWidth - carouselRef.current.clientWidth - 10
+    : false;
 
   return (
     <section className="py-16 bg-white">
@@ -98,50 +107,68 @@ const TeamMemberView = () => {
           </div>
 
           {viewTeam.length > 0 ? (
-            <div className="relative flex items-center">
+            <div className="relative">
               {/* Left Arrow */}
               <button
-                onClick={prevSlide}
-                className={`absolute left-0 z-10 bg-white shadow-md p-2 rounded-full ${
-                  startIndex === 0 ? "hidden" : ""
+                onClick={() => scroll('left')}
+                className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md p-2 rounded-full ${
+                  !showLeftArrow ? "hidden" : ""
                 }`}
+                aria-label="Previous"
               >
                 <ChevronLeft className="w-6 h-6 text-gray-600" />
               </button>
 
-              {/* Team Members Row */}
-              <div className="overflow-hidden w-full px-10">
-                <div className="flex gap-6 transition-transform duration-300 ease-in-out">
-                  {paginatedTeam.map((member, index) => (
-                    <TeamMember
-                      key={index}
-                      name={member.name}
-                      role={member.role}
-                      description={member.description}
-                      icon={member.icon || User}
-                      image={member.image ? `/api/resources/download?filename=${encodeURIComponent(member.image)}` : "/placeholder.jpg"}
-                    />
+              {/* Team Members Carousel */}
+              <div 
+                ref={carouselRef}
+                className="overflow-x-auto hide-scrollbar" 
+                onScroll={handleScroll}
+              >
+                <div className="flex gap-6 px-2 py-4">
+                  {viewTeam.map((member, index) => (
+                    <div 
+                      key={index} 
+                      className="w-full sm:w-full md:w-1/2 lg:w-1/4 min-w-[260px] px-2"
+                    >
+                      <TeamMember
+                        name={member.name}
+                        role={member.role}
+                        description={member.description}
+                        icon={member.icon || User}
+                        image={member.image ? `/api/resources/download?filename=${encodeURIComponent(member.image)}` : "/placeholder.jpg"}
+                      />
+                    </div>
                   ))}
                 </div>
               </div>
 
-              {/* Right Arrow */}
               <button
-                onClick={nextSlide}
-                className={`absolute right-0 z-10 bg-white shadow-md p-2 rounded-full ${
-                  (startIndex + 1) * membersPerRow >= viewTeam.length
-                    ? "hidden"
-                    : ""
+                onClick={() => scroll('right')}
+                className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-md p-2 rounded-full ${
+                  !showRightArrow ? "hidden" : ""
                 }`}
+                aria-label="Next"
               >
                 <ChevronRight className="w-6 h-6 text-gray-600" />
               </button>
             </div>
           ) : (
-            <p className="text-center text-gray-500"></p>
+            <p className="text-center text-gray-500">Loading team members...</p>
           )}
         </div>
       </div>
+      
+      {/* Add custom styles to hide scrollbar but keep functionality */}
+      <style jsx global>{`
+        .hide-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;  /* Chrome, Safari and Opera */
+        }
+      `}</style>
     </section>
   );
 };

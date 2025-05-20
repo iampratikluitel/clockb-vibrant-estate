@@ -29,11 +29,11 @@ const AddNews = async () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={paths.admin.newsinsight}>News and Insights</BreadcrumbLink>
+            <BreadcrumbLink href={paths.admin.newsinsight}>NewsInsights</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Add News and Insights</BreadcrumbPage>
+            <BreadcrumbPage>Add</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

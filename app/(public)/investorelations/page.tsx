@@ -41,7 +41,7 @@ const InvestmentRelations = () => {
       <KeyHighlightsInvestment />
       <InvestmentModelSection />
       <TermAndCondition />
-      <InvestmentTeamSection />
+      {/* <InvestmentTeamSection /> */}
       <CallToAction />
       <ContactInformationSection />
     </div>

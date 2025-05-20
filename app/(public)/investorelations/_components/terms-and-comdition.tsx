@@ -1,11 +1,18 @@
-import { FileText, BriefcaseIcon, ArrowUpRight, Handshake, Building, ArrowRight } from 'lucide-react'
-import React from 'react'
-import { Button } from '@/components/ui/button';
+import {
+  FileText,
+  BriefcaseIcon,
+  ArrowUpRight,
+  Handshake,
+  Building,
+  ArrowRight,
+} from "lucide-react";
+import React from "react";
+import { Button } from "@/components/ui/button";
 
 export default function TermAndCondition() {
   return (
     <>
-    <section className="py-16 bg-white">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-estates-secondary mb-6 tracking-tight">
@@ -96,24 +103,26 @@ export default function TermAndCondition() {
               We facilitate custom investment projects under the investor&apos;s
               brand or institution.
             </p>
-            <Button
-              variant="outline"
-              onClick={() => (window.location.href = "/contact")}
-              className="group"
-            >
-              Still Have Questions? Contact Us Today!
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+              <Button
+                variant="outline"
+                onClick={() => (window.location.href = "/contact")}
+                className="w-full max-w-xs sm:max-w-fit group text-sm sm:text-base px-4 py-2 sm:px-6 sm:py-3 whitespace-normal text-center"
+              >
+                <span className="leading-snug text-center">
+                  Still Have Questions? Contact Us Today!
+                </span>
+                <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform shrink-0" />
+              </Button>
           </div>
         </div>
       </section>
-      </>
-  )
+    </>
+  );
 }
 
 const TermItem = ({ text }: { text: string }) => (
-    <li className="flex items-start">
-      <div className="w-2 h-2 bg-estates-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
-      <span className="text-gray-600">{text}</span>
-    </li>
-  );
+  <li className="flex items-start">
+    <div className="w-2 h-2 bg-estates-primary rounded-full mt-2 mr-3 flex-shrink-0"></div>
+    <span className="text-gray-600">{text}</span>
+  </li>
+);

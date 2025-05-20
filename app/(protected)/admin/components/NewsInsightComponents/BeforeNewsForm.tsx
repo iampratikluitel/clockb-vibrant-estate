@@ -11,19 +11,19 @@ interface Props {
 }
 
 export default function BeforeNewsForm({ type, newsCategory, id }: Props) {
-  const { data: NewsInsight, isLoading: NewsInsightLoading } =
+  const { data: NewsInsights, isLoading: NewsInsightsLoading } =
     useGetAdminNewsInsightByIdQuery(id);
 
   return (
     <>
-      {NewsInsightLoading ? (
+      {NewsInsightsLoading ? (
         <div className="h-[100vh] w-full flex justify-center items-center">
           <p className="loader animate-pulse"></p>
         </div>
       ) : (
         <NewsForm
           type={type}
-          ExistingDetails={NewsInsight}
+          ExistingDetails={NewsInsights}
           newsCategory={newsCategory}
         />
       )}

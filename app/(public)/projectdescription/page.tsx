@@ -200,7 +200,7 @@ const ProjectDescription = () => {
               </div>
             </div>
 
-            <div className="text-center">
+            {/* <div className="text-center">
               <Button
                 className="bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-6 rounded-lg group transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl"
                 onClick={() => window.open("#", "_blank")}
@@ -208,8 +208,8 @@ const ProjectDescription = () => {
                 View Our Master Plan
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
+            </div> */}
               {/* <p className="text-gray-500 text-sm mt-2">Experience our 3D animated master plan visualization</p> */}
-            </div>
           </div>
         </div>
       </section>

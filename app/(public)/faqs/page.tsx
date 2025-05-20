@@ -179,7 +179,7 @@ const Faqs = () => {
               Contact Support
             </Link>
             <a
-              href="tel:+9779851086249"
+              href="tel:+9779761767841"
               className="inline-flex items-center bg-white border border-estates-primary text-estates-primary hover:bg-estates-primary/10 font-semibold px-6 py-3 rounded-lg transition-all duration-300"
             >
               Call Us
