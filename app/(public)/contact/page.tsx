@@ -99,16 +99,15 @@ const Contact = () => {
                   <div>
                     <h3 className="font-semibold text-lg mb-2">Our Location</h3>
                     <p className="text-gray-600 leading-relaxed">
-                      Clock B Business Innovation
+                      Phurtiman Marg, Bishalnagar,
                       <br />
                       {/* 123 Investment Avenue
                       <br /> */}
                       Kathmandu, Nepal
                     </p>
-
                     <div className="mt-5 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
                       <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8296488884735!2d85.33535309999999!3d27.7225455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19094e6425bf%3A0x132662741329893f!2sClock%20b%20Business%20Innovations!5e0!3m2!1sen!2snp!4v1747035036785!5m2!1sen!2snp"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3531.8034355130703!2d85.3356434!3d27.723354699999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb196ca082a2b5%3A0x675b3387fb56614c!2sPhurtiman%20Marg%2C%20Kathmandu%2044600!5e0!3m2!1sen!2snp!4v1747644370960!5m2!1sen!2snp"
                         width="100%"
                         height="250"
                         style={{ border: 0 }}
@@ -130,8 +129,8 @@ const Contact = () => {
                       Phone Numbers
                     </h3>
                     <div className="space-y-2 text-gray-600">
-                      <p>Sales & Investments: +977-9851079636</p>
-                      <p>Customer Support: +977-9843260542</p>
+                      <p>Sales & Investments: {ConfigData?.phone}</p>
+                      <p>Customer Support: {ConfigData?.phone2}</p>
                     </div>
                   </div>
                 </div>
@@ -151,7 +150,7 @@ const Contact = () => {
                           href="mailto:info@projestates.com"
                           className="text-estates-primary hover:underline"
                         >
-                          info@projestates.com
+                          {ConfigData?.email}
                         </a>
                       </p>
                       <p>

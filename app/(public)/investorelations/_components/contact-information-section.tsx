@@ -35,9 +35,11 @@ export default function ContactInformationSection() {
                 </Link>
                 <ContactItem
                   icon={<Phone className="h-6 w-6 text-estates-primary" />}
-                  text="Call Us: 9851086249"
+                  text="Call Us: 9761767841"
                   action={
-                    <a href="tel:9851086249">
+                    <a
+                      href="tel:9761767841"
+                    >
                       <Button variant="outline" size="sm">
                         Call
                       </Button>

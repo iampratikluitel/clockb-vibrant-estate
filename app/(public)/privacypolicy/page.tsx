@@ -10,8 +10,8 @@ const Page = () => {
 
   return (
     <>
-      <main className="pt-24"> {/* Adjust based on header height */}
-        <h1 className="md:px-28 md:py-4 font-semibold text-2xl">Privacy Policy</h1>
+      <main className="pt-24"> 
+        <h1 className="px-4 md:px-28 md:py-4 font-semibold text-2xl">Privacy Policy</h1>
         {Loading ? (
           <PageLoader />
         ) : (
