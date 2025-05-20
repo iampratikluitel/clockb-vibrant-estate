@@ -8,9 +8,11 @@ import { useGetPublicDevelopmentPhaseQuery } from "@/store/api/Public/publicDeve
 import PageLoader from "@/components/PageLoader";
 
 const PhaseWise = () => {
-  const { data, isLoading, error } = useGetPublicDevelopmentPhaseQuery("")
-  
-  const [phaseData, setPhaseData] = useState<DEVELOPMENTPHASE | undefined>(undefined);
+  const { data, isLoading, error } = useGetPublicDevelopmentPhaseQuery("");
+
+  const [phaseData, setPhaseData] = useState<DEVELOPMENTPHASE | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (data) {
@@ -77,13 +79,16 @@ const PhaseWise = () => {
             </div>
           )}
 
-          <div className="text-center mt-8">
+          <div className="flex justify-center mt-8 px-4 sm:px-6">
             <Button
               variant="cta"
+              className="w-full max-w-xs sm:max-w-fit text-sm sm:text-base px-6 py-8 sm:px-6 sm:py-3 whitespace-normal text-center"
               onClick={() => (window.location.href = "#investment-model")}
             >
-              Learn About Investment Opportunities
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <span className="leading-snug">
+                Learn About Investment Opportunities
+              </span>
+              <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
             </Button>
           </div>
         </div>

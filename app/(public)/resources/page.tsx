@@ -136,7 +136,6 @@ const Resources = () => {
           throw new Error(errorData.error || "Failed to fetch resources");
         }
         const data = await response.json();
-        console.log("Fetched resources:", data);
 
         // Separate reports and legal documents based on category
         const reportsData = data.filter(
@@ -145,10 +144,6 @@ const Resources = () => {
         const legalDocsData = data.filter(
           (item: any) => item.category === "legal"
         );
-
-        console.log("Reports data:", reportsData);
-        console.log("Legal documents data:", legalDocsData);
-
         setReports(reportsData);
         setLegalDocuments(legalDocsData);
       } catch (error) {
@@ -192,7 +187,6 @@ const Resources = () => {
         toast.error("Failed to load investment documents");
       }
     };
-
     fetchInvestmentDocs();
   }, []);
 
@@ -208,7 +202,6 @@ const Resources = () => {
         console.error("Error fetching investor kit:", error);
       }
     };
-
     fetchInvestorKit();
   }, []);
 
