@@ -39,12 +39,12 @@ const Edit = async (props: Props) => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink href={paths.admin.newsinsight}>
-              News and Insights
+              NewsInsights
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Edit News and Insights</BreadcrumbPage>
+            <BreadcrumbPage>Edit</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
