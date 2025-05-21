@@ -207,6 +207,34 @@ export default function FaqsGuidesAdmin() {
     }
   };
 
+  const handleDownload = async (fileUrl: string, title: string) => {
+    try {
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(fileUrl)}&downloadAs=${encodeURIComponent(fileUrl)}`,
+        {
+          credentials: 'include',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to download file');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      toast.error('Failed to download file');
+    }
+  };
+
   const getIconComponent = (icon: string) => {
     switch (icon) {
       case 'book':
@@ -368,7 +396,7 @@ export default function FaqsGuidesAdmin() {
                 className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
                 onClick={() => {
                   if (guide.buttonType === 'download' && guide.fileUrl) {
-                    window.open(`/api/resources/download?filename=${encodeURIComponent(guide.fileUrl)}`, '_blank');
+                    handleDownload(guide.fileUrl, guide.title);
                   }
                 }}
               >
@@ -480,4 +508,4 @@ export default function FaqsGuidesAdmin() {
       </CardContent>
     </Card>
   );
-} 
+}

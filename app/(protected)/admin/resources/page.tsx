@@ -1,10 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import ProjectUpdatesAdmin from "./components/ProjectUpdatesAdmin";
 import LegalDocumentsAdmin from "./components/LegalDocumentsAdmin";
 import FaqsGuidesAdmin from "./components/FaqsGuidesAdmin";
@@ -43,7 +39,7 @@ export default function AdminResourcesPage() {
             <TabsTrigger value="legal-docs">Legal Documents</TabsTrigger>
             <TabsTrigger value="faqs">FAQs & Guides</TabsTrigger>
             <TabsTrigger value="contact-details">Contact Details</TabsTrigger>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
+            {/* <TabsTrigger value="documents">Documents</TabsTrigger> */}
             <TabsTrigger value="site-visits">Site Visits</TabsTrigger>
           </TabsList>
 
@@ -71,9 +67,9 @@ export default function AdminResourcesPage() {
             <InvestorRelationsAdmin />
           </TabsContent>
 
-          <TabsContent value="documents">
+          {/* <TabsContent value="documents">
             <DocumentsAdmin />
-          </TabsContent>
+          </TabsContent> */}
 
           <TabsContent value="site-visits">
             <SiteVisitsAdmin />

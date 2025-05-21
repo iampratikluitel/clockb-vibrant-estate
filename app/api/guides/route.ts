@@ -30,35 +30,13 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    console.log('Raw request body:', body); // Debug log
-
-    const { icon, title, description, buttonType, buttonText, fileUrl } = body;
+    const { icon, title, description, buttonType, buttonText, fileUrl, fileName } = body; // Add fileName
 
     if (!icon || !title || !description || !buttonType || !buttonText) {
       return new NextResponse(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400 }
       );
-    }
-
-    // Debug log
-    console.log('Creating guide with data:', {
-      icon,
-      title,
-      description,
-      buttonType,
-      buttonText,
-      fileUrl
-    });
-
-    // Verify prisma client
-    if (!prisma || !prisma.guide) {
-      console.error('Prisma client not properly initialized:', {
-        hasPrisma: !!prisma,
-        hasGuide: prisma ? 'guide' in prisma : false,
-        models: prisma ? Object.keys(prisma) : []
-      });
-      throw new Error('Database client not properly initialized');
     }
 
     const createData = {
@@ -68,11 +46,11 @@ export async function POST(request: Request) {
       buttonType,
       buttonText,
       fileUrl,
-      guide: title, // Use the title as the guide field value
+      fileName: fileName || title, // Store the original file name or use title as fallback
+      guide: title,
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    console.log('Data being sent to Prisma:', createData); // Debug log
 
     const guide = await prisma.guide.create({
       data: createData
@@ -89,4 +67,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}
