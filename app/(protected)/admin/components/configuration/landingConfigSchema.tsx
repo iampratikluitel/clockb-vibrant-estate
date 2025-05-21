@@ -20,6 +20,7 @@ const LandingConfigSchema = z.object({
   card5title: z.string(),
   card5description: z.string(),
   card5Date: z.string().optional(),
+  card5EndDate: z.string().optional(),
 });
 
 export default LandingConfigSchema;

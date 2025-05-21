@@ -69,6 +69,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
     card5title: ExistingDetail?.card5title || "",
     card5description: ExistingDetail?.card5description || "",
     card5Date: ExistingDetail?.card5Date || "",
+    card5EndDate: ExistingDetail?.card5EndDate || "",
   };
 
   const form = useForm<z.infer<typeof LandingConfigSchema>>({
@@ -88,20 +89,24 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
     try {
       setIsLoading(true);
       
-      // Create milestones array from card data
       const milestones = [];
       for (let i = 1; i <= 5; i++) {
         const title = data[`card${i}title` as keyof typeof data];
         const description = data[`card${i}description` as keyof typeof data];
         const period = data[`card${i}Date` as keyof typeof data];
         
-        // Only add milestone if title exists
+        const endDate = i === 5 ? data.card5EndDate : undefined;
+        
         if (title) {
-          milestones.push({ title, description, period });
+          milestones.push({ 
+            title, 
+            description, 
+            period,
+            ...(endDate && { endDate }) 
+          });
         }
       }
       
-      // Include both old card format and new milestones array
       const formData = { 
         _id: ExistingDetail?._id || ExistingDetail, 
         ...data,
@@ -130,6 +135,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
     const titleKey = `${prefix}title` as keyof z.infer<typeof LandingConfigSchema>;
     const descriptionKey = `${prefix}description` as keyof z.infer<typeof LandingConfigSchema>;
     const dateKey = `${prefix}Date` as keyof z.infer<typeof LandingConfigSchema>;
+    const endDateKey = `${prefix}EndDate` as keyof z.infer<typeof LandingConfigSchema>;
 
     return (
       <Card className="w-full">
@@ -174,7 +180,7 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
             name={dateKey}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date</FormLabel>
+                <FormLabel>Start Date</FormLabel>
                 <FormControl>
                   <Input
                     type="date"
@@ -186,6 +192,27 @@ export default function LandingConfiguration({ ExistingDetail }: Props) {
               </FormItem>
             )}
           />
+
+          {/* Add end date field only for card 5 */}
+          {cardNumber === 5 && (
+            <FormField
+              control={form.control}
+              name={endDateKey}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>End Date</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      value={formatDateForInput(field.value)}
+                      onChange={(e) => field.onChange(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </CardContent>
       </Card>
     );

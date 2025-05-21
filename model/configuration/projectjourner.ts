@@ -25,6 +25,7 @@ const projectJourneySchema = new Schema(
     card5title: String,
     card5description: String,
     card5Date: String,
+    card5EndDate: String,
   },
   { 
     strict: false,

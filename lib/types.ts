@@ -176,6 +176,7 @@ export interface PROJECTJOURNEY {
   card5title: string;
   card5description: string;
   card5Date: string;
+  card5EndDate: string;
 }
 
 export interface DEVELOPMENTPHASE {
