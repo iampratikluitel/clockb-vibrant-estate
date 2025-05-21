@@ -9,9 +9,9 @@ const Page = () => {
     useGetPublicConfigConditionsOfUseQuery("");
 
   return (
-    <>
-      <main className="pt-24">
-      <h1 className="px-4 md:px-28 md:py-4 font-semibold text-2xl">Terms and Conditions</h1>
+    <main className="pt-24 pb-10"> {/* Added pb-10 for bottom spacing */}
+      <div className="px-4 md:px-28 py-6 md:py-10">
+        <h1 className="font-semibold text-xl mb-4 pl-2">Terms and Conditions</h1>
 
         {Loading ? (
           <PageLoader />
@@ -20,11 +20,11 @@ const Page = () => {
             dangerouslySetInnerHTML={{
               __html: ExistingDetail?.description as string,
             }}
-            className="px-4 md:px-28 md:py-10 bg-white"
+            className="bg-white p-2 rounded-md shadow-sm"
           ></div>
         )}
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 
