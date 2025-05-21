@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import { toast } from "sonner";
 import { MINIOURL } from "@/lib/constants";
 import { uploadToMinIO } from "@/lib/helper";
+import { Plus, Trash2 } from "lucide-react";
 
 const socialLink = z.object({
   facebook: z.string().optional(),
@@ -29,18 +30,25 @@ const socialLink = z.object({
   youtube: z.string().optional(),
 });
 
+const emailSchema = z.object({
+  label: z.string().min(1, "Label is required"),
+  address: z.string().email("Invalid email address"),
+});
+
+const phoneSchema = z.object({
+  label: z.string().min(1, "Label is required"),
+  number: z.string().min(10, "Phone number must be at least 10 characters"),
+});
+
 const FormSchema = z.object({
-  email: z.string().email(),
   about: z.string().min(2, {
     message: "About must be at least 2 characters.",
   }),
   address: z.string().min(2, {
     message: "Address must be at least 2 characters.",
   }),
-  phone: z.string().min(2, {
-    message: "Phone must be at least 10 characters.",
-  }),
-  phone2: z.string().optional(),
+  emails: z.array(emailSchema).min(1, "At least one email is required"),
+  phones: z.array(phoneSchema).min(1, "At least one phone number is required"),
   socialHandles: socialLink,
 });
 
@@ -54,11 +62,14 @@ const FooterForm = ({ ConfigData }: props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: ConfigData?.email ?? "",
       about: ConfigData?.about ?? "",
       address: ConfigData?.address ?? "",
-      phone: ConfigData?.phone ?? "",
-      phone2: ConfigData?.phone2 ?? "",
+      emails: ConfigData?.emails?.length
+        ? ConfigData.emails
+        : [{ label: "Main", address: "" }],
+      phones: ConfigData?.phones?.length
+        ? ConfigData.phones
+        : [{ label: "Main", number: "" }],
       socialHandles: {
         facebook: ConfigData?.socialHandles?.facebook ?? "",
         linkedin: ConfigData?.socialHandles?.linkedin ?? "",
@@ -70,29 +81,33 @@ const FooterForm = ({ ConfigData }: props) => {
     },
   });
 
+  const {
+    fields: emailFields,
+    append: appendEmail,
+    remove: removeEmail,
+  } = useFieldArray({
+    control: form.control,
+    name: "emails",
+  });
+
+  const {
+    fields: phoneFields,
+    append: appendPhone,
+    remove: removePhone,
+  } = useFieldArray({
+    control: form.control,
+    name: "phones",
+  });
+
   async function handleSubmit(data: z.infer<typeof FormSchema>) {
     setLoading(true);
 
     try {
-      setLoading(true);
-      // if (!data.logo) {
-      //   console.log("Logo data:", data.logo);
-      //   toast.error("Please select Logo");
-      //   return;
-      // }
-      // let ImageUrl = null;
-      // if (data.logo != `/api/resources/download?filename=${encodeURIComponent(ConfigData?.logo ?? "")}`) {
-      //   ImageUrl = await uploadToMinIO(data.logo, "footer");
-      //   if (ImageUrl === "") {
-      //     toast.error("Image Upload Failed Please try again");
-      //     return;
-      //   }
-      // }
       const formData = {
         _id: ConfigData?._id,
         ...data,
-        // logo: ImageUrl ?? ConfigData?.logo,
       };
+
       const response = await fetch(`/api/admin/configuration/footer`, {
         method: "POST",
         headers: {
@@ -103,9 +118,9 @@ const FooterForm = ({ ConfigData }: props) => {
 
       if (!response.ok) throw new Error("Failed to submit");
 
-      toast.success("Configuration updated successfully.");
+      toast.success("Footer configuration updated successfully.");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Failed to update configuration. Please try again.");
     } finally {
       setLoading(false);
@@ -116,186 +131,284 @@ const FooterForm = ({ ConfigData }: props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="w-full max-w-5xl mx-auto space-y-8 p-6 bg-white rounded-xl shadow-md"
+        className="w-full max-w-5xl mx-auto space-y-8 p-6 "
       >
         <h1 className="font-semibold text-3xl text-gray-800">
           Footer Configuration
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="flex flex-col gap-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="about"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>About</FormLabel>
-                  <FormControl>
-                    <Input placeholder="About" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Address</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Phone" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone2"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Secont Phone number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Another Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="grid grid-cols-1 gap-8">
+          <FormField
+            control={form.control}
+            name="about"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>About</FormLabel>
+                <FormControl>
+                  <Input placeholder="About your company" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Address</FormLabel>
+                <FormControl>
+                  <Input placeholder="Company address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Email Fields */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Email Addresses</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => appendEmail({ label: "", address: "" })}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Email
+              </Button>
+            </div>
+
+            {emailFields.map((field, index) => (
+              <div key={field.id} className="flex items-start space-x-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                  <FormField
+                    control={form.control}
+                    name={`emails.${index}.label`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={index !== 0 ? "sr-only" : ""}>
+                          Label
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Email Label (e.g., Main, Support)"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`emails.${index}.address`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={index !== 0 ? "sr-only" : ""}>
+                          Email Address
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            placeholder="Email address"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {index > 0 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="mt-6"
+                    onClick={() => removeEmail(index)}
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                )}
+              </div>
+            ))}
           </div>
 
-          <div className="flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="socialHandles.facebook"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Facebook</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://facebook.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="socialHandles.instagram"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Instagram</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://instagram.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="socialHandles.linkedin"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>LinkedIn</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://linkedin.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="socialHandles.twitter"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Twitter</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://twitter.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="socialHandles.whatsapp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>WhatsApp</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://whatsapp.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="socialHandles.youtube"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>YouTube</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="url"
-                        placeholder="https://youtube.com"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          {/* Phone Number Fields */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-medium">Phone Numbers</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => appendPhone({ label: "", number: "" })}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Phone
+              </Button>
             </div>
+
+            {phoneFields.map((field, index) => (
+              <div key={field.id} className="flex items-start space-x-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-grow">
+                  <FormField
+                    control={form.control}
+                    name={`phones.${index}.label`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={index !== 0 ? "sr-only" : ""}>
+                          Label
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Phone Label (e.g., Office, Mobile)"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name={`phones.${index}.number`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className={index !== 0 ? "sr-only" : ""}>
+                          Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Phone number" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                {index > 0 && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="mt-6"
+                    onClick={() => removePhone(index)}
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Social Media Links */}
+          <h3 className="text-lg font-medium">Social Media Links</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <FormField
+              control={form.control}
+              name="socialHandles.facebook"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Facebook</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://facebook.com/your-page"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socialHandles.instagram"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Instagram</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://instagram.com/your-handle"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socialHandles.linkedin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>LinkedIn</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://linkedin.com/company/your-company"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socialHandles.twitter"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Twitter</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://twitter.com/your-handle"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socialHandles.whatsapp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>WhatsApp</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://wa.me/your-number"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="socialHandles.youtube"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>YouTube</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="url"
+                      placeholder="https://youtube.com/c/your-channel"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -307,7 +420,7 @@ const FooterForm = ({ ConfigData }: props) => {
             </div>
           ) : (
             <Button type="submit" className="w-full sm:w-auto">
-              Submit
+              Save Configuration
             </Button>
           )}
         </div>

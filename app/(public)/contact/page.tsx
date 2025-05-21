@@ -128,10 +128,15 @@ const Contact = () => {
                     <h3 className="font-semibold text-lg mb-2">
                       Phone Numbers
                     </h3>
-                    <div className="space-y-2 text-gray-600">
-                      <p>Sales & Investments: {ConfigData?.phone}</p>
-                      <p>Customer Support: {ConfigData?.phone2}</p>
-                    </div>
+                    {ConfigData?.phones &&
+                      ConfigData.phones.map((phone, index) => (
+                        <li key={index} className="flex items-center">
+                            <div className="text-gray-600">
+                              {phone.label && <span className="text-gray-600">{phone.label}:&nbsp;</span>}
+                              {phone.number}
+                            </div>
+                        </li>
+                      ))}
                   </div>
                 </div>
 
@@ -143,35 +148,26 @@ const Contact = () => {
                     <h3 className="font-semibold text-lg mb-2">
                       Email Addresses
                     </h3>
-                    <div className="space-y-2 text-gray-600">
-                      <p>
-                        General Inquiries:{" "}
-                        <a
-                          href="mailto:info@projestates.com"
-                          className="text-estates-primary hover:underline"
-                        >
-                          {ConfigData?.email}
-                        </a>
-                      </p>
-                      <p>
-                        Investor Relations:{" "}
-                        <a
-                          href="mailto:investors@projestates.com"
-                          className="text-estates-primary hover:underline"
-                        >
-                          investors@projestates.com
-                        </a>
-                      </p>
-                      <p>
-                        Support:{" "}
-                        <a
-                          href="mailto:support@projestates.com"
-                          className="text-estates-primary hover:underline"
-                        >
-                          support@projestates.com
-                        </a>
-                      </p>
-                    </div>
+                    {ConfigData?.emails &&
+                      ConfigData.emails.map((email, index) => (
+                        <li key={index} className="flex items-center">
+                          <div className="text-[#9F9EA1]">
+                            <div>
+                              {email.label && (
+                                <span className="space-y-2 text-gray-600">
+                                  {email.label}:&nbsp;
+                                </span>
+                              )}
+                              <a
+                                href={`mailto:${email.address}`}
+                                className="text-estates-primary hover:underline"
+                              >
+                                {email.address}
+                              </a>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
                   </div>
                 </div>
 

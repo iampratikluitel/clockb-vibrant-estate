@@ -32,23 +32,33 @@ export interface Brochure {
   description: string;
 }
 
-export interface FOOTER {
-  _id: string;
-  logo: string;
-  email: string;
-  about: string;
+export interface EmailItem {
+  label: string;
   address: string;
-  phone: string;
-  phone2: string;
-  socialHandles: {
-    facebook: string;
-    linkedin: string;
-    instagram: string;
-    twitter: string;
-    whatsapp: string;
-    youtube: string;
-  };
-  workingHours: string;
+}
+
+export interface PhoneItem {
+  label: string;
+  number: string;
+}
+
+export interface SocialHandles {
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedin?: string;
+  youtube?: string;
+  whatsapp?: string;
+}
+
+export interface FOOTER {
+  _id?: string;
+  logo?: string;
+  about?: string;
+  emails: EmailItem[];
+  phones: PhoneItem[];
+  address?: string;
+  socialHandles: SocialHandles;
 }
 
 export interface NEWSLETTER {
