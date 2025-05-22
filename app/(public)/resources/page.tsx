@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Download, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -104,8 +102,6 @@ const Resources = () => {
   const [selectedDocument, setSelectedDocument] =
     useState<LegalDocument | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [isDocumentDialogOpen, setIsDocumentDialogOpen] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<LegalDocument | InvestmentDoc | null>(null);
   const [investorRelations, setInvestorRelations] =
     useState<InvestorRelations | null>(null);
 
@@ -285,8 +281,16 @@ const Resources = () => {
   };
 
   const handleDocumentAction = async (doc: LegalDocument | InvestmentDoc) => {
-    setSelectedDoc(doc);
-    setIsDocumentDialogOpen(true);
+    if (doc.fileUrl) {
+      // Open in new window/tab
+      window.open(
+        `/api/view?fileUrl=${encodeURIComponent(doc.fileUrl)}`,
+        '_blank',
+        'noopener,noreferrer'
+      );
+    } else {
+      toast.error("No file URL available");
+    }
   };
 
   // Add this helper function near other utility functions
@@ -354,93 +358,6 @@ const Resources = () => {
                 title={selectedDocument.title}
                 sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
               />
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={isDocumentDialogOpen}
-        onOpenChange={setIsDocumentDialogOpen}
-      >
-        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
-          <DialogHeader className="flex-none">
-            <DialogTitle>{selectedDoc?.title}</DialogTitle>
-          </DialogHeader>
-          {selectedDoc && (
-            <div className="flex flex-col flex-1 min-h-0">
-              <div className="flex-1 overflow-auto">
-                {selectedDoc.fileUrl?.toLowerCase().endsWith(".pdf") ? (
-                  <object
-                    data={`/api/view?fileUrl=${encodeURIComponent(
-                      selectedDoc.fileUrl ?? ""
-                    )}`}
-                    type="application/pdf"
-                    className="w-full h-full"
-                  >
-                    <div className="flex flex-col items-center justify-center h-full">
-                      <p className="text-gray-500 mb-4">
-                        Unable to display PDF directly
-                      </p>
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          window.open(
-                            `/api/view?fileUrl=${encodeURIComponent(
-                              selectedDoc.fileUrl ?? ""
-                            )}`,
-                            "_blank"
-                          )
-                        }
-                        className="flex items-center gap-2"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        Open PDF in New Tab
-                      </Button>
-                    </div>
-                  </object>
-                ) : isImageFile(selectedDoc.fileUrl || "") ? (
-                  <div className="relative w-full h-full">
-                    <img
-                      src={`/api/view?fileUrl=${encodeURIComponent(
-                        selectedDoc.fileUrl ?? ""
-                      )}`}
-                      alt={selectedDoc.title}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full">
-                    <p className="text-gray-500 mb-4">
-                      Preview not available for this file type
-                    </p>
-                    <Button
-                      variant="outline"
-                      onClick={() => handleDownload(selectedDoc)}
-                      className="flex items-center gap-2"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download to View
-                    </Button>
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
-                <Button
-                  variant="outline"
-                  onClick={() => handleDownload(selectedDoc)}
-                  className="flex items-center gap-2"
-                >
-                  <Download className="w-4 h-4" />
-                  Download Document
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsDocumentDialogOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
             </div>
           )}
         </DialogContent>
