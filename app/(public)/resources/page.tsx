@@ -105,7 +105,7 @@ const Resources = () => {
     useState<LegalDocument | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isDocumentDialogOpen, setIsDocumentDialogOpen] = useState(false);
-  const [selectedDoc, setSelectedDoc] = useState<LegalDocument | null>(null);
+  const [selectedDoc, setSelectedDoc] = useState<LegalDocument | InvestmentDoc | null>(null);
   const [investorRelations, setInvestorRelations] =
     useState<InvestorRelations | null>(null);
 
@@ -284,7 +284,7 @@ const Resources = () => {
     }
   };
 
-  const handleDocumentAction = async (doc: LegalDocument) => {
+  const handleDocumentAction = async (doc: LegalDocument | InvestmentDoc) => {
     setSelectedDoc(doc);
     setIsDocumentDialogOpen(true);
   };
@@ -304,7 +304,7 @@ const Resources = () => {
         <div className="container mx-auto px-4 py-16">
           <InvestmentDocuments
             investmentDocs={investmentDocs}
-            handleDownload={handleDownload}
+            handleDocumentAction={handleDocumentAction}
           />
           <ProjectUpdates
             selectedTab={selectedTab}
@@ -373,7 +373,7 @@ const Resources = () => {
                 {selectedDoc.fileUrl?.toLowerCase().endsWith(".pdf") ? (
                   <object
                     data={`/api/view?fileUrl=${encodeURIComponent(
-                      selectedDoc.fileUrl
+                      selectedDoc.fileUrl ?? ""
                     )}`}
                     type="application/pdf"
                     className="w-full h-full"
@@ -387,7 +387,7 @@ const Resources = () => {
                         onClick={() =>
                           window.open(
                             `/api/view?fileUrl=${encodeURIComponent(
-                              selectedDoc.fileUrl
+                              selectedDoc.fileUrl ?? ""
                             )}`,
                             "_blank"
                           )
@@ -403,7 +403,7 @@ const Resources = () => {
                   <div className="relative w-full h-full">
                     <img
                       src={`/api/view?fileUrl=${encodeURIComponent(
-                        selectedDoc.fileUrl
+                        selectedDoc.fileUrl ?? ""
                       )}`}
                       alt={selectedDoc.title}
                       className="w-full h-full object-contain"

@@ -27,7 +27,7 @@ interface GuideItem {
   icon: 'book' | 'refresh' | 'help';
   title: string;
   description: string;
-  buttonType: 'download' | 'view' | 'faq';
+  buttonType: 'download'
   buttonText: string;
   fileUrl?: string;
 }
@@ -40,6 +40,7 @@ export default function FaqsGuidesAdmin() {
   const [editingGuide, setEditingGuide] = useState<GuideItem | null>(null);
   const [newGuide, setNewGuide] = useState<Partial<GuideItem>>({
     icon: 'book',
+    buttonText: 'Download PDF',
     buttonType: 'download'
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -120,7 +121,6 @@ export default function FaqsGuidesAdmin() {
           buttonText: newGuide.buttonText,
           fileUrl
         };
-        console.log('Sending request with body:', requestBody);
 
         const response = await fetch('/api/guides', {
           method: 'POST',
@@ -306,7 +306,7 @@ export default function FaqsGuidesAdmin() {
                   placeholder="Enter description"
                 />
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <label>Button Type</label>
                 <Select
                   value={newGuide.buttonType}
@@ -321,7 +321,7 @@ export default function FaqsGuidesAdmin() {
                     <SelectItem value="faq">FAQ</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
               {newGuide.buttonType === 'download' && (
                 <div className="space-y-2">
                   <label>Document File</label>

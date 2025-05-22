@@ -17,10 +17,10 @@ interface InvestmentDoc {
 
 export default function InvestmentDocuments({
   investmentDocs,
-  handleDownload,
+  handleDocumentAction,
 }: {
   investmentDocs: InvestmentDoc[];
-  handleDownload: (doc: InvestmentDoc) => void;
+  handleDocumentAction: (doc: InvestmentDoc) => void;
 }) {
   const getIconComponent = (icon: string) => {
     switch (icon) {
@@ -51,7 +51,7 @@ export default function InvestmentDocuments({
             title={doc.title}
             description={doc.description}
             buttonText={doc.buttonText}
-            onClick={() => handleDownload(doc)}
+            onClick={() => handleDocumentAction(doc)}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ResourceCardProps {
@@ -34,8 +34,8 @@ export default function ResourceCard({
             className="w-full flex items-center justify-center gap-2 hover:bg-estates-primary hover:text-white"
             onClick={onClick}
           >
-            <Download className="w-4 h-4" />
-            {title}
+            <Eye className="w-4 h-4" />
+            View Document
           </Button>
         </div>
       </div>
