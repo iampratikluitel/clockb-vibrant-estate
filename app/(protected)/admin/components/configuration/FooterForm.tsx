@@ -15,10 +15,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { z } from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
-import SCNSingleImagePicker from "@/components/image-picker/SCNSingleImagePicker";
 import { toast } from "sonner";
-import { MINIOURL } from "@/lib/constants";
-import { uploadToMinIO } from "@/lib/helper";
+
 import { Plus, Trash2 } from "lucide-react";
 
 const socialLink = z.object({
