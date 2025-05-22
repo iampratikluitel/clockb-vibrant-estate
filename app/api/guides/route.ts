@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { icon, title, description, buttonType, buttonText, fileUrl, fileName } = body; // Add fileName
+    const { icon, title, description, buttonType, buttonText, fileUrl } = body;
 
     if (!icon || !title || !description || !buttonType || !buttonText) {
       return new NextResponse(
@@ -39,21 +39,18 @@ export async function POST(request: Request) {
       );
     }
 
-    const createData = {
-      icon,
-      title,
-      description,
-      buttonType,
-      buttonText,
-      fileUrl,
-      fileName: fileName || title, // Store the original file name or use title as fallback
-      guide: title,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-
     const guide = await prisma.guide.create({
-      data: createData
+      data: {
+        icon,
+        title,
+        description,
+        buttonType,
+        buttonText,
+        fileUrl,
+        guide: title,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     });
 
     return NextResponse.json(guide);

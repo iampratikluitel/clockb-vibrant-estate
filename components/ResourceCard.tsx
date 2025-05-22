@@ -35,7 +35,7 @@ export default function ResourceCard({
             onClick={onClick}
           >
             <Download className="w-4 h-4" />
-            {buttonText}
+            {title}
           </Button>
         </div>
       </div>
