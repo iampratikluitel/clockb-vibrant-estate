@@ -7,31 +7,81 @@ import InvestmentCircle from "./_components/investment-circle";
 import { useGetPublicAboutMainSectionQuery } from "@/store/api/Public/publicAbout";
 import Link from "next/link";
 import { paths } from "@/lib/paths";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppointmentDialog from "../contact/_component/appointmentDialog";
+import { toast } from "sonner";
+
+interface Brochure {
+  title: string;
+  description: string;
+  fileUrl: string;
+}
 
 const About = () => {
+  const [brochure, setBrochure] = useState<Brochure | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [isAppointmentOpen, setIsAppointmentOpen] = useState(false);
 
-  const { data: HeroSection, isLoading } = useGetPublicAboutMainSectionQuery();
-  const handleDownloadBrochure = async () => {
-    try {
-      const fetchData = await fetch("/api/public/configuration/brochure");
-      const data = await fetchData.json();
+  const { data: HeroSection } = useGetPublicAboutMainSectionQuery();
 
-      if (data?.brochureUrl) {
-        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(data.brochureUrl)}`;
-        window.open(fileUrl, "_blank");
-      } else {
-        console.error("Brochure URL not found.");
+  useEffect(() => {
+    const fetchBrochure = async () => {
+      try {
+        const response = await fetch("/api/public/configuration/brochure");
+        if (response.ok) {
+          const data = await response.json();
+          setBrochure(data);
+        }
+      } catch (error) {
+        console.error("Error fetching brochure:", error);
+        toast.error("Failed to load brochure information");
       }
+    };
+    fetchBrochure();
+  }, []);
+
+  const handleDownload = async () => {
+    if (!brochure) {
+      toast.error("Brochure not available");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(
+          brochure.fileUrl
+        )}&downloadAs=${encodeURIComponent(brochure.title)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = brochure.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      toast.success("Download started successfully");
     } catch (error) {
-      console.error("Error fetching brochure:", error);
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file");
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col min-h-screen">
-
       <main className="flex-grow pt-24">
         {/* Hero Section */}
         <section className="bg-estates-gray-100 py-16">
@@ -78,7 +128,7 @@ const About = () => {
 
                 <div
                   className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors cursor-pointer"
-                  onClick={handleDownloadBrochure}
+                  onClick={handleDownload}
                 >
                   <FileText className="h-10 w-10 mx-auto mb-4 text-white" />
                   <h3 className="text-xl font-semibold mb-2">

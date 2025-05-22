@@ -52,32 +52,30 @@ const ProjectTimeline = ({ initialData }: ProjectTimelineProps) => {
       const title = data[`card${i}title`];
       const description = data[`card${i}description`];
       const currentDateStr = data[`card${i}Date`];
-      const nextDateStr = data[`card${i + 1}Date`];
+      const endDateStr = data[`card${i}EndDate`];
 
       if (title) {
         let period = "Unknown";
 
         if (currentDateStr) {
           const startYear = new Date(currentDateStr).getFullYear();
-          const endYear = nextDateStr
-            ? new Date(nextDateStr).getFullYear()
-            : startYear;
 
-          if (!isNaN(startYear)) {
-            if (isNaN(endYear)) {
-              period = `${startYear} - Unknown`;
-              console.warn(
-                `Invalid nextDate for card${
-                  i + 1
-                }, using "Unknown" for end year`
-              );
-            } else {
-              period = `${startYear} - ${endYear}`;
-            }
+          // Special handling for the last card (card5)
+          if (i === 5 && endDateStr) {
+            const endYear = new Date(endDateStr).getFullYear();
+            period = `${startYear} - ${endYear}`;
           } else {
-            console.warn(
-              `Invalid startDate for card${i}, using "Unknown" for start year`
-            );
+            // For other cards, use the next card's date as before
+            const nextDateStr = data[`card${i + 1}Date`];
+            const endYear = nextDateStr
+              ? new Date(nextDateStr).getFullYear()
+              : startYear;
+
+            if (!isNaN(endYear)) {
+              period = `${startYear} - ${endYear}`;
+            } else {
+              period = `${startYear} - Unknown`;
+            }
           }
         }
 
@@ -106,8 +104,6 @@ const ProjectTimeline = ({ initialData }: ProjectTimelineProps) => {
 
   useEffect(() => {
     if (isLoading) return;
-
-    // Set visibility to true after a short timeout to ensure the component is rendered
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 500);

@@ -30,8 +30,6 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    console.log('Raw request body:', body); // Debug log
-
     const { icon, title, description, buttonType, buttonText, fileUrl } = body;
 
     if (!icon || !title || !description || !buttonType || !buttonText) {
@@ -41,41 +39,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Debug log
-    console.log('Creating guide with data:', {
-      icon,
-      title,
-      description,
-      buttonType,
-      buttonText,
-      fileUrl
-    });
-
-    // Verify prisma client
-    if (!prisma || !prisma.guide) {
-      console.error('Prisma client not properly initialized:', {
-        hasPrisma: !!prisma,
-        hasGuide: prisma ? 'guide' in prisma : false,
-        models: prisma ? Object.keys(prisma) : []
-      });
-      throw new Error('Database client not properly initialized');
-    }
-
-    const createData = {
-      icon,
-      title,
-      description,
-      buttonType,
-      buttonText,
-      fileUrl,
-      guide: title, // Use the title as the guide field value
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    console.log('Data being sent to Prisma:', createData); // Debug log
-
     const guide = await prisma.guide.create({
-      data: createData
+      data: {
+        icon,
+        title,
+        description,
+        buttonType,
+        buttonText,
+        fileUrl,
+        guide: title,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
     });
 
     return NextResponse.json(guide);
@@ -89,4 +64,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}

@@ -41,7 +41,7 @@ const DownloadBrochure = () => {
           <p className="loader"></p>
         </div>
       ) : (
-        <BrochureConfigForm ConfigData={ConfigData} />
+        <BrochureConfigForm />
       )}
     </div>
   );

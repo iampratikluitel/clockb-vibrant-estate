@@ -98,6 +98,7 @@ model Guide {
   icon        String
   title       String
   updatedAt   DateTime @db.Date
+  fileName    String?
 }
 
 model InvestmentCircle {

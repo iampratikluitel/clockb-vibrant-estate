@@ -9,42 +9,78 @@ import {
   Mail,
   Phone,
   MapPin,
-  FacebookIcon,
+  Twitter,
+  Youtube,
 } from "lucide-react";
 import { useGetPublicConfigFooterQuery } from "@/store/api/Public/publicConfiguration";
-import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons";
 
 const Footer = () => {
-  const { data: ConfigData, isLoading: Loading } =
-    useGetPublicConfigFooterQuery("");
+  const { data: ConfigData, isLoading } = useGetPublicConfigFooterQuery("");
+
+  if (isLoading) {
+    return <div className="h-40 bg-[#1A1F2C]"></div>;
+  }
+
   return (
     <footer className="bg-[#1A1F2C] text-white pt-16 pb-6">
-      <div className="container mx-auhref px-4">
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Column 1: About */}
           <div>
             <h3 className="text-xl font-bold mb-6">Project Estates</h3>
+
             <p className="text-[#9F9EA1] mb-6 leading-relaxed">
-              {/* Premium real estate investment opportunities with exceptional
-              returns and long-term growth potential across strategic locations. */}
-              {ConfigData?.about}
+              {ConfigData?.about || ""}
             </p>
             <div className="flex space-x-4">
-              {ConfigData?.socialHandles.facebook && (
-                <Link href={ConfigData?.socialHandles.facebook}>
-                  <FacebookIcon className="text-sm" />
+              {ConfigData?.socialHandles?.facebook && (
+                <Link
+                  href={ConfigData.socialHandles.facebook}
+                  className="hover:text-[#0EA5E9] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Facebook className="h-5 w-5" />
                 </Link>
               )}
-
-              {ConfigData?.socialHandles.instagram && (
-                <Link href={ConfigData.socialHandles.instagram}>
-                  <Instagram className="h-6 w-6" />
+              {ConfigData?.socialHandles?.instagram && (
+                <Link
+                  href={ConfigData.socialHandles.instagram}
+                  className="hover:text-[#0EA5E9] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Instagram className="h-5 w-5" />
                 </Link>
               )}
-
-              {ConfigData?.socialHandles.linkedin && (
-                <Link href={ConfigData.socialHandles.linkedin}>
-                  <Linkedin className="h-6 w-6" />
+              {ConfigData?.socialHandles?.linkedin && (
+                <Link
+                  href={ConfigData.socialHandles.linkedin}
+                  className="hover:text-[#0EA5E9] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </Link>
+              )}
+              {ConfigData?.socialHandles?.twitter && (
+                <Link
+                  href={ConfigData.socialHandles.twitter}
+                  className="hover:text-[#0EA5E9] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Twitter className="h-5 w-5" />
+                </Link>
+              )}
+              {ConfigData?.socialHandles?.youtube && (
+                <Link
+                  href={ConfigData.socialHandles.youtube}
+                  className="hover:text-[#0EA5E9] transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Youtube className="h-5 w-5" />
                 </Link>
               )}
             </div>
@@ -149,33 +185,41 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-bold mb-6">Contact Us</h3>
             <ul className="space-y-4">
-              <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-[#0EA5E9] mt-1 mr-3 flex-shrink-0" />
-                <span className="text-[#9F9EA1]">{ConfigData?.address}</span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
-                <div className="text-[#9F9EA1]">
-                  <div>{ConfigData?.phone}</div>
-                  {/* <div>+977-9843260542</div> */}
-                </div>
-              </li>
-              <li className="flex items-center">
-                <Phone className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
-                <div className="text-[#9F9EA1]">
-                  <div>{ConfigData?.phone2}</div>
-                  {/* <div>+977-9843260542</div> */}
-                </div>
-              </li>
-              <li className="flex items-center">
-                <Mail className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
-                <a
-                  href={ConfigData?.email}
-                  className="text-[#9F9EA1] hover:text-white transition-colors"
-                >
-                  {ConfigData?.email}
-                </a>
-              </li>
+              {ConfigData?.address && (
+                <li className="flex items-start">
+                  <MapPin className="h-5 w-5 text-[#0EA5E9] mt-1 mr-3 flex-shrink-0" />
+                  <span className="text-[#9F9EA1]">{ConfigData.address}</span>
+                </li>
+              )}
+
+              {/* Phone Numbers */}
+              {ConfigData?.phones &&
+                ConfigData.phones.map((phone, index) => (
+                  <li key={index} className="flex items-center">
+                    <Phone className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
+                    <div className="text-[#9F9EA1]">
+                      <div>
+                        {/* {phone.label && <span className="text-white text-xs mr-2">{phone.label}:</span>} */}
+                        {phone.number}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+
+              {/* Email Addresses */}
+              {ConfigData?.emails && ConfigData.emails.length > 0 && (
+                <li className="flex items-center">
+                  <Mail className="h-5 w-5 text-[#0EA5E9] mr-3 flex-shrink-0" />
+                  <div className="text-[#9F9EA1]">
+                    <a
+                      href={`mailto:${ConfigData.emails[0].address}`}
+                      className="hover:text-white transition-colors"
+                    >
+                      {ConfigData.emails[0].address}
+                    </a>
+                  </div>
+                </li>
+              )}
             </ul>
           </div>
         </div>

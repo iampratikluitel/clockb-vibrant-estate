@@ -1,13 +1,25 @@
 import { Schema, model, models, Model } from "mongoose";
 
+if (models.FooterConfiguration) {
+  delete models.FooterConfiguration;
+}
+
+const emailSchema = new Schema({
+  label: { type: String, required: true },
+  address: { type: String, required: true }
+}, { _id: false });
+
+const phoneSchema = new Schema({
+  label: { type: String, required: true },
+  number: { type: String, required: true }
+}, { _id: false });
+
 const footerSchema = new Schema(
   {
-    logo: String,
     about: String,
-    email: String,
+    emails: [emailSchema],
+    phones: [phoneSchema],
     address: String,
-    phone: String,
-    phone2: String,
     socialHandles: {
       facebook: String,
       twitter: String,
@@ -17,20 +29,12 @@ const footerSchema = new Schema(
       instagram: String,
     },
   },
-  { strict: false }
+  { 
+    strict: false,
+    timestamps: true 
+  }
 );
 
-let FooterConfiguration: Model<any>;
-try {
-  FooterConfiguration =
-    models.FooterConfiguration ||
-    model("FooterConfiguration", footerSchema, "FooterConfiguration");
-} catch (error) {
-  FooterConfiguration = model(
-    "FooterConfiguration",
-    footerSchema,
-    "FooterConfiguration"
-  );
-}
+const FooterConfiguration: Model<any> = model("FooterConfiguration", footerSchema, "FooterConfiguration");
 
 export default FooterConfiguration;

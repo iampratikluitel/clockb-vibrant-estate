@@ -40,7 +40,7 @@ export default function InvestmentDocsAdmin() {
   const [editingDoc, setEditingDoc] = useState<InvestmentDoc | null>(null);
   const [newDoc, setNewDoc] = useState<Partial<InvestmentDoc>>({
     icon: 'file-text',
-    buttonText: 'Download PDF',
+    buttonText: 'View PDF',
     actionType: 'download'
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -305,7 +305,7 @@ export default function InvestmentDocsAdmin() {
                   )}
                 </div>
               </div>
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <label>Document Action</label>
                 <Select
                   value={newDoc.actionType}
@@ -319,7 +319,7 @@ export default function InvestmentDocsAdmin() {
                     <SelectItem value="view">View</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
               <div className="space-y-2">
                 <label>Button Text</label>
                 <Input
@@ -453,7 +453,7 @@ export default function InvestmentDocsAdmin() {
                     </p>
                   )}
                 </div>
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <label>Document Action</label>
                   <Select
                     value={editingDoc.actionType}
@@ -467,7 +467,7 @@ export default function InvestmentDocsAdmin() {
                       <SelectItem value="view">View</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
                 <div className="space-y-2">
                   <label>Button Text</label>
                   <Input

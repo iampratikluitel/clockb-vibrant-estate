@@ -5,12 +5,36 @@ import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MINIOURL } from "@/lib/constants";
 import Menu from "./MobileMenu";
+import { toast } from "sonner";
+
+interface Brochure {
+  title: string;
+  description: string;
+  fileUrl: string;
+}
 
 const Header = () => {
+  const [brochure, setBrochure] = useState<Brochure | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const fetchBrochure = async () => {
+      try {
+        const response = await fetch("/api/public/configuration/brochure");
+        if (response.ok) {
+          const data = await response.json();
+          setBrochure(data);
+        }
+      } catch (error) {
+        console.error("Error fetching brochure:", error);
+        toast.error("Failed to load brochure information");
+      }
+    };
+    fetchBrochure();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,22 +44,42 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleDownloadBrochure = async () => {
-    try {
-      const fetchData = await fetch("/api/public/configuration/brochure");
-      const data = await fetchData.json();
+  const handleDownload = async () => {
+    if (!brochure) {
+      toast.error("Brochure not available");
+      return;
+    }
 
-      if (data?.brochureUrl) {
-        const fileUrl = `/api/resources/download?filename=${encodeURIComponent(
-          data.brochureUrl
-        )}`;
-        // Open the file in a new tab
-        window.open(fileUrl, "_blank");
-      } else {
-        console.error("Brochure URL not found.");
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(
+          brochure.fileUrl
+        )}&downloadAs=${encodeURIComponent(brochure.title)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download file");
       }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = brochure.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      toast.success("Download started successfully");
     } catch (error) {
-      console.error("Error fetching brochure:", error);
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -45,23 +89,25 @@ const Header = () => {
         isScrolled ? "bg-white shadow-lg py-3" : "bg-white py-6"
       }`}
     >
-      <nav className="container mx-auto flex items-center justify-between px-4">
-        {/* Logo */}
+      <nav
+        className="container mx-auto flex items-center justify-between px-4"
+        aria-label="Main navigation"
+      >
         <Link
           href="/"
           className="flex items-center space-x-3 text-estates-primary hover:opacity-80 transition-all duration-300 group"
+          aria-label="Project Estates Home"
         >
           <img
-            className="w-12 h-12 group-hover:scale-110 transition-transform duration-30"
+            className="w-12 h-12 group-hover:scale-110 transition-transform duration-300"
             src="/logo/project-estate.png"
-            alt="logo"
+            alt="Project Estates logo"
           />
           <span className="text-xl font-bold tracking-tight">
             Project Estates
           </span>
         </Link>
 
-        {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-10">
           <NavLink href="/" isActive={pathname === "/"}>
             Home
@@ -70,14 +116,13 @@ const Header = () => {
             About
           </NavLink>
           <NavLink
-            href="/projectdescription"
+            href="/project-description"
             isActive={pathname === "/project-description"}
           >
             Project Description
           </NavLink>
-          {/* <NavLink href="/faqs" isActive={pathname === "/faqs"}>FAQs</NavLink> */}
           <NavLink
-            href="/investorelations"
+            href="/investor-relations"
             isActive={pathname === "/investor-relations"}
           >
             Investor Relations
@@ -86,13 +131,19 @@ const Header = () => {
             Contact
           </NavLink>
         </div>
-          <Button
-            onClick={handleDownloadBrochure}
-            className="hidden lg:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
-          >
-            <Download className="w-4 h-4 mr-2 animate-bounce" />
-            Download Brochure
-          </Button>
+
+        <Button
+          onClick={handleDownload}
+          disabled={isLoading || !brochure}
+          className="hidden lg:flex items-center bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-6 py-5 rounded-lg transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 active:shadow-md"
+          aria-label={
+            isLoading ? "Downloading brochure..." : "Download brochure"
+          }
+        >
+          <Download className={`w-4 h-4 mr-2`} />
+          {isLoading ? "Downloading..." : "Download Brochure"}
+        </Button>
+
         <div className="md:hidden">
           <Menu />
         </div>

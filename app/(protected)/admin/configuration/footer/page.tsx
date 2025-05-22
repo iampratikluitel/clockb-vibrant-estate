@@ -3,8 +3,6 @@
 import React from "react";
 import FooterForm from "../../components/configuration/FooterForm";
 import { useGetAdminConfigFooterQuery } from "@/store/api/Admin/adminConfiguration";
-import { Provider } from "react-redux";
-import { store } from "@/store/store";
 import {
   Breadcrumb,
   BreadcrumbList,

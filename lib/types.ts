@@ -28,27 +28,36 @@ export interface TESTIMONIALS {
 export interface Brochure {
   _id: string;
   brochure?: string;
-  name: string;
-  description: string;
+  title: string;
+}
+
+export interface EmailItem {
+  label: string;
+  address: string;
+}
+
+export interface PhoneItem {
+  label: string;
+  number: string;
+}
+
+export interface SocialHandles {
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedin?: string;
+  youtube?: string;
+  whatsapp?: string;
 }
 
 export interface FOOTER {
-  _id: string;
-  logo: string;
-  email: string;
-  about: string;
-  address: string;
-  phone: string;
-  phone2: string;
-  socialHandles: {
-    facebook: string;
-    linkedin: string;
-    instagram: string;
-    twitter: string;
-    whatsapp: string;
-    youtube: string;
-  };
-  workingHours: string;
+  _id?: string;
+  logo?: string;
+  about?: string;
+  emails: EmailItem[];
+  phones: PhoneItem[];
+  address?: string;
+  socialHandles: SocialHandles;
 }
 
 export interface NEWSLETTER {
@@ -166,6 +175,7 @@ export interface PROJECTJOURNEY {
   card5title: string;
   card5description: string;
   card5Date: string;
+  card5EndDate: string;
 }
 
 export interface DEVELOPMENTPHASE {
