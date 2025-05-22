@@ -2,24 +2,16 @@ import { connectDb } from "@/lib/mongodb";
 import Brochure from "@/model/configuration/brochureConfiguration";
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
-export const GET = async () => {
-  console.log("Running GET request: Get Brochure");
-
+export async function GET() {
   try {
     await connectDb();
-    const data = await Brochure.findOne(); 
-
-    if (!data) {
-      return NextResponse.json({ error: "Brochure not found" }, { status: 404 });
-    }
-    return NextResponse.json({ brochureUrl: data.brochure }, { status: 200 });
+    const brochure = await Brochure.findOne().sort({ updatedAt: -1 });
+    return NextResponse.json(brochure || null);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching investor kit:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Failed to fetch investor kit" },
       { status: 500 }
     );
   }
-};
+}

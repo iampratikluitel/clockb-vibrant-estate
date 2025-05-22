@@ -1,184 +1,130 @@
-import { MINIOURL } from "@/lib/constants";
-import { uploadToMinIO } from "@/lib/helper";
-import { Brochure } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { z } from "zod";
+import { uploadToMinIO } from "@/lib/helper";
 
-const FormSchema = z.object({
-  brochure: z.any(),
-});
-
-interface Props {
-  ConfigData: Brochure | undefined;
+interface Brochure {
+  _id?: string;
+  title: string;
+  fileUrl: string;
 }
 
-export default function BrochureConfigForm({ ConfigData }: Props) {
+export default function BrochureAdmin() {
+  const [brochure, setBrochure] = useState<Brochure | null>(null);
+  const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [existingId, setExistingId] = useState<string | undefined>(
-    ConfigData?._id
-  );
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      brochure: ConfigData?.brochure
-        ? `/api/resources/download?filename=${encodeURIComponent(
-            ConfigData.brochure
-          )}`
-        : null,
-    },
-  });
+  useEffect(() => {
+    fetchBrochure();
+  }, []);
+
+  const fetchBrochure = async () => {
+    try {
+      const response = await fetch("/api/admin/configuration/brochure");
+      if (response.ok) {
+        const data = await response.json();
+        if (data) {
+          setBrochure(data);
+          setTitle(data.title);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching brochure:", error);
+      toast.error("Failed to fetch brochure");
+    }
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files && event.target.files[0];
-    if (selectedFile && selectedFile.type === "application/pdf") {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
       setFile(selectedFile);
-    } else {
-      toast.error("Please select a valid PDF file");
     }
   };
 
-  const handleDelete = async () => {
-    if (!existingId) {
-      toast.error("No brochure to delete.");
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
     try {
-      setLoading(true);
-      const res = await fetch(
-        `/api/admin/configuration/brochure?id=${existingId}`,
-        {
-          method: "DELETE",
+      let fileUrl = brochure?.fileUrl;
+
+      if (file) {
+        fileUrl = await uploadToMinIO(file, "brochure");
+        if (!fileUrl) {
+          toast.error("Failed to upload file");
+          return;
         }
-      );
-
-      if (res.ok) {
-        toast.success("Brochure deleted successfully");
-        setExistingId(undefined);
-        setFile(null);
-        form.reset();
-      } else {
-        toast.error("Failed to delete brochure");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error deleting brochure");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onSubmit = async () => {
-    if (!file) {
-      toast.error("Please select a PDF file");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      let fileUrl = await uploadToMinIO(file, "BrochureConfig");
-
-      if (!fileUrl) {
-        toast.error("File upload failed. Please try again.");
-        return;
       }
 
-      const payload = {
-        brochure: fileUrl,
-        _id: existingId,
-      };
-
-      const res = await fetch("/api/admin/configuration/brochure", {
+      const response = await fetch("/api/admin/configuration/brochure", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          _id: brochure?._id,
+          title,
+          fileUrl,
+        }),
       });
 
-      if (res.ok) {
-        const result = await res.json();
-        toast.success(
-          `Brochure ${existingId ? "updated" : "uploaded"} successfully`
-        );
-        setFile(null);
-        form.reset();
+      if (response.ok) {
+        toast.success("Brochure updated successfully");
+        fetchBrochure();
       } else {
-        toast.error("Failed to upload brochure");
+        toast.error("Failed to update brochure");
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error uploading brochure");
+    } catch (error) {
+      console.error("Error updating brochure:", error);
+      toast.error("Failed to update brochure");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center bg-gray-50 px-4 py-4">
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg space-y-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800">
-          PDF Brochure Manager
-        </h2>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold">Brochure</h2>
+        <p className="text-gray-500">Manage the Brochure document</p>
+      </div>
 
-        {/* File Input */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Upload Brochure (PDF Only)
+          <label htmlFor="title" className="block text-sm font-medium mb-1">
+            Title
           </label>
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="block w-full border border-gray-300 rounded-lg px-4 py-2 text-sm shadow-sm file:border-0 file:bg-blue-100 file:text-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
           />
         </div>
 
-        {/* Existing Brochure Link */}
-        {ConfigData?.brochure && (
-          <div className="text-center">
-            <a
-              href={`/api/resources/download?filename=${encodeURIComponent(
-                ConfigData.brochure
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline text-sm"
-            >
-              📄 Download Current Brochure
-            </a>
-          </div>
-        )}
+        <div>
+          <label htmlFor="file" className="block text-sm font-medium mb-1">
+            Document
+          </label>
+          <Input
+            id="file"
+            type="file"
+            onChange={handleFileChange}
+            accept=".pdf,.doc,.docx"
+          />
+          {brochure?.fileUrl && !file && (
+            <p className="text-sm text-gray-500 mt-1">
+              Current file: {brochure.fileUrl.split("/").pop()}
+            </p>
+          )}
+        </div>
 
-        {/* Upload Button */}
-        <button
-          onClick={form.handleSubmit(onSubmit)}
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2.5 rounded-lg text-base font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading
-            ? "Uploading..."
-            : existingId
-            ? "Update Brochure"
-            : "Upload Brochure"}
-        </button>
-
-        {/* Delete Button */}
-        {existingId && (
-          <button
-            onClick={handleDelete}
-            disabled={loading}
-            className="w-full bg-red-500 text-white py-2.5 rounded-lg text-base font-semibold hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? "Deleting..." : "Delete Brochure"}
-          </button>
-        )}
-      </div>
+        <Button type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Save Changes"}
+        </Button>
+      </form>
     </div>
   );
 }

@@ -2,7 +2,18 @@ import { model, Model, models, Schema } from "mongoose";
 
 const brochureSchema = new Schema(
   {
-    brochure: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+    },
+    brochure: {
+      type: String,
+      required: true,
+    },
+    updatedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   { strict: false }
 );

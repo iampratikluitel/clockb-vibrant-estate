@@ -1,27 +1,76 @@
+"use client";
+
 import { Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MINIOURL } from "@/lib/constants";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-const handleDownloadBrochure = async () => {
-  try {
-    const res = await fetch("/api/public/configuration/brochure");
-    const data = await res.json();
-
-    if (data?.brochureUrl) {
-      const fileUrl = `/api/resources/download?filename=${encodeURIComponent(
-        data.brochureUrl
-      )}`;
-      window.open(fileUrl, "_blank");
-    } else {
-      console.error("Brochure URL not found.");
-    }
-  } catch (error) {
-    console.error("Error fetching brochure:", error);
-  }
-};
+interface Brochure {
+  title: string;
+  description: string;
+  fileUrl: string;
+}
 
 const Hero = () => {
+  const [brochure, setBrochure] = useState<Brochure | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchBrochure = async () => {
+      try {
+        const response = await fetch("/api/public/configuration/brochure");
+        if (response.ok) {
+          const data = await response.json();
+          setBrochure(data);
+        }
+      } catch (error) {
+        console.error("Error fetching brochure:", error);
+        toast.error("Failed to load brochure information");
+      }
+    };
+    fetchBrochure();
+  }, []);
+
+  const handleDownload = async () => {
+    if (!brochure) {
+      toast.error("Brochure not available");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(
+          brochure.fileUrl
+        )}&downloadAs=${encodeURIComponent(brochure.title)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = brochure.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      toast.success("Download started successfully");
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex items-center">
       {/* Background Image with Overlay */}
@@ -49,7 +98,7 @@ const Hero = () => {
               className="bg-estates-primary hover:bg-estates-primary/90 text-white font-semibold px-8 py-6 text-lg rounded-lg 
       transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-xl active:translate-y-0 
       shadow-lg hover:shadow-estates-primary/20 group w-full sm:w-auto"
-              onClick={handleDownloadBrochure}
+              onClick={handleDownload}
             >
               <Download className="w-5 h-5 mr-2 group-hover:animate-bounce" />
               Download Brochure

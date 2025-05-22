@@ -15,6 +15,12 @@ import FaqGuides from "./_components/FaqGuides";
 import ContactSupport from "./_components/ContactSupport";
 import InvestmentKit from "./_components/InvestmentKit";
 
+interface InvestorKit {
+  title: string;
+  description: string;
+  fileUrl: string;
+}
+
 interface InvestmentDoc {
   id: string;
   icon: "file-text" | "scroll-text" | "file";
@@ -94,11 +100,7 @@ const Resources = () => {
   const [loadingGuides, setLoadingGuides] = useState(true);
   const [guides, setGuides] = useState<FaqGuide[]>([]);
   const [investmentDocs, setInvestmentDocs] = useState<InvestmentDoc[]>([]);
-  const [investorKit, setInvestorKit] = useState<{
-    title: string;
-    description: string;
-    fileUrl: string;
-  } | null>(null);
+  const [investorKit, setInvestorKit] = useState<InvestorKit | null>(null);
   const [selectedDocument, setSelectedDocument] =
     useState<LegalDocument | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
@@ -245,7 +247,9 @@ const Resources = () => {
     }
   };
 
-  const handleDownload = async (doc: LegalDocument | InvestmentDoc | FaqGuide) => {
+  const handleDownload = async (
+    doc: InvestorKit | LegalDocument | InvestmentDoc | FaqGuide
+  ) => {
     try {
       if (!doc.fileUrl) {
         toast.error("No file available for download");
@@ -285,8 +289,8 @@ const Resources = () => {
       // Open in new window/tab
       window.open(
         `/api/view?fileUrl=${encodeURIComponent(doc.fileUrl)}`,
-        '_blank',
-        'noopener,noreferrer'
+        "_blank",
+        "noopener,noreferrer"
       );
     } else {
       toast.error("No file URL available");
@@ -303,7 +307,12 @@ const Resources = () => {
     <div className="min-h-screen flex flex-col bg-estates-gray-100">
       <main className="flex-grow pt-24 pb-16">
         {/* Hero Section */}
-        <InvestmentKit investorKit={investorKit}/>
+        {investorKit && (
+          <InvestmentKit
+            investmentKit={investorKit}
+            handleDownload={handleDownload}
+          />
+        )}
 
         <div className="container mx-auto px-4 py-16">
           <InvestmentDocuments
@@ -320,9 +329,9 @@ const Resources = () => {
             legalDocuments={legalDocuments}
             handleDocumentAction={handleDocumentAction}
           />
-          <FaqGuides 
-            guides={guides} 
-            loadingGuides={loadingGuides} 
+          <FaqGuides
+            guides={guides}
+            loadingGuides={loadingGuides}
             handleDownload={handleDownload}
           />
           <ContactSupport

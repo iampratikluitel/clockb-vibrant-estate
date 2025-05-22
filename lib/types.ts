@@ -28,8 +28,7 @@ export interface TESTIMONIALS {
 export interface Brochure {
   _id: string;
   brochure?: string;
-  name: string;
-  description: string;
+  title: string;
 }
 
 export interface EmailItem {
