@@ -116,14 +116,14 @@ const Header = () => {
             About
           </NavLink>
           <NavLink
-            href="/project-description"
-            isActive={pathname === "/project-description"}
+            href="/projectdescription"
+            isActive={pathname === "/projectdescription"}
           >
             Project Description
           </NavLink>
           <NavLink
-            href="/investor-relations"
-            isActive={pathname === "/investor-relations"}
+            href="/investorelations"
+            isActive={pathname === "/investorelations"}
           >
             Investor Relations
           </NavLink>
