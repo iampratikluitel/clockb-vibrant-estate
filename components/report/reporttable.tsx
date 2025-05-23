@@ -188,7 +188,7 @@ const ReportTable = ({ data }: ReportTableProps) => {
         open={isDocumentDialogOpen}
         onOpenChange={setIsDocumentDialogOpen}
       >
-        <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+        <DialogContent className="max-w-6xl h-[90vh] flex flex-col">
           <DialogHeader className="flex-none">
             <DialogTitle>{selectedDoc?.title}</DialogTitle>
           </DialogHeader>

@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
 import minioClient from '@/lib/minioClient';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
   try {
+    const session = await auth();
+    if (!session) {
+      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const fileUrl = searchParams.get('fileUrl');
 

@@ -13,17 +13,22 @@ export default function ProjectUpdates({
   loading: boolean;
 }) {
   return (
-    <section className="mb-20 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+    <section
+      className="mb-20 animate-fade-in"
+      style={{ animationDelay: "0.3s" }}
+    >
       <div className="border-l-4 border-estates-primary pl-4 mb-8">
         <h2 className="text-3xl font-bold text-estates-secondary">
           Project Updates & Reports
         </h2>
-        <p className="text-gray-600 mt-2">Stay informed about project progress</p>
+        <p className="text-gray-600 mt-2">
+          Stay informed about project progress
+        </p>
       </div>
       <div className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-        <div className="flex border-b">
+        <div className="flex flex-col sm:flex-row w-full border-b">
           <button
-            className={`py-4 px-6 font-medium flex items-center gap-2 ${
+            className={`py-4 px-6 font-medium flex items-center gap-2 w-full justify-center sm:justify-start ${
               selectedTab === "quarterly"
                 ? "bg-estates-primary text-white"
                 : "hover:bg-gray-50"
@@ -31,10 +36,12 @@ export default function ProjectUpdates({
             onClick={() => setSelectedTab("quarterly")}
           >
             <BarChart2 className="h-5 w-5" />
-            Quarterly Progress Reports
+            <span className="whitespace-nowrap">
+              Quarterly Progress Reports
+            </span>
           </button>
           <button
-            className={`py-4 px-6 font-medium flex items-center gap-2 ${
+            className={`py-4 px-6 font-medium flex items-center gap-2 w-full justify-center sm:justify-start ${
               selectedTab === "construction"
                 ? "bg-estates-primary text-white"
                 : "hover:bg-gray-50"
@@ -42,10 +49,12 @@ export default function ProjectUpdates({
             onClick={() => setSelectedTab("construction")}
           >
             <Construction className="h-5 w-5" />
-            Construction & Development
+            <span className="whitespace-nowrap">
+              Construction & Development
+            </span>
           </button>
           <button
-            className={`py-4 px-6 font-medium flex items-center gap-2 ${
+            className={`py-4 px-6 font-medium flex items-center gap-2 w-full justify-center sm:justify-start ${
               selectedTab === "land"
                 ? "bg-estates-primary text-white"
                 : "hover:bg-gray-50"
@@ -53,7 +62,9 @@ export default function ProjectUpdates({
             onClick={() => setSelectedTab("land")}
           >
             <Home className="h-5 w-5" />
-            Land Allocation & Valuation
+            <span className="whitespace-nowrap">
+              Land Allocation & Valuation
+            </span>
           </button>
         </div>
         <div className="p-6">
