@@ -71,8 +71,11 @@ export default function BrochureAdmin() {
       });
 
       if (response.ok) {
+        const updated = await response.json();
         toast.success("Brochure updated successfully");
-        fetchBrochure();
+        setBrochure(updated);
+        setTitle(updated.title);
+        setFile(null);
       } else {
         toast.error("Failed to update brochure");
       }
