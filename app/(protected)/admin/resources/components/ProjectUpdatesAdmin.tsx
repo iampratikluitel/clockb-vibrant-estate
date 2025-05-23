@@ -193,40 +193,42 @@ export default function ProjectUpdatesAdmin() {
         size = `${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`;
       }
 
-      const url = editingReport 
-        ? `/api/reports/${editingReport.id}`
-        : '/api/reports';
-      
-      const method = editingReport ? 'PUT' : 'POST';
-      
-      const now = new Date().toISOString();
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          size, // Use the preserved or new size
-          category: selectedTab,
-          fileUrl,
-          createdAt: now,
-          updatedAt: now,
-        }),
-      });
+      console.log("fileUrl:",fileUrl)
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.details || `Failed to ${editingReport ? 'update' : 'create'} report`);
-      }
-
-      const newReport = await response.json();
+      // const url = editingReport 
+      //   ? `/api/reports/${editingReport.id}`
+      //   : '/api/reports';
       
-      if (editingReport) {
-        setReports(reports.map(r => r.id === editingReport.id ? newReport : r));
-      } else {
-        setReports([...reports, newReport]);
-      }
+      // const method = editingReport ? 'PUT' : 'POST';
+      
+      // const now = new Date().toISOString();
+      // const response = await fetch(url, {
+      //   method,
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     ...formData,
+      //     size, // Use the preserved or new size
+      //     category: selectedTab,
+      //     fileUrl,
+      //     createdAt: now,
+      //     updatedAt: now,
+      //   }),
+      // });
+
+      // if (!response.ok) {
+      //   const error = await response.json();
+      //   throw new Error(error.details || `Failed to ${editingReport ? 'update' : 'create'} report`);
+      // }
+
+      // const newReport = await response.json();
+      
+      // if (editingReport) {
+      //   setReports(reports.map(r => r.id === editingReport.id ? newReport : r));
+      // } else {
+      //   setReports([...reports, newReport]);
+      // }
 
       setIsDialogOpen(false);
       setSelectedFile(null);

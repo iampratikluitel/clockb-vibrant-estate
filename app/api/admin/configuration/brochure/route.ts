@@ -11,9 +11,9 @@ export async function GET() {
     const brochure = await Brochure.findOne().sort({ updatedAt: -1 });
     return NextResponse.json(brochure || null);
   } catch (error) {
-    console.error("Error fetching investor kit:", error);
+    console.error("Error fetching Brochure:", error);
     return NextResponse.json(
-      { error: "Failed to fetch investor kit" },
+      { error: "Failed to fetch Brochure" },
       { status: 500 }
     );
   }
@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
     const data = await request.json();
 
     if (user) {
-      let responseMessage = "Added";
       if (data?._id) {
         const existingConfig = await Brochure.findById(data._id);
         if (existingConfig) {
@@ -37,16 +36,18 @@ export async function POST(request: NextRequest) {
           ) {
             await minioClient.removeObject(BUCKET_NAME, existingConfig.fileUrl);
           }
-          await Brochure.findByIdAndUpdate(data._id, data, { new: true });
-          responseMessage = "Updated";
-        } else {
-          await new Brochure(data).save();
+          const updated = await Brochure.findByIdAndUpdate(data._id, data, {
+            new: true,
+          });
+          return NextResponse.json(updated, { status: 200 });
         }
-      } else {
-        await new Brochure(data).save();
       }
-      return NextResponse.json({ message: responseMessage }, { status: 200 });
+
+      const newBrochure = await new Brochure(data).save();
+      return NextResponse.json(newBrochure, { status: 200 });
     }
+
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Internal Server Error";
