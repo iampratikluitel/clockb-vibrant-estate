@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useGetAdminInvestmentDocumentByIdQuery } from '@/store/api/Admin/adminResources';
 
 interface InvestmentDoc {
   id: string;

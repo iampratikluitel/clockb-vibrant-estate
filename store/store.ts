@@ -19,6 +19,8 @@ import { publicContactApi } from "./api/Public/publicContact";
 import { adminDevelopementPhaseApi } from "./api/Admin/adminDevelopmentPhase";
 import { publicDevelopementPhaseApi } from "./api/Public/publicDevelopmentPhase";
 import { adminMiscsApi } from "./api/Admin/adminMisc";
+import { adminResourcesApi } from "./api/Admin/adminResources";
+import { publicResourcesApi } from "./api/Public/publicResources";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +33,7 @@ export const store = configureStore({
     [adminDevelopementPhaseApi.reducerPath]: adminDevelopementPhaseApi.reducer,
     [adminContactApi.reducerPath]: adminContactApi.reducer,
     [adminMiscsApi.reducerPath]: adminMiscsApi.reducer,
+    [adminResourcesApi.reducerPath]: adminResourcesApi.reducer,
 
     [publicConfigurationApi.reducerPath]: publicConfigurationApi.reducer,
     [publicFunctionsApi.reducerPath]: publicFunctionsApi.reducer,
@@ -42,6 +45,7 @@ export const store = configureStore({
     [publicDevelopementPhaseApi.reducerPath]:
       publicDevelopementPhaseApi.reducer,
     [publicContactApi.reducerPath]: publicContactApi.reducer,
+    [publicResourcesApi.reducerPath]: publicResourcesApi.reducer,
   },
   devTools: true,
   middleware: (getDefaultMiddleware) =>
@@ -55,6 +59,7 @@ export const store = configureStore({
       adminContactApi.middleware,
       adminDevelopementPhaseApi.middleware,
       adminMiscsApi.middleware,
+      adminResourcesApi.middleware,
 
       publicConfigurationApi.middleware,
       publicFunctionsApi.middleware,
@@ -64,7 +69,8 @@ export const store = configureStore({
       publicProjectApi.middleware,
       publicFaqsApi.middleware,
       publicContactApi.middleware,
-      publicDevelopementPhaseApi.middleware
+      publicDevelopementPhaseApi.middleware,
+      publicResourcesApi.middleware
     ),
 });
 

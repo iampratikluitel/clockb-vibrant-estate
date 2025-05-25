@@ -195,40 +195,40 @@ export default function ProjectUpdatesAdmin() {
 
       console.log("fileUrl:",fileUrl)
 
-      // const url = editingReport 
-      //   ? `/api/reports/${editingReport.id}`
-      //   : '/api/reports';
+      const url = editingReport 
+        ? `/api/reports/${editingReport.id}`
+        : '/api/reports';
       
-      // const method = editingReport ? 'PUT' : 'POST';
+      const method = editingReport ? 'PUT' : 'POST';
       
-      // const now = new Date().toISOString();
-      // const response = await fetch(url, {
-      //   method,
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     size, // Use the preserved or new size
-      //     category: selectedTab,
-      //     fileUrl,
-      //     createdAt: now,
-      //     updatedAt: now,
-      //   }),
-      // });
+      const now = new Date().toISOString();
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          size, // Use the preserved or new size
+          category: selectedTab,
+          fileUrl,
+          createdAt: now,
+          updatedAt: now,
+        }),
+      });
 
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   throw new Error(error.details || `Failed to ${editingReport ? 'update' : 'create'} report`);
-      // }
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.details || `Failed to ${editingReport ? 'update' : 'create'} report`);
+      }
 
-      // const newReport = await response.json();
+      const newReport = await response.json();
       
-      // if (editingReport) {
-      //   setReports(reports.map(r => r.id === editingReport.id ? newReport : r));
-      // } else {
-      //   setReports([...reports, newReport]);
-      // }
+      if (editingReport) {
+        setReports(reports.map(r => r.id === editingReport.id ? newReport : r));
+      } else {
+        setReports([...reports, newReport]);
+      }
 
       setIsDialogOpen(false);
       setSelectedFile(null);

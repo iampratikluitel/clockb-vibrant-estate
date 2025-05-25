@@ -73,6 +73,11 @@ const DashboardSidebar = () => {
       icon: Newspaper 
     },
     { 
+      name: "Resource", 
+      path: "/admin/resource", 
+      icon: FolderOpen 
+    },
+    { 
       name: "Resources", 
       path: "/admin/resources", 
       icon: FolderOpen 
