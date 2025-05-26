@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import minioClient from '@/lib/minioClient';
+import { BUCKET_NAME } from '@/lib/constants';
 
 export async function PUT(
   request: Request,
@@ -26,7 +28,7 @@ export async function PUT(
 
     if (missingFields.length > 0) {
       return NextResponse.json(
-        { 
+        {
           error: 'Missing required fields',
           details: `The following fields are required: ${missingFields.join(', ')}`
         },
@@ -34,7 +36,7 @@ export async function PUT(
       );
     }
 
-    // Try to parse the date
+    // Validate date
     let parsedDate;
     try {
       parsedDate = new Date(date);
@@ -43,7 +45,7 @@ export async function PUT(
       }
     } catch (error) {
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid date format',
           details: 'The date must be in a valid format (YYYY-MM-DD)'
         },
@@ -51,7 +53,29 @@ export async function PUT(
       );
     }
 
-    const report = await prisma.reports.update({
+    // Fetch existing report to compare fileUrl
+    const existingReport = await prisma.reports.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!existingReport) {
+      return NextResponse.json(
+        { error: 'Report not found' },
+        { status: 404 }
+      );
+    }
+
+    // Remove old file if fileUrl has changed
+    if (existingReport.fileUrl && existingReport.fileUrl !== fileUrl) {
+      try {
+        await minioClient.removeObject(BUCKET_NAME, existingReport.fileUrl);
+      } catch (minioError) {
+        console.warn(`Failed to remove old file from MinIO: ${minioError}`);
+      }
+    }
+
+    // Update the report
+    const updatedReport = await prisma.reports.update({
       where: { id: params.id },
       data: {
         title,
@@ -64,11 +88,12 @@ export async function PUT(
         updatedAt: new Date()
       },
     });
-    return NextResponse.json(report);
+
+    return NextResponse.json(updatedReport);
   } catch (error) {
     console.error('Error updating report:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to update report',
         details: error instanceof Error ? error.message : 'Unknown error occurred'
       },
@@ -87,18 +112,38 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Get the report to remove its file first
+    const report = await prisma.reports.findUnique({
+      where: { id: params.id },
+    });
+
+    if (!report) {
+      return NextResponse.json({ error: 'Report not found' }, { status: 404 });
+    }
+
+    // Remove file from MinIO if exists
+    if (report.fileUrl) {
+      try {
+        await minioClient.removeObject(BUCKET_NAME, report.fileUrl);
+      } catch (minioError) {
+        console.warn(`Failed to remove file from MinIO: ${minioError}`);
+      }
+    }
+
+    // Delete report from DB
     await prisma.reports.delete({
       where: { id: params.id },
     });
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting report:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to delete report',
         details: error instanceof Error ? error.message : 'Unknown error occurred'
       },
       { status: 500 }
     );
   }
-} 
+}

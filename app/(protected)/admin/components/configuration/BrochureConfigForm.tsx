@@ -52,6 +52,7 @@ export default function BrochureAdmin() {
 
       if (file) {
         fileUrl = await uploadToMinIO(file, "brochure");
+        console.log("uploaded", fileUrl)
         if (!fileUrl) {
           toast.error("Failed to upload file");
           return;

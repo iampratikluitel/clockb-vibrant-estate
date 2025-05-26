@@ -101,6 +101,16 @@ model Guide {
   fileName    String?
 }
 
+model LegalDocument {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  fileUrl     String
+  icon        String
+  title       String
+  updatedAt   DateTime @db.Date
+  fileName    String?
+  createdAt   DateTime @db.Date
+}
 model InvestmentCircle {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   v           Int      @map("__v")
@@ -163,19 +173,19 @@ model LandingThirdSection {
   card9name         String
 }
 
-model LegalDocument {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  category    String
-  createdAt   DateTime @db.Date
-  date        DateTime @db.Date
-  description String
-  fileUrl     String
-  size        String
-  status      String
-  title       String
-  type        String
-  updatedAt   DateTime @db.Date
-}
+// model LegalDocument {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   category    String
+//   createdAt   DateTime @db.Date
+//   date        DateTime @db.Date
+//   description String
+//   fileUrl     String
+//   size        String
+//   status      String
+//   title       String
+//   type        String
+//   updatedAt   DateTime @db.Date
+// }
 
 model NewsInsight {
   id String @id @default(auto()) @map("_id") @db.ObjectId
