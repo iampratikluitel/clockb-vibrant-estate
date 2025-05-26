@@ -81,32 +81,39 @@ const ReportTable = ({ data }: ReportTableProps) => {
         setSelectedDoc(report);
         setIsDocumentDialogOpen(true);
       } else if (action === "download") {
-        const response = await fetch(
-          `/api/download?fileUrl=${encodeURIComponent(
-            report.fileUrl
-          )}&downloadAs=${encodeURIComponent(report.title)}`,
-          {
-            credentials: "include",
-          }
-        );
+        const downloadUrl = `/api/download?fileUrl=${encodeURIComponent(
+          report.fileUrl
+        )}`;
+
+        const response = await fetch(downloadUrl, {
+          method: "GET",
+          credentials: "include",
+        });
 
         if (!response.ok) {
-          throw new Error("Failed to download file");
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.error || "Failed to download file");
         }
 
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = report.title;
+        link.download = report.title || "download";
         document.body.appendChild(link);
         link.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(link);
+
+        // Cleanup
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+        }, 100);
       }
     } catch (error) {
       console.error("Error handling file action:", error);
-      toast.error("Failed to process file action");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to process file action"
+      );
     } finally {
       setLoading((prev) => ({ ...prev, [report.fileUrl]: false }));
     }
