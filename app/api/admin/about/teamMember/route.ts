@@ -17,9 +17,9 @@ export const POST = async (request: NextRequest) => {
     if (user) {
       const existingDoc = await TeamMember.findOne({ _id: Data?._id });
       if (existingDoc) {
-        //check if logo has been changed or not if yes delete previous one
-        if (existingDoc.logo && existingDoc.logo != Data.logo) {
-          await minioClient.removeObject(BUCKET_NAME, existingDoc.logo);
+        //check if image has been changed or not if yes delete previous one
+        if (existingDoc.image && existingDoc.image != Data.image) {
+          await minioClient.removeObject(BUCKET_NAME, existingDoc.image);
         }
         await existingDoc.updateOne(Data);
         return NextResponse.json({ message: "TeamMember Updated" }, { status: 201 });
@@ -76,10 +76,10 @@ export const DELETE = async (request: NextRequest) => {
     }
 
     await TeamMember.deleteOne({ _id });
-    if (exisitingDoc.logo != null) {
+    if (exisitingDoc.image != null) {
       await minioClient.removeObject(
         BUCKET_NAME,
-        exisitingDoc.logo
+        exisitingDoc.image
       );
     }
     return NextResponse.json({ message: "TeamMember Deleted" }, { status: 201 });

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,8 +21,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
+import { uploadToMinIO } from "@/lib/helper";
 
 interface Report {
   id: string;
@@ -36,27 +43,43 @@ interface Report {
 }
 
 const STATUS_OPTIONS = [
-  { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-800' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-800' },
-  { value: 'pending', label: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'approved', label: 'Approved', color: 'bg-purple-100 text-purple-800' },
-  { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-800' },
-  { value: 'rejected', label: 'Rejected', color: 'bg-red-100 text-red-800' },
+  {
+    value: "completed",
+    label: "Completed",
+    color: "bg-green-100 text-green-800",
+  },
+  {
+    value: "in_progress",
+    label: "In Progress",
+    color: "bg-blue-100 text-blue-800",
+  },
+  {
+    value: "pending",
+    label: "Pending",
+    color: "bg-yellow-100 text-yellow-800",
+  },
+  {
+    value: "approved",
+    label: "Approved",
+    color: "bg-purple-100 text-purple-800",
+  },
+  { value: "draft", label: "Draft", color: "bg-gray-100 text-gray-800" },
+  { value: "rejected", label: "Rejected", color: "bg-red-100 text-red-800" },
 ];
 
 export default function ProjectUpdatesAdmin() {
-  const [selectedTab, setSelectedTab] = useState('quarterly');
+  const [selectedTab, setSelectedTab] = useState("quarterly");
   const [reports, setReports] = useState<Report[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingReport, setEditingReport] = useState<Report | null>(null);
-  const [formData, setFormData] = useState<Omit<Report, 'id'>>({
-    title: '',
-    date: '',
-    type: '',
-    size: '',
-    status: '',
-    category: 'quarterly',
+  const [formData, setFormData] = useState<Omit<Report, "id">>({
+    title: "",
+    date: "",
+    type: "",
+    size: "",
+    status: "",
+    category: "quarterly",
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -68,16 +91,18 @@ export default function ProjectUpdatesAdmin() {
 
   const fetchReports = async () => {
     try {
-      const response = await fetch('/api/reports');
+      const response = await fetch("/api/reports");
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.details || 'Failed to fetch reports');
+        throw new Error(error.details || "Failed to fetch reports");
       }
       const data = await response.json();
       setReports(data);
     } catch (error) {
-      console.error('Error fetching reports:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to load reports');
+      console.error("Error fetching reports:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load reports"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -86,11 +111,11 @@ export default function ProjectUpdatesAdmin() {
   const handleAddReport = () => {
     setEditingReport(null);
     setFormData({
-      title: '',
-      date: '',
-      type: '',
-      size: '',
-      status: '',
+      title: "",
+      date: "",
+      type: "",
+      size: "",
+      status: "",
       category: selectedTab,
     });
     setIsDialogOpen(true);
@@ -100,7 +125,7 @@ export default function ProjectUpdatesAdmin() {
     setEditingReport(report);
     setFormData({
       title: report.title,
-      date: new Date(report.date).toISOString().split('T')[0],
+      date: new Date(report.date).toISOString().split("T")[0],
       type: report.type,
       size: report.size,
       status: report.status,
@@ -113,19 +138,21 @@ export default function ProjectUpdatesAdmin() {
   const handleDeleteReport = async (id: string) => {
     try {
       const response = await fetch(`/api/reports/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.details || 'Failed to delete report');
+        throw new Error(error.details || "Failed to delete report");
       }
-      
-      setReports(reports.filter(report => report.id !== id));
-      toast.success('Report deleted successfully');
+
+      setReports(reports.filter((report) => report.id !== id));
+      toast.success("Report deleted successfully");
     } catch (error) {
-      console.error('Error deleting report:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to delete report');
+      console.error("Error deleting report:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete report"
+      );
     }
   };
 
@@ -133,53 +160,53 @@ export default function ProjectUpdatesAdmin() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setSelectedFile(file);
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        type: file.type.split('/')[1].toUpperCase(),
-        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`
+        type: file.type.split("/")[1].toUpperCase(),
+        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
       }));
     }
   };
 
-  const uploadFile = async (file: File) => {
-    try {
-      // First, get a pre-signed URL from your API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          filename: file.name,
-          contentType: file.type || 'application/octet-stream',
-        }),
-      });
+  // const uploadFile = async (file: File) => {
+  //   try {
+  //     // First, get a pre-signed URL from your API
+  //     const response = await fetch('/api/uploadtominio', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         filename: file.name,
+  //         contentType: file.type || 'application/octet-stream',
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        throw new Error('Failed to get upload URL');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to get upload URL');
+  //     }
 
-      const { url, key } = await response.json();
+  //     const { url, key } = await response.json();
 
-      // Upload the file to MinIO using the pre-signed URL
-      const uploadResponse = await fetch(url, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type || 'application/octet-stream',
-        },
-      });
+  //     // Upload the file to MinIO using the pre-signed URL
+  //     const uploadResponse = await fetch(url, {
+  //       method: 'PUT',
+  //       body: file,
+  //       headers: {
+  //         'Content-Type': file.type || 'application/octet-stream',
+  //       },
+  //     });
 
-      if (!uploadResponse.ok) {
-        throw new Error('Failed to upload file');
-      }
+  //     if (!uploadResponse.ok) {
+  //       throw new Error('Failed to upload file');
+  //     }
 
-      return key;
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      throw error;
-    }
-  };
+  //     return key;
+  //   } catch (error) {
+  //     console.error('Error uploading file:', error);
+  //     throw error;
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -188,58 +215,92 @@ export default function ProjectUpdatesAdmin() {
       let size = formData.size;
 
       if (selectedFile) {
-        fileUrl = await uploadFile(selectedFile);
-        // Don't update size if we're not uploading a new file
+        fileUrl = await uploadToMinIO(selectedFile, "reports");
         size = `${(selectedFile.size / (1024 * 1024)).toFixed(1)} MB`;
       }
 
-      console.log("fileUrl:",fileUrl)
+      const url = editingReport
+        ? `/api/reports/${editingReport.id}`
+        : "/api/reports";
 
-      // const url = editingReport 
-      //   ? `/api/reports/${editingReport.id}`
-      //   : '/api/reports';
-      
-      // const method = editingReport ? 'PUT' : 'POST';
-      
-      // const now = new Date().toISOString();
-      // const response = await fetch(url, {
-      //   method,
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     size, // Use the preserved or new size
-      //     category: selectedTab,
-      //     fileUrl,
-      //     createdAt: now,
-      //     updatedAt: now,
-      //   }),
-      // });
+      const method = editingReport ? "PUT" : "POST";
+      const now = new Date();
 
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   throw new Error(error.details || `Failed to ${editingReport ? 'update' : 'create'} report`);
-      // }
+      if (method === "PUT") {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: formData.title,
+            date: new Date(formData.date),
+            type: formData.type,
+            size: size,
+            status: formData.status,
+            category: selectedTab,
+            fileUrl: fileUrl,
+            updatedAt: now,
+          }),
+        });
+        // Handle response...
+      } else {
+        const metadata = {
+          title: formData.title,
+          date: new Date(formData.date),
+          type: formData.type,
+          size: size,
+          status: formData.status,
+          category: selectedTab,
+          fileUrl: fileUrl,
+          createdAt: now,
+          updatedAt: now,
+        };
 
-      // const newReport = await response.json();
-      
-      // if (editingReport) {
-      //   setReports(reports.map(r => r.id === editingReport.id ? newReport : r));
-      // } else {
-      //   setReports([...reports, newReport]);
-      // }
+        const form = new FormData();
+        form.append("metadata", JSON.stringify(metadata));
+
+        if (selectedFile) {
+          form.append("file", selectedFile);
+        }
+
+        const response = await fetch(url, {
+          method,
+          body: form,
+        });
+      }
+
+      if (!editingReport && selectedFile && !fileUrl) {
+        throw new Error("File upload failed");
+      }
 
       setIsDialogOpen(false);
       setSelectedFile(null);
-      toast.success(`Report ${editingReport ? 'updated' : 'added'} successfully`);
+      setFormData({
+        title: "",
+        date: "",
+        type: "",
+        size: "",
+        status: "",
+        category: selectedTab,
+      });
+      fetchReports();
+      toast.success(
+        editingReport
+          ? "Report updated successfully"
+          : "Report added successfully"
+      );
     } catch (error) {
-      console.error('Error saving report:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to save report');
+      console.error("Error submitting report:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit report"
+      );
     }
   };
 
-  const filteredReports = reports.filter(report => report.category === selectedTab);
+  const filteredReports = reports.filter(
+    (report) => report.category === selectedTab
+  );
 
   return (
     <Card>
@@ -274,15 +335,25 @@ export default function ProjectUpdatesAdmin() {
                 {filteredReports.map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>{report.title}</TableCell>
-                    <TableCell>{new Date(report.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {new Date(report.date).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>{report.type}</TableCell>
                     <TableCell>{report.size}</TableCell>
                     <TableCell>{report.status}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditReport(report)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditReport(report)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteReport(report.id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteReport(report.id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -308,15 +379,25 @@ export default function ProjectUpdatesAdmin() {
                 {filteredReports.map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>{report.title}</TableCell>
-                    <TableCell>{new Date(report.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {new Date(report.date).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>{report.type}</TableCell>
                     <TableCell>{report.size}</TableCell>
                     <TableCell>{report.status}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditReport(report)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditReport(report)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteReport(report.id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteReport(report.id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -342,15 +423,25 @@ export default function ProjectUpdatesAdmin() {
                 {filteredReports.map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>{report.title}</TableCell>
-                    <TableCell>{new Date(report.date).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {new Date(report.date).toLocaleDateString()}
+                    </TableCell>
                     <TableCell>{report.type}</TableCell>
                     <TableCell>{report.size}</TableCell>
                     <TableCell>{report.status}</TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => handleEditReport(report)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditReport(report)}
+                      >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDeleteReport(report.id)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteReport(report.id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -364,7 +455,9 @@ export default function ProjectUpdatesAdmin() {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent aria-describedby="dialog-description">
             <DialogHeader>
-              <DialogTitle>{editingReport ? 'Edit Report' : 'Add New Report'}</DialogTitle>
+              <DialogTitle>
+                {editingReport ? "Edit Report" : "Add New Report"}
+              </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -372,7 +465,9 @@ export default function ProjectUpdatesAdmin() {
                 <Input
                   id="title"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -382,7 +477,9 @@ export default function ProjectUpdatesAdmin() {
                   id="date"
                   type="date"
                   value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, date: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -403,7 +500,7 @@ export default function ProjectUpdatesAdmin() {
                     className="w-full"
                   >
                     <Upload className="mr-2 h-4 w-4" />
-                    {selectedFile ? selectedFile.name : 'Choose File'}
+                    {selectedFile ? selectedFile.name : "Choose File"}
                   </Button>
                 </div>
               </div>
@@ -411,7 +508,9 @@ export default function ProjectUpdatesAdmin() {
                 <Label htmlFor="fileType">File Type</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value) => setFormData({ ...formData, type: value })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, type: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select file type" />
@@ -441,7 +540,9 @@ export default function ProjectUpdatesAdmin() {
                 <Label htmlFor="status">Status</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value) => setFormData({ ...formData, status: value })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, status: value })
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select status" />
@@ -449,7 +550,9 @@ export default function ProjectUpdatesAdmin() {
                   <SelectContent>
                     {STATUS_OPTIONS.map((status) => (
                       <SelectItem key={status.value} value={status.value}>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${status.color}`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${status.color}`}
+                        >
                           {status.label}
                         </span>
                       </SelectItem>
@@ -458,11 +561,15 @@ export default function ProjectUpdatesAdmin() {
                 </Select>
               </div>
               <div className="flex justify-end space-x-2">
-                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsDialogOpen(false)}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">
-                  {editingReport ? 'Update' : 'Add'} Report
+                  {editingReport ? "Update" : "Add"} Report
                 </Button>
               </div>
             </form>
@@ -471,4 +578,4 @@ export default function ProjectUpdatesAdmin() {
       </CardContent>
     </Card>
   );
-} 
+}

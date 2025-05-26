@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { uploadToMinIO } from '@/lib/helper';
 
 interface LegalDocument {
   id: string;
@@ -155,60 +156,60 @@ export default function LegalDocumentsAdmin() {
     }
   };
 
-  const uploadFile = async (file: File) => {
-    try {
-      const payload = {
-        filename: file.name,
-        contentType: file.type || 'application/octet-stream',
-      };
-      console.log('[uploadFile] sending →', payload);
+  // const uploadFile = async (file: File) => {
+  //   try {
+  //     const payload = {
+  //       filename: file.name,
+  //       contentType: file.type || 'application/octet-stream',
+  //     };
+  //     console.log('[uploadFile] sending →', payload);
       
-      // First, get a pre-signed URL from your API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
+  //     // First, get a pre-signed URL from your API
+  //     const response = await fetch('/api/upload', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       credentials: 'include',
+  //       body: JSON.stringify(payload),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
-        console.error('[uploadFile] upload URL request failed:', {
-          status: response.status,
-          statusText: response.statusText,
-          error: errorData
-        });
-        throw new Error(errorData.error || 'Failed to get upload URL');
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
+  //       console.error('[uploadFile] upload URL request failed:', {
+  //         status: response.status,
+  //         statusText: response.statusText,
+  //         error: errorData
+  //       });
+  //       throw new Error(errorData.error || 'Failed to get upload URL');
+  //     }
 
-      const { url, key } = await response.json();
-      console.log('[uploadFile] got presigned URL:', { url, key });
+  //     const { url, key } = await response.json();
+  //     console.log('[uploadFile] got presigned URL:', { url, key });
 
-      // Upload the file to MinIO using the pre-signed URL
-      const uploadResponse = await fetch(url, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
+  //     // Upload the file to MinIO using the pre-signed URL
+  //     const uploadResponse = await fetch(url, {
+  //       method: 'PUT',
+  //       body: file,
+  //       headers: {
+  //         'Content-Type': file.type,
+  //       },
+  //     });
 
-      if (!uploadResponse.ok) {
-        console.error('[uploadFile] MinIO upload failed:', {
-          status: uploadResponse.status,
-          statusText: uploadResponse.statusText
-        });
-        throw new Error('Failed to upload file to MinIO');
-      }
+  //     if (!uploadResponse.ok) {
+  //       console.error('[uploadFile] MinIO upload failed:', {
+  //         status: uploadResponse.status,
+  //         statusText: uploadResponse.statusText
+  //       });
+  //       throw new Error('Failed to upload file to MinIO');
+  //     }
 
-      return key;
-    } catch (error) {
-      console.error('[uploadFile] error:', error);
-      throw error;
-    }
-  };
+  //     return key;
+  //   } catch (error) {
+  //     console.error('[uploadFile] error:', error);
+  //     throw error;
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -219,7 +220,7 @@ export default function LegalDocumentsAdmin() {
       }
 
       // 1. Upload the file first
-      const fileUrl = await uploadFile(selectedFile);
+      const fileUrl = await uploadToMinIO(selectedFile, "legal");
       console.log('[handleSubmit] file uploaded, url:', fileUrl);
 
       // 2. Construct the payload
@@ -340,13 +341,13 @@ export default function LegalDocumentsAdmin() {
                       >
                         <Download className="h-4 w-4" />
                       </Button>
-                      <Button 
+                      {/* <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => handleEditDocument(doc)}
                       >
                         <Pencil className="h-4 w-4" />
-                      </Button>
+                      </Button> */}
                       <Button 
                         variant="ghost" 
                         size="sm" 
