@@ -52,11 +52,17 @@ export default function BrochureAdmin() {
 
       if (file) {
         fileUrl = await uploadToMinIO(file, "brochure");
-        console.log("uploaded", fileUrl)
+        console.log("uploaded", fileUrl);
         if (!fileUrl) {
           toast.error("Failed to upload file");
           return;
         }
+      }
+
+      if (!fileUrl) {
+        toast.error("Failed to upload file");
+        setLoading(false);
+        return;
       }
 
       const response = await fetch("/api/admin/configuration/brochure", {
@@ -89,7 +95,7 @@ export default function BrochureAdmin() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 py-4">
       <div>
         <h2 className="text-2xl font-bold">Brochure</h2>
         <p className="text-gray-500">Manage the Brochure document</p>

@@ -284,47 +284,46 @@ const Resources = () => {
   //   }
   // };
 
-
   const handleDownload = async (
-  doc: InvestorKit | LegalDocument | InvestmentDoc | FaqGuide
-) => {
-  try {
-    if (!doc.fileUrl) {
-      toast.error("No file available for download");
-      return;
-    }
-
-    const response = await fetch(
-      `/api/download?fileUrl=${encodeURIComponent(
-        doc.fileUrl
-      )}&downloadAs=${encodeURIComponent(doc.title)}`,
-      {
-        credentials: "include",
+    doc: InvestorKit | LegalDocument | InvestmentDoc | FaqGuide
+  ) => {
+    try {
+      if (!doc.fileUrl) {
+        toast.error("No file available for download");
+        return;
       }
-    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Download failed:", response.status, errorText);
-      throw new Error("Failed to download file");
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(
+          doc.fileUrl
+        )}&downloadAs=${encodeURIComponent(doc.title)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Download failed:", response.status, errorText);
+        throw new Error("Failed to download file");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = doc.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file");
     }
+  };
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = doc.title;
-    document.body.appendChild(link);
-    link.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
-  } catch (error) {
-    console.error("Error downloading file:", error);
-    toast.error("Failed to download file");
-  }
-};
-
-  const handleDocumentAction = async (doc: LegalDocument | InvestmentDoc) => {
+  const handleDocumentAction = async (doc: InvestorKit | LegalDocument | InvestmentDoc) => {
     if (doc.fileUrl) {
       // Open in new window/tab
       window.open(
@@ -350,7 +349,7 @@ const Resources = () => {
         {investorKit && (
           <InvestmentKit
             investmentKit={investorKit}
-            handleDownload={handleDownload}
+            handleDownload={handleDocumentAction}
           />
         )}
 
