@@ -123,6 +123,8 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
         };
         const response = await AdminAddUpdateNews({
           ...formData,
+          _id: ExistingDetails?._id || "",
+          image: formData.image || "",
         }).unwrap();
         if (response) {
           toast.success(`${response.message}`);
