@@ -45,66 +45,66 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleDownload = async () => {
-    if (!brochure) {
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      if (!brochure.fileUrl) {
-        throw new Error("File URL not available");
-      }
-
-      const downloadUrl = `/api/view?fileUrl=${encodeURIComponent(
-        brochure.fileUrl
-      )}&v=${new Date(brochure.updatedAt).getTime()}`;
-      window.open(downloadUrl, "_blank");
-    } catch (error) {
-      console.log("Error opening file:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   // const handleDownload = async () => {
   //   if (!brochure) {
-  //     toast.error("Brochure not available");
   //     return;
   //   }
 
   //   setIsLoading(true);
   //   try {
-  //     const response = await fetch(
-  //       `/api/download?fileUrl=${encodeURIComponent(
-  //         brochure.fileUrl
-  //       )}&downloadAs=${encodeURIComponent(brochure.title)}`,
-  //       {
-  //         credentials: "include",
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("Failed to download file");
+  //     if (!brochure.fileUrl) {
+  //       throw new Error("File URL not available");
   //     }
 
-  //     const blob = await response.blob();
-  //     const url = window.URL.createObjectURL(blob);
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.download = brochure.title;
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     window.URL.revokeObjectURL(url);
-  //     document.body.removeChild(link);
-  //     toast.success("Download started successfully");
+  //     const downloadUrl = `/api/view?fileUrl=${encodeURIComponent(
+  //       brochure.fileUrl
+  //     )}&v=${new Date(brochure.updatedAt).getTime()}`;
+  //     window.open(downloadUrl, "_blank");
   //   } catch (error) {
-  //     console.error("Error downloading file:", error);
-  //     toast.error("Failed to download file");
+  //     console.log("Error opening file:", error);
   //   } finally {
   //     setIsLoading(false);
   //   }
   // };
+
+  const handleDownload = async () => {
+    if (!brochure) {
+      toast.error("Brochure not available");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `/api/download?fileUrl=${encodeURIComponent(
+          brochure.fileUrl
+        )}&downloadAs=${encodeURIComponent(brochure.title)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download file");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = brochure.title;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+      toast.success("Download started successfully");
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download file");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <header

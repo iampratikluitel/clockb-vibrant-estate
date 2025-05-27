@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+import { model, Model, models, Schema } from "mongoose";
 
-const investorKitSchema = new mongoose.Schema({
+const investorKitSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -19,6 +19,10 @@ const investorKitSchema = new mongoose.Schema({
   },
 });
 
-const InvestorKit = mongoose.models.InvestorKit || mongoose.model("InvestorKit", investorKitSchema);
-
+let InvestorKit: Model<any>;
+try {
+  InvestorKit = models.InvestorKit || model("InvestorKit", investorKitSchema, "InvestorKit");
+} catch (error) {
+  InvestorKit = model("InvestorKit", investorKitSchema, "InvestorKit");
+}
 export default InvestorKit; 
