@@ -25,20 +25,23 @@ export default function BrochureAdmin() {
       const response = await fetch("/api/admin/configuration/brochure");
       if (response.ok) {
         const data = await response.json();
+        console.log("Fetched brochure:", data);
         if (data) {
           setBrochure(data);
           setTitle(data.title);
         }
+      } else {
+        console.log("Failed to fetch brochure, status:", response.status);
       }
     } catch (error) {
       console.error("Error fetching brochure:", error);
-      toast.error("Failed to fetch brochure");
     }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
+      console.log("File selected:", selectedFile.name);
       setFile(selectedFile);
     }
   };
@@ -46,13 +49,16 @@ export default function BrochureAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    console.log("Submitting form...");
 
     try {
       let fileUrl = brochure?.fileUrl;
 
       if (file) {
+        console.log("Uploading new file to MinIO...");
         fileUrl = await uploadToMinIO(file, "brochure");
-        console.log("uploaded", fileUrl);
+        console.log("Uploaded file URL:", fileUrl);
+
         if (!fileUrl) {
           toast.error("Failed to upload file");
           return;
@@ -60,11 +66,13 @@ export default function BrochureAdmin() {
       }
 
       if (!fileUrl) {
+        console.log("No file URL available after upload");
         toast.error("Failed to upload file");
         setLoading(false);
         return;
       }
 
+      console.log("Sending POST request to update brochure...");
       const response = await fetch("/api/admin/configuration/brochure", {
         method: "POST",
         headers: {
@@ -79,11 +87,13 @@ export default function BrochureAdmin() {
 
       if (response.ok) {
         const updated = await response.json();
+        console.log("Brochure updated:", updated);
         toast.success("Brochure updated successfully");
         setBrochure(updated);
         setTitle(updated.title);
         setFile(null);
       } else {
+        console.log("Failed to update brochure, status:", response.status);
         toast.error("Failed to update brochure");
       }
     } catch (error) {
@@ -109,7 +119,10 @@ export default function BrochureAdmin() {
           <Input
             id="title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              console.log("Title changed:", e.target.value);
+              setTitle(e.target.value);
+            }}
             required
           />
         </div>

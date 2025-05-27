@@ -12,6 +12,7 @@ interface Brochure {
   title: string;
   description: string;
   fileUrl: string;
+  updatedAt: string;
 }
 
 const Header = () => {
@@ -46,7 +47,6 @@ const Header = () => {
 
   const handleDownload = async () => {
     if (!brochure) {
-      toast.error("Brochure not available");
       return;
     }
 
@@ -55,14 +55,13 @@ const Header = () => {
       if (!brochure.fileUrl) {
         throw new Error("File URL not available");
       }
-      window.open(
-        `/api/view?fileUrl=${encodeURIComponent(brochure.fileUrl)}`,
-        "_blank"
-      );
-      toast.success("Opening brochure in new window");
+
+      const downloadUrl = `/api/view?fileUrl=${encodeURIComponent(
+        brochure.fileUrl
+      )}&v=${new Date(brochure.updatedAt).getTime()}`;
+      window.open(downloadUrl, "_blank");
     } catch (error) {
-      console.error("Error opening file:", error);
-      toast.error("Failed to open file");
+      console.log("Error opening file:", error);
     } finally {
       setIsLoading(false);
     }

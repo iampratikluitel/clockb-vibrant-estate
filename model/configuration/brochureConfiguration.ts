@@ -6,7 +6,7 @@ const brochureSchema = new Schema(
       type: String,
       required: true,
     },
-    brochure: {
+    fileUrl: {
       type: String,
       required: true,
     },
