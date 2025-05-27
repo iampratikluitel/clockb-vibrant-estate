@@ -41,6 +41,45 @@ const About = () => {
     fetchBrochure();
   }, []);
 
+  // const handleDownload = async () => {
+  //   if (!brochure) {
+  //     toast.error("Brochure not available");
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(
+  //       `/api/download?fileUrl=${encodeURIComponent(
+  //         brochure.fileUrl
+  //       )}&downloadAs=${encodeURIComponent(brochure.title)}`,
+  //       {
+  //         credentials: "include",
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("Failed to download file");
+  //     }
+
+  //     const blob = await response.blob();
+  //     const url = window.URL.createObjectURL(blob);
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.download = brochure.title;
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     window.URL.revokeObjectURL(url);
+  //     document.body.removeChild(link);
+  //     toast.success("Download started successfully");
+  //   } catch (error) {
+  //     console.error("Error downloading file:", error);
+  //     toast.error("Failed to download file");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleDownload = async () => {
     if (!brochure) {
       toast.error("Brochure not available");
@@ -49,32 +88,17 @@ const About = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `/api/download?fileUrl=${encodeURIComponent(
-          brochure.fileUrl
-        )}&downloadAs=${encodeURIComponent(brochure.title)}`,
-        {
-          credentials: "include",
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to download file");
+      if (!brochure.fileUrl) {
+        throw new Error("File URL not available");
       }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = brochure.title;
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(link);
-      toast.success("Download started successfully");
+      window.open(
+        `/api/view?fileUrl=${encodeURIComponent(brochure.fileUrl)}`,
+        "_blank"
+      );
+      toast.success("Opening brochure in new window");
     } catch (error) {
-      console.error("Error downloading file:", error);
-      toast.error("Failed to download file");
+      console.error("Error opening file:", error);
+      toast.error("Failed to open file");
     } finally {
       setIsLoading(false);
     }

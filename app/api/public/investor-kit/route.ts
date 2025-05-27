@@ -2,16 +2,19 @@ import { connectDb } from "@/lib/mongodb";
 import InvestorKit from "@/model/investor-kit";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export const dynamic = "force-dynamic";
+
+export const GET = async () => {
+  console.log("Running GET request: Get Investor kit");
   try {
     await connectDb();
-    const investorKit = await InvestorKit.findOne().sort({ updatedAt: -1 });
-    return NextResponse.json(investorKit || null);
+    const data = await InvestorKit.findOne();
+    return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error("Error fetching investor kit:", error);
+    console.log(error);
     return NextResponse.json(
-      { error: "Failed to fetch investor kit" },
-      { status: 500 }
+      { error: "Invalid request body" },
+      { status: 400 }
     );
   }
-}
+};

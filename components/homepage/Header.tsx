@@ -12,6 +12,7 @@ interface Brochure {
   title: string;
   description: string;
   fileUrl: string;
+  updatedAt: string;
 }
 
 const Header = () => {
@@ -43,6 +44,28 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // const handleDownload = async () => {
+  //   if (!brochure) {
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   try {
+  //     if (!brochure.fileUrl) {
+  //       throw new Error("File URL not available");
+  //     }
+
+  //     const downloadUrl = `/api/view?fileUrl=${encodeURIComponent(
+  //       brochure.fileUrl
+  //     )}&v=${new Date(brochure.updatedAt).getTime()}`;
+  //     window.open(downloadUrl, "_blank");
+  //   } catch (error) {
+  //     console.log("Error opening file:", error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleDownload = async () => {
     if (!brochure) {

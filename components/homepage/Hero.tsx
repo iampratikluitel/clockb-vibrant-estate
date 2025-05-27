@@ -32,6 +32,27 @@ const Hero = () => {
     fetchBrochure();
   }, []);
 
+  // const handleDownload = async () => {
+  //   if (!brochure) {
+  //     toast.error("Brochure not available");
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+  //   try {
+  //     if (!brochure.fileUrl) {
+  //       throw new Error("File URL not available");
+  //     }
+  //     window.open(`/api/view?fileUrl=${encodeURIComponent(brochure.fileUrl)}`, '_blank');
+  //     toast.success("Opening brochure in new window");
+  //   } catch (error) {
+  //     console.error("Error opening file:", error);
+  //     toast.error("Failed to open file");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleDownload = async () => {
     if (!brochure) {
       toast.error("Brochure not available");

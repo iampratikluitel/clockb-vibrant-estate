@@ -42,10 +42,16 @@ export default function InvestorRelationsAdmin() {
   useEffect(() => {
     fetchData();
   }, []);
-
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/investor-relations');
+      const response = await fetch('/api/investor-relations', {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      console.log("response", response)
       if (!response.ok) throw new Error('Failed to fetch data');
       const data = await response.json();
       setData(data);
@@ -66,14 +72,32 @@ export default function InvestorRelationsAdmin() {
       
       const method = editingEvent ? 'PUT' : 'POST';
       
+      // Optimistic update
+      const optimisticEvent = {
+        id: editingEvent?.id || Date.now().toString(),
+        ...eventFormData
+      };
+
+      // Update local state optimistically
+      setData(prevData => {
+        if (!prevData) return null;
+        const updatedEvents = editingEvent
+          ? prevData.events.map(e => e.id === editingEvent.id ? optimisticEvent : e)
+          : [...prevData.events, optimisticEvent];
+        return { ...prevData, events: updatedEvents };
+      });
+      
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(eventFormData),
       });
 
-      if (!response.ok) throw new Error('Failed to save event');
+      if (!response.ok) {
+        throw new Error('Failed to save event');
+      }
 
+      // Fetch fresh data to ensure sync with server
       await fetchData();
       setIsEventDialogOpen(false);
       setEditingEvent(null);
@@ -82,22 +106,38 @@ export default function InvestorRelationsAdmin() {
     } catch (error) {
       console.error('Error saving event:', error);
       toast.error('Failed to save event');
+      // Revert optimistic update on error
+      await fetchData();
     }
   };
 
   const handleDeleteEvent = async (id: string) => {
     try {
+      // Optimistic update
+      setData(prevData => {
+        if (!prevData) return null;
+        return {
+          ...prevData,
+          events: prevData.events.filter(event => event.id !== id)
+        };
+      });
+
       const response = await fetch(`/api/investor-relations/events/${id}`, {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Failed to delete event');
+      if (!response.ok) {
+        throw new Error('Failed to delete event');
+      }
 
+      // Fetch fresh data to ensure sync with server
       await fetchData();
       toast.success('Event deleted successfully');
     } catch (error) {
       console.error('Error deleting event:', error);
       toast.error('Failed to delete event');
+      // Revert optimistic update on error
+      await fetchData();
     }
   };
 
