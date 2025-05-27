@@ -1,12 +1,14 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { auth } from '@/auth';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
     const session = await auth();
     if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const data = await request.json();
@@ -14,7 +16,7 @@ export async function POST(request: Request) {
 
     if (!investorRelations) {
       return NextResponse.json(
-        { error: 'Investor relations not found' },
+        { error: "Investor relations not found" },
         { status: 404 }
       );
     }
@@ -28,13 +30,14 @@ export async function POST(request: Request) {
         investorRelationsId: investorRelations.id,
       },
     });
+    console.log("event", event);
 
     return NextResponse.json(event);
   } catch (error) {
-    console.error('Error creating event:', error);
+    console.error("Error creating event:", error);
     return NextResponse.json(
-      { error: 'Failed to create event' },
+      { error: "Failed to create event" },
       { status: 500 }
     );
   }
-} 
+}
