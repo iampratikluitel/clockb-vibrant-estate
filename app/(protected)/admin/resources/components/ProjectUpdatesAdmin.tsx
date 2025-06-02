@@ -168,46 +168,6 @@ export default function ProjectUpdatesAdmin() {
     }
   };
 
-  // const uploadFile = async (file: File) => {
-  //   try {
-  //     // First, get a pre-signed URL from your API
-  //     const response = await fetch('/api/uploadtominio', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         filename: file.name,
-  //         contentType: file.type || 'application/octet-stream',
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error('Failed to get upload URL');
-  //     }
-
-  //     const { url, key } = await response.json();
-
-  //     // Upload the file to MinIO using the pre-signed URL
-  //     const uploadResponse = await fetch(url, {
-  //       method: 'PUT',
-  //       body: file,
-  //       headers: {
-  //         'Content-Type': file.type || 'application/octet-stream',
-  //       },
-  //     });
-
-  //     if (!uploadResponse.ok) {
-  //       throw new Error('Failed to upload file');
-  //     }
-
-  //     return key;
-  //   } catch (error) {
-  //     console.error('Error uploading file:', error);
-  //     throw error;
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

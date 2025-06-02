@@ -56,10 +56,9 @@ const NewsInsights = () => {
                   <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">
                     {category.title}
                   </h3>
-                  <div
-                    className="text-gray-600 text-sm line-clamp-3 mb-4"
-                    dangerouslySetInnerHTML={{ __html: category.overview }}
-                  />
+                  <div className="text-gray-600 text-sm line-clamp-3 mb-4">
+                    {category.description}
+                  </div>
 
                   <Link
                     href={`${paths.public.newsInsight}/${category.slug}`}

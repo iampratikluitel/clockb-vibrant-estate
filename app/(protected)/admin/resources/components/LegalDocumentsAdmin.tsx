@@ -155,62 +155,6 @@ export default function LegalDocumentsAdmin() {
       }));
     }
   };
-
-  // const uploadFile = async (file: File) => {
-  //   try {
-  //     const payload = {
-  //       filename: file.name,
-  //       contentType: file.type || 'application/octet-stream',
-  //     };
-  //     console.log('[uploadFile] sending →', payload);
-      
-  //     // First, get a pre-signed URL from your API
-  //     const response = await fetch('/api/upload', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       credentials: 'include',
-  //       body: JSON.stringify(payload),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json().catch(() => ({ error: 'Failed to parse error response' }));
-  //       console.error('[uploadFile] upload URL request failed:', {
-  //         status: response.status,
-  //         statusText: response.statusText,
-  //         error: errorData
-  //       });
-  //       throw new Error(errorData.error || 'Failed to get upload URL');
-  //     }
-
-  //     const { url, key } = await response.json();
-  //     console.log('[uploadFile] got presigned URL:', { url, key });
-
-  //     // Upload the file to MinIO using the pre-signed URL
-  //     const uploadResponse = await fetch(url, {
-  //       method: 'PUT',
-  //       body: file,
-  //       headers: {
-  //         'Content-Type': file.type,
-  //       },
-  //     });
-
-  //     if (!uploadResponse.ok) {
-  //       console.error('[uploadFile] MinIO upload failed:', {
-  //         status: uploadResponse.status,
-  //         statusText: uploadResponse.statusText
-  //       });
-  //       throw new Error('Failed to upload file to MinIO');
-  //     }
-
-  //     return key;
-  //   } catch (error) {
-  //     console.error('[uploadFile] error:', error);
-  //     throw error;
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

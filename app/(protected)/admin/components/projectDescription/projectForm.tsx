@@ -76,7 +76,7 @@ export default function AddProjectForm({
         ? new Date(ExistingDetail.addedDate)
         : undefined,
       image: ExistingDetail?.image
-        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail.image)}`
+        ? `/api/resources/download?filename=${encodeURIComponent(ExistingDetail?.image)}`
         : null,
       overview: ExistingDetail?.overview ?? "",
       categoryId: ExistingDetail?.categoryId ?? "",
