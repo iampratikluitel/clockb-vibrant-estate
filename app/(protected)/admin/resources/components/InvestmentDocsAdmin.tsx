@@ -305,21 +305,6 @@ export default function InvestmentDocsAdmin() {
                   )}
                 </div>
               </div>
-              {/* <div className="space-y-2">
-                <label>Document Action</label>
-                <Select
-                  value={newDoc.actionType}
-                  onValueChange={(value) => setNewDoc({ ...newDoc, actionType: value as 'download' | 'view' })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select action type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="download">Download</SelectItem>
-                    <SelectItem value="view">View</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div> */}
               <div className="space-y-2">
                 <label>Button Text</label>
                 <Input
@@ -453,21 +438,6 @@ export default function InvestmentDocsAdmin() {
                     </p>
                   )}
                 </div>
-                {/* <div className="space-y-2">
-                  <label>Document Action</label>
-                  <Select
-                    value={editingDoc.actionType}
-                    onValueChange={(value) => setEditingDoc({ ...editingDoc, actionType: value as 'download' | 'view' })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select action type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="download">Download</SelectItem>
-                      <SelectItem value="view">View</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div> */}
                 <div className="space-y-2">
                   <label>Button Text</label>
                   <Input

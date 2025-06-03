@@ -35,7 +35,7 @@ const AddProject = async () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Add Projects</BreadcrumbPage>
+            <BreadcrumbPage>Add</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

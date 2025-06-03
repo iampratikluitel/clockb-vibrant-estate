@@ -6,8 +6,6 @@ export const adminNewsInsightsApi = createApi({
   reducerPath: "adminNewsInsightsApi",
   tagTypes: [
     "Admin NewsInsights",
-    "Admin NewsInsights Enquiry",
-    "Admin NewsInsights Download",
   ],
   baseQuery: baseQuery,
   keepUnusedDataFor: 2,

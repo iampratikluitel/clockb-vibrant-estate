@@ -306,22 +306,6 @@ export default function FaqsGuidesAdmin() {
                   placeholder="Enter description"
                 />
               </div>
-              {/* <div className="space-y-2">
-                <label>Button Type</label>
-                <Select
-                  value={newGuide.buttonType}
-                  onValueChange={(value) => setNewGuide({ ...newGuide, buttonType: value as any })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select button type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="download">Download</SelectItem>
-                    <SelectItem value="view">View</SelectItem>
-                    <SelectItem value="faq">FAQ</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div> */}
               {newGuide.buttonType === 'download' && (
                 <div className="space-y-2">
                   <label>Document File</label>

@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { NewsSchema } from "./NewsSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MINIOURL } from "@/lib/constants";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import AddNewsCategory from "./newsCategory";
 import {
@@ -40,7 +39,7 @@ import ReactTipTapEditor from "@/components/CustomComponent/CustomEditor/ReactTi
 
 interface props {
   type: "Add" | "Edit";
-  ExistingDetails?: any;
+  ExistingDetails?: NEWSINSIGHT;
   newsCategory: any[];
 }
 
@@ -148,8 +147,8 @@ const NewsForm = ({ type, ExistingDetails, newsCategory }: props) => {
       deleteNewsCategory(
         id,
         type == "Add"
-          ? "/admin/news/add"
-          : `admin/news/edit?id=${ExistingDetails?._id}`
+          ? "/admin/newsinsight/add"
+          : `admin/newsinsight/edit?id=${ExistingDetails?._id}`
       ),
       {
         loading: "Deleting...",
